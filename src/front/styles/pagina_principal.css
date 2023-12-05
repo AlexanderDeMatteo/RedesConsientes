@@ -1,0 +1,39 @@
+.box3 {
+    background-color: whitesmoke;
+    width: 1089px;
+  }
+  
+  #pagina#central {
+    width: 100%;
+    min-height: 1060;
+    background-color: red;
+  }
+  
+  #boton1 {
+    margin-left: 40%;
+  }
+  #boton2 {
+    margin-left: 10%;
+  }
+  #selector {
+    margin-top: 10px;
+  }
+  .card-body {
+    display: block;
+  }
+  #avatar_perfil {
+    margin-top: 20px;
+    width: 250px;
+    height: 250px;
+  }
+  
+  .content ul{
+    margin: 0;
+    list-style: none;
+  }
+  
+  .content li+li{
+    margin-top: 0
+  }
+  
+  

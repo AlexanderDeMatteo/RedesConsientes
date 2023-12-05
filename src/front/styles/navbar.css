@@ -1,0 +1,41 @@
+#avatar {
+    height: 50px;
+    width: 50px;
+    border-radius: 500px;
+    /* margin-top: 20px; */
+  }
+  .arrow-avatar {
+    margin-top: 12px;
+  }
+  #menu {
+    height: 75px;
+    background-color: white;
+    padding: 10px;
+  
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+  }
+  #hola {
+    margin-top: -25px;
+    float: right;
+    margin-right: 0;
+    height: 50px;
+    max-height: 60px;
+  }
+  li {
+    text-decoration: none;
+  }
+  .dropdown-item {
+    text-decoration: none;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  #nav-item {
+  }
+  
+  #navbarcontainer{
+    margin-left: 0 !important;
+  }

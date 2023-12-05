@@ -1,0 +1,30 @@
+.filtros {
+    border: solid #2e3e57;
+    border-radius: 15px;
+    position: fixed;
+    padding: 10px;
+    top: 105px;
+    left: 441px;
+    background-color: white;
+    overflow: auto;
+    width: 300px;
+    /* box-shadow: 10px 5px 5px #2e3e57 */
+  }
+  
+  .dropdowns {
+    color: black;
+    background-color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .form-control {
+    border: 1px solid #385bfc;
+  }
+  .rango {
+    position: absolute;
+    left: 10px;
+  }
+  
