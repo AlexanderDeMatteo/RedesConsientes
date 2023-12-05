@@ -2,17 +2,17 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import "../../styles/paginaPrincipal.css";
-import Imager from "../component/perfil_components/consulta.jpg";
-import Imager1 from "../component/perfil_components/consulta2.jpg";
-import Imager2 from "../component/perfil_components/consulta3.jpeg";
-import Imager3 from "../component/perfil_components/consulta3.jpeg";
-import Imager4 from "../component/perfil_components/consulta4.jpg";
-import psicologo_img from "../component/perfil_components/psicologo.png";
-import { Imagenes } from "../component/perfil_components/imagenes";
-import { AboutMe } from "../component/perfil_components/AboutMe";
-import { uploadFile } from "../component/drag_and_drop";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import "../../styles/pagina_principal.css";
+import Imager from "../component/perfil_componentes/consulta.jpg";
+import Imager1 from "../component/perfil_componentes/consulta2.jpg";
+import Imager2 from "../component/perfil_componentes/consulta3.jpeg";
+import Imager3 from "../component/perfil_componentes/consulta3.jpeg";
+import Imager4 from "../component/perfil_componentes/consulta4.jpg";
+import psicologo_img from "../component/perfil_componentes/psicologo.png";
+// import { Imagenes } from "../component/perfil_components/imagenes";
+import { AboutMe } from "../component/perfil_componentes/AboutMe";
+// import { uploadFile } from "../component/drag_and_drop";
+import { useParams } from "react-router-dom";
 
 export const PerfilUsuarioSeleccionado = () => {
     const API_URL = process.env.BACKEND_URL;

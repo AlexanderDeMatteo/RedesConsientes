@@ -4,7 +4,7 @@ import { Context } from "../store/appContext.js";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "@react-spring/web";
-import { Modal } from "../component/modal.js";
+import { Modal } from "../component/Modal.js";
 
 export const Calendar_custom = () => {
     const { actions, store } = useContext(Context)

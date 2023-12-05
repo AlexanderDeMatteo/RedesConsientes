@@ -3,7 +3,7 @@ import {
 	getAuthToken,
 	removeAuthToken,
 	hasValidToken
-} from '../utils/authTokenUtils';
+} from '../../utils/AuthTokenUtil';
 const getState = ({ getStore, getActions, setStore }) => {
 	const API_URL = process.env.BACKEND_URL;
 	return {

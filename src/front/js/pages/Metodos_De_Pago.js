@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import "../../styles/paginaPrincipal.css";
+import "../../styles/pagina_principal.css";
 
 
 export const MetodosDePago = () => {

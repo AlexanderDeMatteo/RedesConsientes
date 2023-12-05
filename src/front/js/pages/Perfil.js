@@ -2,18 +2,17 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
-import "../../styles/paginaPrincipal.css";
-import Imager from "../component/perfil_components/consulta.jpg";
-import Imager1 from "../component/perfil_components/consulta2.jpg";
-import Imager2 from "../component/perfil_components/consulta3.jpeg";
-import Imager3 from "../component/perfil_components/consulta3.jpeg";
-import Imager4 from "../component/perfil_components/consulta4.jpg";
-import psicologo_img from "../component/perfil_components/psicologo.png";
-import { Imagenes } from "../component/perfil_components/imagenes";
-import { AboutMe } from "../component/perfil_components/AboutMe";
+import "../../styles/pagina_principal.css";
+import Imager from "../component/perfil_componentes/consulta.jpg";
+import Imager1 from "../component/perfil_componentes/consulta2.jpg";
+import Imager3 from "../component/perfil_componentes/consulta3.jpeg";
+import Imager4 from "../component/perfil_componentes/consulta4.jpg";
+import psicologo_img from "../component/perfil_componentes/psicologo.png";
+import { Imagenes } from "../component/perfil_componentes/Imagenes";
+import { AboutMe } from "../component/perfil_componentes/AboutMe";
 import { useNavigate } from 'react-router-dom';
-import { uploadFile } from "../component/drag_and_drop";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+// import { uploadFile } from "../component/drag_and_drop";
+// import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 export const Perfil = () => {
   const API_URL = process.env.BACKEND_URL;
@@ -425,7 +424,7 @@ export const Perfil = () => {
                               <div className="row">
                                 <div className="col-sm-6">
                                   <img className="img-fluid mb-3" src={Imager1} alt="Photo" />
-                                  <img className="img-fluid mb-3" src={Imager2} alt="Photo" />
+                                  <img className="img-fluid mb-3" src={Imager3} alt="Photo" />
                                 </div>
 
                                 <div className="col-sm-6">

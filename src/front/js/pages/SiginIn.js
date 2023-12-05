@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
-import {Navigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 
@@ -23,7 +23,7 @@ export const SignIn = () => {
             password: password,
         };
         if (await actions.loginUser(data)) {
-            navigate.push("/Perfil");
+            navigate("/Perfil");
         } else {
             alert("Credenciales Invalidas");
         }

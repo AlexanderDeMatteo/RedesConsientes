@@ -1,5 +1,5 @@
 import React from 'react'
-import { CalendarCogif_custom } from '../pages/calendar_config'
+import { CalendarCogif_custom } from '../pages/Calendar_Config'
 
 export const Modal = () => {
     return (
