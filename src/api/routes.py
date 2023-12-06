@@ -16,7 +16,8 @@ import os
 from datetime import date
 
 api = Blueprint('api', __name__)
-
+# Allow CORS requests to this API
+CORS(api)
 
 @api.route('/sign-up', methods=['POST'])
 def handle_register():
@@ -338,14 +339,14 @@ def handle_sessions_today(psychologist_id):
         return jsonify(response), 201
 
 
-# Obtain sessions by the ID of the professor. Return all sessions for that professor
+# Obtain sessions by the ID of the psicologo. Return all sessions for that piscologo
+# traer todas las sesiones del psicologo, para anular los botones
 @api.route("/sessions/<int:psychologist_id>/", methods=['GET'])
 def handle_get_sessions(psychologist_id):
     sessions = Session.query.filter_by(psychologist_id=psychologist_id ).all()
     response = []
     for session in sessions:
         response.append(session.serialize())
-        # calendar_date = Session.query.filter_by(calendar_date=calendar_date).all()
         print(response)
     if sessions is None:
         return jsonify({"message": "Not sessions available for this Psychologist"}), 401

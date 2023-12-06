@@ -9,7 +9,7 @@ const Sessions = () => {
 
     const externalApi = "vpaas-magic-cookie-915aa11ce167415c8b96071968facdbe/053e40"
 
-    const aleatoriName = ["PleaseUseAGoodRoomName", "PleaseUseAGoodRoomName2"]
+    const aleatoriName = ["PleaseUseAGoodRoomName"]
     return (
         <div>
             <JaaSMeeting

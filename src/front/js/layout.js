@@ -21,6 +21,7 @@ import { Sidebarx } from "./component/SideBar";
 // import { Expedientes } from "./pages/Expedientes";
 import { PerfilUsuarioSeleccionado } from "./pages/Perfil_Usuario_Seleccionado";
 import { MetodosDePago } from "./pages/Metodos_De_Pago";
+import PrivateRoutes from "../utils/PrivateRoutes";
 
 //create your first component
 const Layout = () => {
@@ -37,6 +38,7 @@ const Layout = () => {
             <Route element={<Home />} path="/"/>
             <Route element={<SignUp />} path="/signup"/>
             <Route element={<SignIn />} path="/signin"/>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
                 <div id="navbar2">
@@ -48,6 +50,7 @@ const Layout = () => {
               </div>} 
               path="/perfil"
               />
+             </Route>
             <Route element={
             <div className="contenedor">
                 <div id="navbar2">

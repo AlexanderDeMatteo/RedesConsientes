@@ -48,7 +48,7 @@ export const SignUp = () => {
 		// 	numero_fpv: numero_fpv,
 		// };
 		if (await actions.registerUser(data)) {
-			navigate.push("/Perfil");
+			navigate("/Perfil");
 		} else {
 			alert("EL USUARIO YA ESTA CREADO INTENTE DE NUEVO");
 		}
@@ -312,7 +312,7 @@ export const SignUp = () => {
 			</div >
 			{
 				localStorage.getItem("token") != undefined && (
-					<Navigate to="/" />
+					navigate("/")
 				)
 			}
 		</section >

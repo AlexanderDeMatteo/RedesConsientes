@@ -35,3 +35,5 @@ export const setAuthToken = (token) => {
     // Check if the token exists and is valid
     return token ?? false;
   };
+
+  

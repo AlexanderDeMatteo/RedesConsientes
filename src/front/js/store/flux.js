@@ -48,6 +48,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} else return false;
 			},
 
+			handleLogOut: () =>{
+				removeAuthToken()
+				if (!hasValidToken){
+					return true
+				}
+				// setStore({token:""})
+				return false
+			},
+
 			privateData: async () => {
 				let response = await fetch(`${API_URL}/api/private`, {
 					method: "POST",

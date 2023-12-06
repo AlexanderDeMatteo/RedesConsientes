@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
-import { BrowserRouter, useHistory, NavLink } from "react-router-dom";
+import { useNavigate, NavLink,redirect} from "react-router-dom";
 import "../../styles/navbar.css";
 import { Context } from "../store/appContext";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
+
 import {
   setAuthToken,
   getAuthToken,
@@ -13,14 +14,21 @@ export const Navbar = () => {
   const [isLogOut, setIsLogOut] = useState(false);
   const { actions, store } = useContext(Context);
 
-  useEffect(() => {
-    if (getAuthToken("token") && isLogOut) setIsLogOut(false);
-  }, [getAuthToken("token"), isLogOut]);
+  const navigate = useNavigate()
+
+  const handleLogOut = () =>{
+    setIsLogOut(true)
+  }
 
   useEffect(() => {
-    // actions.privateData()
     actions.handle_user_data();
   }, []);
+
+  // useEffect(() => {
+    
+  //   if (getAuthToken() && isLogOut) setIsLogOut(false);
+  // }, [isLogOut]);
+
 
   return (
     <div className="wrapper">
@@ -178,13 +186,16 @@ export const Navbar = () => {
                 {/* <li className="dropdown-item"><NavLink to="/status">Status</NavLink></li>
                 <li className="dropdown-item"><NavLink to="/facturacion">Facturacion</NavLink></li> */}
                 <li onClick={(e) => {
-                  removeAuthToken("token");
-                  setIsLogOut(true)
+                    removeAuthToken()
+                    navigate("/")
+                
+                  // handleLogOut()
+                  // setIsLogOut(true)
                 }} className="dropdown-item">Log Out</li>
               </ul>
             </li>
             : ""}
-          {isLogOut && <BrowserRouter to={"/"} />}
+          {/* {hasValidToken() && navigate("/")} */}
         </ul>
       </nav >
     </div >

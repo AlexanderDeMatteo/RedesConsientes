@@ -259,10 +259,13 @@ class Schedule(db.Model):
         db.Integer, db.ForeignKey('user.id'), nullable=False)
     # schedule_reserved_id = db.relationship(
     #     'ScheduleReserved', backref='schedule', uselist=True)
+
     start_time = db.Column(db.String(10), nullable=False, unique=False)
     end_time = db.Column(db.String(10), nullable=False, unique=False)
-    session_id = db.relationship(
-        "Session", backref="schedule.id", uselist=False)
+    # session_id = db.relationship(
+    #     "Session", back_populates="schedule", uselist=False)
+    sessions = db.relationship(
+        "Session", back_populates="schedule", uselist=False)
 
     def serialize(self):
         return {
@@ -312,6 +315,7 @@ class Session(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     schedule_id = db.Column(db.ForeignKey('schedule.id'),
                             nullable=False, unique=False)
+    schedule = db.relationship("Schedule", back_populates="sessions")
     reserved = db.Column(db.Boolean(), nullable=True, default=False)
     calendar_date = db.Column(db.Date, nullable=False, unique=False)
     room_number = db.Column(db.String(200), nullable=False, unique=True)
