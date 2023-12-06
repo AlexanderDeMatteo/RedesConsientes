@@ -14,6 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userPsicologos: JSON.parse(sessionStorage.getItem("psicos")) || [],
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
 			userFpvData: {},
+			userScheduleData:{}
 		},
 
 		actions: {
@@ -137,6 +138,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
+			handle_user_data_schedule: async (usuario) => {
+				const store = getStore()
+				let response = await fetch(`${API_URL}/sessions/${usuario}/`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				if (response.ok) {
+					let body = await response.json()
+					let dataFiltada = body.filter((data) => data.id == usuario)
+					let nuevaData = (Object.assign({}, ...dataFiltada));
+					console.log(nuevaData)
+					setStore({ userScheduleData: nuevaData })
+
+
+				}
+			},
+
 			handle_user_data: async () => {
 				let response = await fetch(`${API_URL}/api/user-data`, {
 					method: 'GET',
@@ -212,15 +233,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// 	}
 			// },
 
-			get_user_dates: async (data) => {
-				console.log(data)
-				let response = await fetch(`${API_URL}/sessions/today/1`, {
+			get_user_dates: async (id) => {
+				let response = await fetch(`${API_URL}/sessions/today/${id}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${getAuthToken("token")}`
 					},
-
+				
 				});
 				console.log(response)
 				console.log(body)
@@ -228,7 +248,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					let body = await response.json()
 					console.log("aaaa")
 					console.log(body)
-					setStore({ userData: body })
+					setStore({ userScheduleData: body })
 
 				}
 			},

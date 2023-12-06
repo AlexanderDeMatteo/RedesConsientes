@@ -33,7 +33,7 @@ export const Card = ({
                                         </Link>
                                     </li>
                                     <li className="codepen">
-                                        <Link to={`/calendar`}>
+                                        <Link to={`/calendar/${id ? id : 0}`}>
                                             <i className="fa-regular fa-calendar-days"></i>
                                         </Link>
                                     </li>

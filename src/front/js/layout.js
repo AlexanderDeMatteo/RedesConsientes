@@ -22,6 +22,9 @@ import { Sidebarx } from "./component/SideBar";
 import { PerfilUsuarioSeleccionado } from "./pages/Perfil_Usuario_Seleccionado";
 import { MetodosDePago } from "./pages/Metodos_De_Pago";
 import PrivateRoutes from "../utils/PrivateRoutes";
+import ReservedSession from "./pages/ReservedSession";
+import Calendar from "react-calendar";
+
 
 //create your first component
 const Layout = () => {
@@ -51,6 +54,7 @@ const Layout = () => {
               path="/perfil"
               />
              </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
                 <div id="navbar2">
@@ -62,7 +66,8 @@ const Layout = () => {
               </div>}
               path="/perfil/:id"
               />
-
+            </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
                 <div id="navbar2">
@@ -74,6 +79,8 @@ const Layout = () => {
               </div>}
               path="/metodosDePago"
             />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
                 <div id="navbar2">
@@ -85,6 +92,8 @@ const Layout = () => {
               </div>}
               path="/buscador"
             />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
                 <div id="navbar2">
@@ -96,6 +105,21 @@ const Layout = () => {
               </div>}
               path="/calendar"
             />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+            <div className="contenedor">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                  <Calendar_custom/>
+                </div>
+              </div>}
+              path="/calendar/:id/"
+              />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
                 <div id="navbar2">
@@ -107,6 +131,8 @@ const Layout = () => {
               </div>}
               path="/calendar_config"
             />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
                 <div id="navbar2">
@@ -118,6 +144,8 @@ const Layout = () => {
               </div>}
               path="/calendar_today"
             />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
                 <div id="navbar2">
@@ -129,6 +157,20 @@ const Layout = () => {
               </div>}
               path="/sessions"
             />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+            <div className="contenedor">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                  <ReservedSession/>
+                </div>
+              </div>}
+              path="/session/:id/:room"
+              />
+            </Route>
             <Route element={<h1>Not found!</h1>} path={"*"}/>
           </Routes>
           <Footer />

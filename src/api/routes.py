@@ -102,18 +102,18 @@ def handle_user_data():
         user.update(data)
         email = data["email"]
         fpv = data["fpv_number"]
-        city = data["city"]
-        state = data["state"]
-        phone_number = data["phone_number"]
-        cedula = data["cedula"]
+        # city = data["city"]
+        # state = data["state"]
+        # phone_number = data["phone_number"]
+        # cedula = data["cedula"]
         if user_profile_info is None:
             create_profile_info = UserProfileInfo(
                 user_id=current_user,
                 fpv_number=fpv,
-                city=city,
-                state=state,
-                phone_number=phone_number,
-                cedula=cedula,
+                # city=city,
+                # state=state,
+                # phone_number=phone_number,
+                # cedula=cedula,
 
             )
             try:
@@ -324,11 +324,13 @@ def handle_one_strategie(id):
 @api.route("/sessions/today/<int:psychologist_id>", methods=['GET'])
 def handle_sessions_today(psychologist_id):
     today = date.today()
+    print(today)
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%d/%m/%Y")
     print(today)
     sessions = Session.query.filter_by(
         psychologist_id=psychologist_id).where(current_date == Session.date).all()
+    print(session, "aaaaaaaaaaaaaaaaaaaaa")
     response = []
     for session in sessions:
         response.append(session.serialize())

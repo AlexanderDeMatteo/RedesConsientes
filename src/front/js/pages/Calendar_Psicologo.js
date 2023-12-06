@@ -5,8 +5,10 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "@react-spring/web";
 import { Modal } from "../component/Modal.js";
+import { useParams } from "react-router-dom";
 
-export const Calendar_custom = () => {
+
+export const Calendar_Psicologo = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
     const [items, setItems] = useState([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
@@ -14,6 +16,8 @@ export const Calendar_custom = () => {
     const [month, setMonth] = useState()
     const [year, setYear] = useState()
     // const [todayDay, setToDay] = useState(new Date().toString().split(" "));
+
+    const { id } = useParams();
 
     
     const dateValue= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
@@ -30,6 +34,7 @@ export const Calendar_custom = () => {
 
     useEffect(() => {
         actions.getSchedule()
+        actions.handle_user_data_seleccinado(id);
 
     }, [])
 
