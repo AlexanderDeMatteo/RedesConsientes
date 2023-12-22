@@ -8,7 +8,12 @@ export const CalendarToday_custom = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
     const [items, setItems] = useState([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
-
+    const [dayNumber, setDayNumber] = useState(selectedDate[2])
+    const [month, setMonth] = useState(selectedDate[1])
+    const [year, setYear] = useState(selectedDate[3])
+    const [day, setDay] = useState(selectedDate[0])
+    const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
+    console.log(fecha)
     const transition = useTransition(items, {
         from: { x: 0, y: 50, opacity: 0 },
         enter: { x: 0, y: 0, opacity: 1 },
@@ -16,11 +21,8 @@ export const CalendarToday_custom = () => {
     });
 
     useEffect(() => {
-        console.log(store)
-        let pp = store.userData
-        console.log(pp)
-        actions.get_user_dates(1)
-        console.log(actions.get_user_dates(1))
+        // actions.get_client_dates(2)
+        // console.log(get_client_dates(2))
         
 
     }, [])

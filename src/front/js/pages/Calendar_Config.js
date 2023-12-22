@@ -22,17 +22,11 @@ export const CalendarCogif_custom = () => {
     });
 
     useEffect(() => {
-        actions.getSchedule()
-
-
-
 
     }, [store])
 
     function onCreatetimework(event) {
         event.preventDefault();
-        console.log(DatesCreate)
-        console.log(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal)
         actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal)
         setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
         setShowCreate(!showcreate)
@@ -105,10 +99,7 @@ export const CalendarCogif_custom = () => {
                     <div className="col-md-12">
                         <form>
                             <div className="card-body">
-                                {/* <div className="form-check">
-                                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                    <label className="form-check-label" htmlFor="exampleCheck1">Trabaja en Fin de Semana</label>
-                                </div> */}
+                             
                                 <div className="form-group">
                                     <label htmlFor="exampleInputEmail1">Horarios</label>
                                     {/* <input type="email" className="form-control" id="exampleInputEmail1" placeholder="Enter email" /> */}
@@ -173,17 +164,7 @@ export const CalendarCogif_custom = () => {
                                 </div>
 
 
-                                {/* <div className="form-group">
-                                    <label htmlFor="exampleInputPassword1">Password</label>
-                                    <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
-                                </div>a */}
-
-
-
-
-                                {/* <div className="card-footer">
-
-                                </div> */}
+                             
                             </div>
 
 

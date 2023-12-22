@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, UserProfileInfo, PsychAcademicInfo, Schedule, Session, PsychExperiences, PsychTherapeuticStrategies, TodoList, TodoListContainer
+from .models import db, User, UserProfileInfo, PsychAcademicInfo, Session, PsychExperiences, PsychTherapeuticStrategies, TodoList, TodoListContainer
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -14,7 +14,6 @@ def setup_admin(app):
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(UserProfileInfo, db.session))
     admin.add_view(ModelView(PsychAcademicInfo, db.session))
-    admin.add_view(ModelView(Schedule, db.session))
     admin.add_view(ModelView(Session, db.session))
     admin.add_view(ModelView(PsychExperiences, db.session))
     admin.add_view(ModelView(PsychTherapeuticStrategies, db.session))

@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import PsychAcademicInfo, PsychExperiences, PsychTherapeuticStrategies, Schedule, Session, UserProfileInfo, db, User
+from api.models import PsychAcademicInfo, PsychExperiences, PsychTherapeuticStrategies, Session, UserProfileInfo, db, User
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -78,44 +78,42 @@ def handle_login():
 #     print(current_id_user)
 
 
+
 @api.route("/user-data", methods=['GET', 'PUT'])
 @jwt_required()
 def handle_user_data():
     current_user = get_jwt_identity()
     user = User.query.filter_by(id=current_user).one_or_none()
-    user_profile_info = UserProfileInfo.query.filter_by(
-        user_id=current_user).one_or_none()
+    user_profile_info = UserProfileInfo.query.filter_by(user_id = current_user).one_or_none()
     if request.method == 'GET':
         if user is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
         if user_profile_info is None:
             return jsonify(user.serialize()), 200
-        else:
+        else: 
             user_info = user.serialize()
             profile_info = user_profile_info.serialize()
-            full_info = {**user_info, **profile_info}
-            # print(user_profile_info.serialize())
-           # print(full_info, "linea 82")
-            return jsonify(full_info), 200
+            full_info = {**user_info,**profile_info }
+            return jsonify(full_info), 200 
     if request.method == 'PUT':
         data = request.json
+        print(data)
+        #data_decode = json.loads(data)
         user.update(data)
         email = data["email"]
         fpv = data["fpv_number"]
-        # city = data["city"]
-        # state = data["state"]
-        # phone_number = data["phone_number"]
-        # cedula = data["cedula"]
-        if user_profile_info is None:
+        city = data["city"]
+        state = data["state"]
+        phone_number = data["phone_number"]
+        if user_profile_info is None: 
             create_profile_info = UserProfileInfo(
-                user_id=current_user,
-                fpv_number=fpv,
-                # city=city,
-                # state=state,
-                # phone_number=phone_number,
-                # cedula=cedula,
-
-            )
+                user_id = current_user,
+                fpv_number = fpv,
+                city = city,
+                state = state,
+                phone_number = phone_number,
+                
+            ) 
             try:
                 db.session.add(create_profile_info)
                 db.session.commit()
@@ -125,11 +123,8 @@ def handle_user_data():
                 print(error)
                 return jsonify(error), 500
         else:
-            print(data)
             updated = user_profile_info.update(data)
-            # Se actualiza el usuario si existe
-            return jsonify({"message": "Datos actualizados.", "ok": updated}), 200
-
+            return jsonify({"message": "actualizalo", "ok": updated}), 200  
 # Route to update profile picture and load it directly from cloudinary.
 
 # @api.route('/usuario/<int:id>', methods=['GET'])
@@ -174,19 +169,12 @@ def protected():
 def handle_user_psicologo():
     if request.method == 'GET':
         users = User.query.filter_by(is_psicologo=True).all()
-        users_info = UserProfileInfo.query.filter(
-            UserProfileInfo.fpv_number != "null")
+        users_info = UserProfileInfo.query.filter(UserProfileInfo.fpv_number != "null")
         if users is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
         else:
-            users = list(map(
-                lambda user: user.serialize(),
-                users
-            ))
-            users_info = list(map(
-                lambda user: user.serialize(),
-                users_info
-            ))
+            users = list(map(lambda user: user.serialize(),users))
+            users_info = list(map(lambda user: user.serialize(), users_info))
             full_info = []
             for user in users:
                 for info in users_info:
@@ -320,17 +308,33 @@ def handle_one_strategie(id):
         return jsonify({"message": "Strategie does not exist!"}), 404
 # Get Session by ID of the professor, but returns all sessions of the current day. If there's no sessions, will return the same statement
 
+@api.route("/sessions/today/client/<int:client_id>", methods=['GET'])
+def handle_sessions_client_today(client_id):
+    today = date.today()
+    print(today)
+    # Get the current date and stringify to compare with the value on the database
+    current_date = today.strftime("%Y/%m/%d")
+    print(today)
+    sessions = Session.query.filter_by(
+        client_id=client_id).where(current_date == Session.calendar_date).all()
+    response = []
+    for session in sessions:
+        response.append(session.serialize())
+        print(response)
+    if sessions is None:
+        return jsonify({"message": "Not sessions available for this client"}), 401
+    else:
+        return jsonify(response), 201
 
 @api.route("/sessions/today/<int:psychologist_id>", methods=['GET'])
 def handle_sessions_today(psychologist_id):
     today = date.today()
     print(today)
     # Get the current date and stringify to compare with the value on the database
-    current_date = today.strftime("%d/%m/%Y")
+    current_date = today.strftime("%Y/%m/%d")
     print(today)
     sessions = Session.query.filter_by(
-        psychologist_id=psychologist_id).where(current_date == Session.date).all()
-    print(session, "aaaaaaaaaaaaaaaaaaaaa")
+        psychologist_id=psychologist_id).where(current_date == Session.calendar_date).all()
     response = []
     for session in sessions:
         response.append(session.serialize())
@@ -365,11 +369,14 @@ def handle_session_create():
         psychologist = User.query.filter_by(id=current_psychologist).where(
             User.is_psicologo == True).one_or_none()  # Confirma si el usuario actual es psicologo o no
         if psychologist is not None:
+            schedule_data = request.json
+            schedule_data["psychologist_id"] = psychologist.id
+            schedule = Session.create_schedule(schedule_data)
+            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
             room_number = os.urandom(20).hex()
             session_data = request.json
             session_data["psychologist_id"] = psychologist.id
             session_data["room_number"] = room_number
-            print(session_data)
             session = Session.create(session_data)
             if session is not None:
                 return jsonify({"message": "Session created succesfully", }), 201
@@ -418,6 +425,7 @@ def handle_reserved_session(session_id):
         data["client_id"] = user.id
         # actualiza la session y le coloca el id del usuario. tambien cambia el estado de reservacion a true
         reserved = session.reserve_session(data)
+        console.log(data["client_id"])
         if reserved is True:
             return jsonify({"message": "session is reserved"}), 200
         else:
@@ -446,66 +454,70 @@ def handle_unbook_session(session_id):
 
 # Handle the creation of schedules for the sessions of each professor
 
+# @api.route("/schedule/<int:id>", methods=['GET'])
+# @api.route("/schedule", methods=['GET', 'POST'])
+# @jwt_required()
+# def handle_schedule(id=None):
+#     current_psychologist = get_jwt_identity()
+#     psychologist = User.query.filter_by(id=current_psychologist).where(User.is_psicologo == True).one_or_none()
+#     print(psychologist)
+#     if request.method == 'POST':
+#         schedule_data = request.json
+#         schedule_data["psychologist_id"] = psychologist.id
+#         schedule = Schedule.create_schedule(schedule_data)
+#         today = date.today()
+#         print(today)
+#         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+#         if schedule is not None:
+#             return jsonify({"message": "schedule created succesfully"}), 201
+#         return jsonify({"message": "info error"}), 400
+#     elif request.method == 'GET':
+#         if psychologist is not None:
+#             schedules_current_id = Schedule.query.filter_by(psychologist_id=psychologist.id).all()
+#             print(schedules_current_id)
+#             response = []
+#             if schedules_current_id is not None:
+#                 for schedule_single in schedules_current_id:
+#                     response.append(schedule_single.serialize())
+#                 return jsonify(response), 200
+#             else:
+#                 return jsonify({"message": "no schedules"})
+#         else:
+#             schedules = Schedule.query.filter_by(psychologist_id=id).all()
+#             response = [schedule.serialize() for schedule in schedules]
+#             return jsonify(response), 200
 
-@api.route("/schedule", methods=['GET', 'POST'])
-@jwt_required()
-def handle_schedule():
-    current_psychologist = get_jwt_identity()
-    psychologist = User.query.filter_by(id=current_psychologist).where(
-        User.is_psicologo == True).one_or_none()
-    if request.method == 'POST':
-        schedule_data = request.json
-        schedule_data["psychologist_id"] = psychologist.id
-        schedule = Schedule.create_schedule(schedule_data)
-        today = date.today()
-        print(today)
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        if schedule is not None:
-            return jsonify({"message": "schedule created succesfully"}), 201
-        return jsonify({"message": "info error"}), 400
-    elif request.method == 'GET':
-        schedules_current_id = Schedule.query.filter_by(
-            psychologist_id=psychologist.id).all()
-        print(schedules_current_id)
-        response = []
-        if schedules_current_id is not None:
-            for schedule_single in schedules_current_id:
-                response.append(schedule_single.serialize())
-            return jsonify(response), 200
-        else:
-            return jsonify({"message": "no schedules"})
 
-
-@api.route("/schedule-handle/<int:schedule_id>", methods=['DELETE', 'PUT'])
-@jwt_required()
-def handle_modification_schedule(schedule_id):
-    current_psychologist = get_jwt_identity()
-    psychologist = User.query.filter_by(id=current_psychologist).where(
-        User.is_psicologo == True).one_or_none()
-    if request.method == 'DELETE':
-        schedule_to_delete = Schedule.query.filter_by(
-            id=schedule_id).one_or_none()
-        if schedule_to_delete.psychologist_id != psychologist.id:
-            return jsonify({"message": "not the owner of the schedule"}), 402
-        else:
-            if schedule_to_delete is None:
-                return jsonify({"message": "schedule not found"}), 404
-            removed = schedule_to_delete.delete_schedule()
-            if removed == False:
-                return jsonify({"status": False, "message": "something happened"}), 500
-            else:
-                return jsonify({"status": True, "message": "service deleted"}), 204
-    elif request.method == 'PUT':
-        schedule_to_modify = Schedule.query.filter_by(
-            id=schedule_id).one_or_none()
-        if schedule_to_modify.psychologist_id != psychologist.id:
-            return jsonify({"message": "not the owner of the schedule"}), 402
-        data = request.json
-        if schedule_to_modify is not None:
-            modified = schedule_to_modify.update_schedule(data)
-            if modified == True:
-                return jsonify({"message": "schedule modified"}), 200
-            return jsonify({"message": "error"})
+# @api.route("/schedule-handle/<int:schedule_id>", methods=['DELETE', 'PUT'])
+# @jwt_required()
+# def handle_modification_schedule(schedule_id):
+#     current_psychologist = get_jwt_identity()
+#     psychologist = User.query.filter_by(id=current_psychologist).where(
+#         User.is_psicologo == True).one_or_none()
+#     if request.method == 'DELETE':
+#         schedule_to_delete = Schedule.query.filter_by(
+#             id=schedule_id).one_or_none()
+#         if schedule_to_delete.psychologist_id != psychologist.id:
+#             return jsonify({"message": "not the owner of the schedule"}), 402
+#         else:
+#             if schedule_to_delete is None:
+#                 return jsonify({"message": "schedule not found"}), 404
+#             removed = schedule_to_delete.delete_schedule()
+#             if removed == False:
+#                 return jsonify({"status": False, "message": "something happened"}), 500
+#             else:
+#                 return jsonify({"status": True, "message": "service deleted"}), 204
+#     elif request.method == 'PUT':
+#         schedule_to_modify = Schedule.query.filter_by(
+#             id=schedule_id).one_or_none()
+#         if schedule_to_modify.psychologist_id != psychologist.id:
+#             return jsonify({"message": "not the owner of the schedule"}), 402
+#         data = request.json
+#         if schedule_to_modify is not None:
+#             modified = schedule_to_modify.update_schedule(data)
+#             if modified == True:
+#                 return jsonify({"message": "schedule modified"}), 200
+#             return jsonify({"message": "error"})
 
 # @api.route("/refresh", methods=["POST"])
 # @jwt_required(refresh=True)

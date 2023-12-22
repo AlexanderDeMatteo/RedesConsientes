@@ -24,6 +24,7 @@ import { MetodosDePago } from "./pages/Metodos_De_Pago";
 import PrivateRoutes from "../utils/PrivateRoutes";
 import ReservedSession from "./pages/ReservedSession";
 import Calendar from "react-calendar";
+import { Calendar_Psicologo } from "./pages/Calendar_Psicologo";
 
 
 //create your first component
@@ -113,7 +114,7 @@ const Layout = () => {
                   <Sidebarx />
                 </div>
                 <div id="paginaCentral">
-                  <Calendar_custom/>
+                  <Calendar_Psicologo/>
                 </div>
               </div>}
               path="/calendar/:id/"

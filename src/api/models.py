@@ -1,6 +1,7 @@
 from email.policy import default
 from enum import unique
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import or_
 
 db = SQLAlchemy()
 
@@ -18,15 +19,8 @@ class User(db.Model):
     address = db.relationship("UserAddress", backref="user", uselist=False)
     # PaidMethod = db.relationship("UserPaymentMethod", backref="user", uselist=False)
     user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
-    session_ids = db.relationship("Session", primaryjoin="and_(User.id==Session.psychologist_id, " "Session.client_id)",)
-    schedule_id = db.relationship('Schedule', backref='user', uselist=False)
-    # scheduleReserved_id = db.relationship('ScheduleReserved', backref='user', uselist=False)
-    # def __init__(self, name, email, password, is_psicologo):
-    # self.name = name
-    # self.email = email
-    # self.password = password
-    # self.is_active = True
-    # self.is_psicologo = is_psicologo
+    session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id,  User.id == Session.client_id)",)
+    # schedule_id = db.relationship('Schedule', backref='user', uselist=False)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -38,6 +32,7 @@ class User(db.Model):
             "name": self.name,
             "last_name": self.last_name,
             "is_psicologo": self.is_psicologo,
+            "session_ids": self.session_ids,
         }
 
     @ classmethod
@@ -149,8 +144,7 @@ class UserAddress(db.Model):
 
 class UserProfileInfo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        'user.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
     profile_picture = db.Column(db.String(500), unique=False, nullable=True)
     dob = db.Column(db.String(20), nullable=True)
     dni = db.Column(db.String(30), nullable=True)
@@ -253,59 +247,59 @@ class UserProfileInfo(db.Model):
 
 
 
-class Schedule(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    psychologist_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # schedule_reserved_id = db.relationship(
-    #     'ScheduleReserved', backref='schedule', uselist=True)
+# class Schedule(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     psychologist_id = db.Column(
+#         db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     # schedule_reserved_id = db.relationship(
+#     #     'ScheduleReserved', backref='schedule', uselist=True)
 
-    start_time = db.Column(db.String(10), nullable=False, unique=False)
-    end_time = db.Column(db.String(10), nullable=False, unique=False)
-    # session_id = db.relationship(
-    #     "Session", back_populates="schedule", uselist=False)
-    sessions = db.relationship(
-        "Session", back_populates="schedule", uselist=False)
+#     start_time = db.Column(db.String(10), nullable=False, unique=False)
+#     end_time = db.Column(db.String(10), nullable=False, unique=False)
+#     # session_id = db.relationship(
+#     #     "Session", back_populates="schedule", uselist=False)
+#     sessions = db.relationship(
+#         "Session", back_populates="schedule", uselist=False)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "psychologist_id": self.psychologist_id,
-            "start_time": self.start_time,
-            "end_time": self.end_time,
-        }
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "psychologist_id": self.psychologist_id,
+#             "start_time": self.start_time,
+#             "end_time": self.end_time,
+#         }
 
-    @classmethod
-    def create_schedule(cls, schedules):
-        try:
-            new_schedule_data = cls(**schedules)
-            db.session.add(new_schedule_data)
-            db.session.commit()
-            return new_schedule_data
-        except Exception as error:
-            db.session.rollback()
-            return error
+#     @classmethod
+#     def create_schedule(cls, schedules):
+#         try:
+#             new_schedule_data = cls(**schedules)
+#             db.session.add(new_schedule_data)
+#             db.session.commit()
+#             return new_schedule_data
+#         except Exception as error:
+#             db.session.rollback()
+#             return error
 
-    def delete_schedule(self):
-        db.session.delete(self)
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
+#     def delete_schedule(self):
+#         db.session.delete(self)
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             return False
 
-    def update_schedule(self, schedule):
-        if "start_time" in schedule:
-            self.start_time = schedule["start_time"]
-        if "end_time" in schedule:
-            self.end_time = schedule["end_time"]
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
+#     def update_schedule(self, schedule):
+#         if "start_time" in schedule:
+#             self.start_time = schedule["start_time"]
+#         if "end_time" in schedule:
+#             self.end_time = schedule["end_time"]
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             return False
 
 
 class Session(db.Model):
@@ -313,9 +307,11 @@ class Session(db.Model):
     psychologist_id = db.Column(
         db.Integer, db.ForeignKey('user.id'), nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    schedule_id = db.Column(db.ForeignKey('schedule.id'),
-                            nullable=False, unique=False)
-    schedule = db.relationship("Schedule", back_populates="sessions")
+    # schedule_id = db.Column(db.ForeignKey('schedule.id'),
+    #                         nullable=False, unique=False)
+    # schedule = db.relationship("Schedule", back_populates="sessions")
+    start_time = db.Column(db.String(10), nullable=False, unique=False)
+    end_time = db.Column(db.String(10), nullable=False, unique=False)
     reserved = db.Column(db.Boolean(), nullable=True, default=False)
     calendar_date = db.Column(db.Date, nullable=False, unique=False)
     room_number = db.Column(db.String(200), nullable=False, unique=True)
@@ -328,8 +324,22 @@ class Session(db.Model):
             "client_id": self.client_id,
             "reserved": self.reserved,
             "calendar_date": self.calendar_date,
-            "room_number": self.room_number
+            "room_number": self.room_number,
+            "start_time": self.start_time,
+            "end_time": self.end_time,
+
         }
+    
+    @classmethod
+    def create_schedule(cls, schedules):
+        try:
+            new_schedule_data = cls(**schedules)
+            db.session.add(new_schedule_data)
+            db.session.commit()
+            return new_schedule_data
+        except Exception as error:
+            db.session.rollback()
+            return error
 
     # Method to create a new Session
     @classmethod
