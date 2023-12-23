@@ -25,18 +25,16 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     });
 
     useEffect(() => {
-        // actions.getPsicologiScheduleDay(1, fecha)
+        actions.getPsicologiScheduleDay(1, fecha)
 
-    }, [store])
+    }, [fecha])
 
-    function onCreatetimework(event) {
+    async function onCreatetimework(event) {
         event.preventDefault();
-        console.log(DatesCreate)
-        console.log(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal)
-        actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
+        await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
         setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
         setShowCreate(!showcreate)
-        actions.getPsicologiScheduleDay(1)
+        await actions.getPsicologiScheduleDay(1, fecha)
     }
     function deleteDate(event) {
         event.preventDefault();
@@ -65,9 +63,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
 
         setDatesCreate(prevFormData => {
-            if(TIMEinicio > 12){
-                console.log("el numero no es valido")
-            }
             return {
                 ...prevFormData,
                 ['TIMEinicio']: value === "1" ? 'am' : 'pm'
@@ -81,9 +76,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
 
         setDatesCreate(prevFormData => {
-            if(TIMEfinal > 12){
-                console.log("el numero no es valido")
-            }
             return {
                 ...prevFormData,
                 ['TIMEfinal']: value === "1" ? 'am' : 'pm'
@@ -182,7 +174,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                         </select>
                                                     </div>
                                                     <div className="col-5">
-                                                        <button className="btn btn-primary button_create_date" >Crear Horario</button>
+                                                        <button className="btn btn-primary button_create_date" onClick={onCreatetimework} >Crear Horario</button>
                                                     </div>
 
                                                 </div>
@@ -205,7 +197,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onClick={onCreateSession}>Guardar</button>
+                            <button type="button" class="btn btn-primary" >Guardar</button>
                         </div>
                     </div>
                 </div>

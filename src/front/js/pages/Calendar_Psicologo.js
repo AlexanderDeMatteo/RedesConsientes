@@ -57,10 +57,10 @@ export const Calendar_Psicologo = () => {
     const calendar_date= selectedDate[3] + "/" + selectedDate[1] + "/" + selectedDate[2]
     const calendar_date2= selectedDate[2] + "/" + selectedDate[1] + "/" + selectedDate[3]
 
-    function onCreateSession(event) {
+    async function onCreateSession(event) {
         event.preventDefault();
-        actions.handle_reserved(event.target.name)
-        actions.getPsicologiScheduleDay(id, fecha)
+        await actions.handle_reserved(event.target.name)
+        await actions.getPsicologiScheduleDay(id, fecha)
     }
 
 

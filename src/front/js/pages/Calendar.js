@@ -38,7 +38,7 @@ export const Calendar_custom = () => {
 
     
     useEffect(() => {
-        actions.getPsicologiScheduleDay(1, fecha)
+    actions.getPsicologiScheduleDay(1, fecha)
         // console.log(masculinos)
     }, [selectedDate])
 

@@ -314,7 +314,7 @@ def handle_sessions_client_today(client_id):
     print(today)
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
-    print(today)
+    print(current_date)
     sessions = Session.query.filter_by(
         client_id=client_id).where(current_date == Session.calendar_date).all()
     response = []
@@ -425,7 +425,8 @@ def handle_reserved_session(session_id):
         data["client_id"] = user.id
         # actualiza la session y le coloca el id del usuario. tambien cambia el estado de reservacion a true
         reserved = session.reserve_session(data)
-        console.log(data["client_id"])
+        print(data)
+        print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
         if reserved is True:
             return jsonify({"message": "session is reserved"}), 200
         else:

@@ -3,7 +3,11 @@ import "../../styles/custom_calendar_today.css"
 import { Context } from "../store/appContext.js";
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "react-spring";
+import { useLocation } from "react-router-dom";
 import Calendar from 'react-calendar';
+// import { useParams } from "react-router-dom";
+
+
 export const CalendarToday_custom = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
@@ -13,19 +17,25 @@ export const CalendarToday_custom = () => {
     const [year, setYear] = useState(selectedDate[3])
     const [day, setDay] = useState(selectedDate[0])
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
-    console.log(fecha)
+    // const {id} = useParams()
+  
     const transition = useTransition(items, {
         from: { x: 0, y: 50, opacity: 0 },
         enter: { x: 0, y: 0, opacity: 1 },
 
     });
 
+//     ids=store.userData.id
+//    console.log()
+
+
+
     useEffect(() => {
-        // actions.get_client_dates(2)
-        // console.log(get_client_dates(2))
+        actions.getPsicologiScheduleDay(1, fecha)
         
 
     }, [])
+
 
 
     return (

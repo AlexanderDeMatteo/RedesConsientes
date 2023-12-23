@@ -333,6 +333,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			get_today_psicologo_dates: async (id) => {
+				let response = await fetch(`${API_URL}/sessions/today/${id}`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				
+				});
+				console.log(response)
+				if (response.ok) {
+					let body = await response.json()
+					console.log(body)
+					setStore({ clientScheduleData: body })
+
+				}
+			},
 
 			handle_edit: (data, prop) => {
 				let store = getStore()

@@ -1,18 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/sidebar2.css";
 import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 
 export const Sidebarx = () => {
-
     const [contentPerfil, setContentPerfil] = useState(false)
     const [contentAdmPaciente, setContentAdmPaciente] = useState(false)
     const [contentadmCuenta, setContentadmCuenta] = useState(false)
     const [contentNavega, setContentNavega] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
-
+    const { actions, store } = useContext(Context)
+    const navigate = useNavigate();
+    console.log(store)
     const toggle = () => setIsOpen(!isOpen)
 
+    // const guardarId = async () => {
+    //     try {
+    //         // Agrego el await antes del Axios
+    //         let response = await fetch(`${API_URL}/api/user-data`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${getAuthToken("token")}`
+    //             },
+    //             // body: JSON.stringify([])
+    //         });
+    //         console.log(response)
+    //          //Asegurate si viene en response o response.data y usa el correspondiente, axios generalmente tiene .data
+    //         if(response.ok){
+    //             let body = response.json()
+    //             console.log(body)
+    //             console.log("aaaaaaaaaaaaaaaaaaaaaa")
+    //           navigate(`/calendar_today/${id}/`, { state: {id: body.id} });
+    //           // o este otro
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+    
+    const id = {
+    id: store.userData.id
+    };
+    console.log(id)
+      
+    function handleClick() {
+    navigate(`/calendar_today/${id.id}`, { state: { userData: id } });
+    }
+      
+    // return (
+    // <div>
+    // <h1>Componente 2</h1>
+    // <button type="button" onClick={handleClick}>
+    //     Ir a Componente 1 pasando objeto
+    // </button>
+    // </div>
+    // );
+      
+    
+
+    useEffect(() => {
+
+    }, [])
+
+    useEffect
     // let sidebar = document.querySelector(".sidebar");
     // let closeBtn = document.querySelector("#btn");
 
@@ -57,9 +109,10 @@ export const Sidebarx = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="/calendar_today">
+                                <a>
                                     <i class="fa-solid fa-book"></i>
-                                    <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span>
+                                    {/* <span className="links_name" onClick={handleClick()} style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span> */}
+                                    { contentPerfil == true && isOpen == true ? <span className="links_name" onClick={handleClick()} style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span> :<span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span>}
                                 </a>
                             </li>
                             <li>
