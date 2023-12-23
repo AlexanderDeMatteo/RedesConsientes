@@ -61,11 +61,10 @@ export const Calendar_custom = () => {
     const calendar_date= selectedDate[3] + "/" + selectedDate[1] + "/" + selectedDate[2]
     const calendar_date2= selectedDate[2] + "/" + selectedDate[1] + "/" + selectedDate[3]
 
-    function onCreateSession(event) {
+    async function onCreateSession(event) {
         event.preventDefault();
-        actions.createSession(event.target.name, calendar_date)
-        actions.getSchedule()
-        actions.handle_user_data_schedule(id)
+        await actions.handle_reserved(event.target.name)
+        await actions.getPsicologiScheduleDay(id, fecha)
     }
 
 
@@ -127,11 +126,16 @@ export const Calendar_custom = () => {
                                                 {transition((style, item) =>
                                                     item ? <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`} ><div className="card-header">
                                                         <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
-                                                        {/* <div className="card-tools button-agend">
-                                                            <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a>
-                                                        </div> */}
+                                                        {!store.userData.is_psicologo ? <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a> : ""}
+                                                        
                                                         {console.log(item.id)}
                                                     </div> </animated.div> : '')}
+
+
+
+
+
+
 
 
                                             </div>

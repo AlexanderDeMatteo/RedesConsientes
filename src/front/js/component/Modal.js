@@ -34,12 +34,12 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
         setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
         setShowCreate(!showcreate)
-        await actions.getPsicologiScheduleDay(1, fecha)
+        await actions.getPsicologiScheduleDay(id, fecha)
     }
     function deleteDate(event) {
         event.preventDefault();
         actions.deleteSchedule(event.target.name)
-        actions.getPsicologiScheduleDay(1, fecha)
+        actions.getPsicologiScheduleDay(id, fecha)
     }
     function showcreatedates(event) {
         event.preventDefault();
@@ -88,7 +88,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         // console.log(event.target.name)d
         actions.createSession(event.target.name, calendar_date2)
         console.log(store.psicologySession)
-        actions.getPsicologiScheduleDay(1, fecha)
+        actions.getPsicologiScheduleDay(id, fecha)
     }
 
 
