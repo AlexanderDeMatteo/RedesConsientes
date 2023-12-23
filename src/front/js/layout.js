@@ -143,7 +143,7 @@ const Layout = () => {
                   <CalendarToday_custom />
                 </div>
               </div>}
-              path="/calendar_today"
+              path="/calendar_today/:id"
             />
             </Route>
             <Route element={<PrivateRoutes/>}>

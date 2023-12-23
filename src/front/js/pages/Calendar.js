@@ -30,7 +30,7 @@ export const Calendar_custom = () => {
     console.log(month)
     console.log(year)
     
-    const transition = useTransition(store.psicologySession, {
+    const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },
         enter: { x: 0, y: 0, opacity: 1 },
 

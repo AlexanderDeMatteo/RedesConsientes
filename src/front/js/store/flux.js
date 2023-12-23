@@ -16,7 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userFpvData: {},
 			userScheduleData:{},
 			userSession:{},
-			psicologySession:{},
+			scheduleSession:{},
 			clientScheduleData:{}
 		},
 
@@ -74,24 +74,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			getSchedule: async () => {
-				const store = getStore()
-				let response = await fetch(`${API_URL}/api/schedule`, {
-					method: 'GET',
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${getAuthToken("token")}`
-					},
-				});
-				if (response.ok) {
-					let body = await response.json()
-					setStore({
-						...store,
-						userTime: body
-					})
-					// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
-				}
-			},
+			// getSchedule: async () => {
+			// 	const store = getStore()
+			// 	let response = await fetch(`${API_URL}/api/schedule`, {
+			// 		method: 'GET',
+			// 		headers: {
+			// 			"Content-Type": "application/json",
+			// 			Authorization: `Bearer ${getAuthToken("token")}`
+			// 		},
+			// 	});
+			// 	if (response.ok) {
+			// 		let body = await response.json()
+			// 		setStore({
+			// 			...store,
+			// 			userTime: body
+			// 		})
+			// 		// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
+			// 	}
+			// },
 
 			getPsicologiSchedule: async (id) => {
 				const store = getStore()
@@ -129,7 +129,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 					let schedule = body.filter(persona => persona.calendar_date == date)
 					setStore({
 						...store,
-						psicologySession: schedule
+						scheduleSession: schedule
+					})
+					// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
+				}
+			},
+
+			getPsicologiScheduleReservedDay: async (id, fecha) => {
+				const store = getStore()
+				console.log(id)
+				let response = await fetch(`${API_URL}/api/sessions/${id}`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				if (response.ok) {
+					let body = await response.json()
+					console.log(id)
+					let date = `${fecha} 00:00:00 GMT`
+					let schedule = body.filter(persona => persona.calendar_date == date && persona.reserved == true)
+					setStore({
+						...store,
+						scheduleSession: schedule
 					})
 					// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}

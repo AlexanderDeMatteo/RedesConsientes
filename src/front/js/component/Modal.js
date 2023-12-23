@@ -14,7 +14,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
     // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
 
-    const transition = useTransition(store.psicologySession, {
+    const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },
         enter: { x: 0, y: 0, opacity: 1 },
     });

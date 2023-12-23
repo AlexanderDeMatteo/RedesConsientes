@@ -3,7 +3,7 @@ import "../../styles/custom_calendar_today.css"
 import { Context } from "../store/appContext.js";
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "react-spring";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Calendar from 'react-calendar';
 // import { useParams } from "react-router-dom";
 
@@ -11,27 +11,28 @@ import Calendar from 'react-calendar';
 export const CalendarToday_custom = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
-    const [items, setItems] = useState([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
+    const [items, setItems] = useState([store.scheduleSession]);
     const [dayNumber, setDayNumber] = useState(selectedDate[2])
     const [month, setMonth] = useState(selectedDate[1])
     const [year, setYear] = useState(selectedDate[3])
     const [day, setDay] = useState(selectedDate[0])
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
     // const {id} = useParams()
-  
-    const transition = useTransition(items, {
+    const {id} = useParams()
+    
+    const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },
         enter: { x: 0, y: 0, opacity: 1 },
 
     });
-
+    console.log(fecha)
 //     ids=store.userData.id
 //    console.log()
 
-
+    console.log(items)
 
     useEffect(() => {
-        actions.getPsicologiScheduleDay(1, fecha)
+        actions.getPsicologiScheduleReservedDay(1, fecha)
         
 
     }, [])
@@ -72,19 +73,19 @@ export const CalendarToday_custom = () => {
                                                         <div className="card-header header_custom">
                                                             <h3 className="card-title title_custom">Cita</h3>
                                                             <div className="card-tools">
-                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">Mas Informacion
+                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">{item.calendar_date}
                                                                 </a>
                                                             </div>
 
                                                         </div>
                                                     </div>
-                                                    <span className="info-box-number">{item.text}</span>
+                                                    <span className="info-box-number">Hora: {item.start_time} - {item.end_time}</span>
                                                     {/* <div className="progress">
                                             <div className="progress-bar" ></div>
                                         </div> */}
-                                                    <span className="progress-description">
-                                                        70% Increase in 30 Days
-                                                    </span>
+                                                    <a href={`/session/${id}/${item.room_number}`} className="progress-description">
+                                                    Ir a Session
+                                                    </a>
                                                 </div>
 
                                             </div>
@@ -96,16 +97,12 @@ export const CalendarToday_custom = () => {
                             <div class="col-md-5 custom_card">
                                 <div class="card card-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Cita</h3>
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                                            </button>
-                                        </div>
+                                        <h3 class="card-title">Frase del Dia</h3>
 
                                     </div>
 
                                     <div class="card-body">
-                                        Texto
+                                        La frase del Dia....
                                     </div>
 
                                 </div>
