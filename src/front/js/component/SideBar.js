@@ -46,7 +46,7 @@ export const Sidebarx = () => {
     console.log(id)
       
     function handleClick() {
-    navigate(`/calendar_today/${id.id}`, { state: { userData: id } });
+    navigate(`/calendar_today/${store.userData.id}`);
     }
       
     // return (
@@ -61,7 +61,7 @@ export const Sidebarx = () => {
     
 
     useEffect(() => {
-
+        actions.handle_user_data()
     }, [])
 
     useEffect
@@ -90,6 +90,7 @@ export const Sidebarx = () => {
                 </div>
                 <ul className="nav-list">
                     <li>
+                        
                         <a onClick={() => setContentPerfil(!contentPerfil)}>
                             <i class="fa-regular fa-user"></i>
                             <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: isOpen ? "block" : "none" }} > Personal </span>
@@ -108,11 +109,11 @@ export const Sidebarx = () => {
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Sesiones Online</span>
                                 </a>
                             </li>
-                            <li>
+                            <li onClick={() => handleClick()} >
                                 <a>
                                     <i class="fa-solid fa-book"></i>
-                                    {/* <span className="links_name" onClick={handleClick()} style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span> */}
-                                    { contentPerfil == true && isOpen == true ? <span className="links_name" onClick={handleClick()} style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span> :<span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span>}
+                                    <span className="links_name"  style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span>
+                                    {/* { contentPerfil == true && isOpen == true ? <span className="links_name" onClick={handleClick()} style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span> :<span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span>} */}
                                 </a>
                             </li>
                             <li>
