@@ -6,6 +6,8 @@ import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "@react-spring/web";
 import { Modal } from "../component/Modal.js";
 import { useParams } from "react-router-dom";
+
+
 export const Calendar_custom = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
@@ -16,7 +18,7 @@ export const Calendar_custom = () => {
     const [day, setDay] = useState(selectedDate[0])
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
     // const [todayDay, setToDay] = useState(new Date().toString().split(" "));
-    const {id} = useParams()
+    const {id} = useParams(0)
     
     const dateValue= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
     const startDate= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
@@ -39,9 +41,10 @@ export const Calendar_custom = () => {
 
     
     useEffect(() => {
-    actions.getPsicologiScheduleDay(id, fecha)
+    actions.getPsicologiScheduleDay(0, fecha)
         // console.log(masculinos)
-    }, [selectedDate])
+        console.log(id)
+    }, [])
 
     function onChangeCalendar(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);

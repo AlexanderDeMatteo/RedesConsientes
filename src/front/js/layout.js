@@ -94,7 +94,7 @@ const Layout = () => {
               path="/buscador"
             />
             </Route>
-            <Route element={<PrivateRoutes/>}>
+            {/* <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
                 <div id="navbar2">
@@ -106,7 +106,7 @@ const Layout = () => {
               </div>}
               path="/calendar"
             />
-            </Route>
+            </Route> */}
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
@@ -114,7 +114,7 @@ const Layout = () => {
                   <Sidebarx />
                 </div>
                 <div id="paginaCentral">
-                  <Calendar_Psicologo/>
+                  <Calendar_custom/>
                 </div>
               </div>}
               path="/calendar/:id"

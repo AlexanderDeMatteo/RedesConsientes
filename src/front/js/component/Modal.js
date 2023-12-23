@@ -2,7 +2,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import "../../styles/custom_calendar_config.css"
 import { Context } from "../store/appContext.js";
-
+import { useParams } from "react-router-dom";
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "react-spring";
 
@@ -10,7 +10,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const { actions, store } = useContext(Context)
     const [showcreate, setShowCreate] = useState(false);
     const [DatesCreate, setDatesCreate] = useState({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' });
-
+    const {id} = useParams(0)
 
     // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
 
@@ -25,7 +25,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     });
 
     useEffect(() => {
-        actions.getPsicologiScheduleDay(1, fecha)
+        actions.getPsicologiScheduleDay(id, fecha)
 
     }, [fecha])
 

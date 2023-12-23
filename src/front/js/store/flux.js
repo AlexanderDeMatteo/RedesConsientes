@@ -112,10 +112,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			getPsicologiScheduleDay: async (id, fecha) => {
+			getPsicologiScheduleDay: async (ids, fecha) => {
 				const store = getStore()
-				console.log(id)
-				let response = await fetch(`${API_URL}/api/sessions/${id}`, {
+				console.log(ids)
+				let response = await fetch(`${API_URL}/api/sessions/${ids}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -124,9 +124,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(id)
+					console.log(ids)
 					let date = `${fecha} 00:00:00 GMT`
 					let schedule = body.filter(persona => persona.calendar_date == date)
+					console.log(body)
 					setStore({
 						...store,
 						scheduleSession: schedule
