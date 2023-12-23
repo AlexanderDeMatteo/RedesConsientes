@@ -41,14 +41,18 @@ export const Sidebarx = () => {
     // };
     
     const id = {
-    id: store.userData.id
+        id: store.userData.id
     };
     console.log(id)
-      
-    function handleClick() {
-    navigate(`/calendar_today/${store.userData.id}`);
+    let calendar = "calendar"
+    let calendar_today = "calendar_today"
+    
+    function handleClick(a) {
+    navigate(`/${a}/${store.userData.id}`);
+    console.log(a)
     }
-      
+    
+    
     // return (
     // <div>
     // <h1>Componente 2</h1>
@@ -57,7 +61,6 @@ export const Sidebarx = () => {
     // </button>
     // </div>
     // );
-      
     
 
     useEffect(() => {
@@ -109,7 +112,7 @@ export const Sidebarx = () => {
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Sesiones Online</span>
                                 </a>
                             </li>
-                            <li onClick={() => handleClick()} >
+                            <li onClick={() => handleClick(calendar_today)} >
                                 <a>
                                     <i class="fa-solid fa-book"></i>
                                     <span className="links_name"  style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Agenda del dia</span>
@@ -137,8 +140,8 @@ export const Sidebarx = () => {
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Expedientes</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="/calendar">
+                            <li onClick={() => handleClick(calendar)} >
+                                <a>
                                     <i class="fa-solid fa-book-open"></i>
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Manejo de Agenda</span>
                                 </a>

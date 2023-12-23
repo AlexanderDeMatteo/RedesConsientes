@@ -5,7 +5,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "@react-spring/web";
 import { Modal } from "../component/Modal.js";
-
+import { useParams } from "react-router-dom";
 export const Calendar_custom = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
@@ -16,7 +16,7 @@ export const Calendar_custom = () => {
     const [day, setDay] = useState(selectedDate[0])
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
     // const [todayDay, setToDay] = useState(new Date().toString().split(" "));
-
+    const {id} = useParams()
     
     const dateValue= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
     const startDate= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
@@ -29,6 +29,7 @@ export const Calendar_custom = () => {
     console.log(day)
     console.log(month)
     console.log(year)
+    console.log(id)
     
     const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },
@@ -38,7 +39,7 @@ export const Calendar_custom = () => {
 
     
     useEffect(() => {
-    actions.getPsicologiScheduleDay(1, fecha)
+    actions.getPsicologiScheduleDay(id, fecha)
         // console.log(masculinos)
     }, [selectedDate])
 

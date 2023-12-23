@@ -32,7 +32,7 @@ export const CalendarToday_custom = () => {
     console.log(items)
 
     useEffect(() => {
-        actions.getPsicologiScheduleReservedDay(1, fecha)
+        actions.getPsicologiScheduleReservedDay(id, fecha)
         
 
     }, [])

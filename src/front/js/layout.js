@@ -117,7 +117,7 @@ const Layout = () => {
                   <Calendar_Psicologo/>
                 </div>
               </div>}
-              path="/calendar/:id/"
+              path="/calendar/:id"
               />
             </Route>
             <Route element={<PrivateRoutes/>}>
