@@ -123,4 +123,22 @@
   
     color: white;
   }
+
+  .react-timerange-picker__wrapper{
+    display: flex;
+    color: black;
+  }
   
+  .react-time-picker__wrapper{
+    display: flex;
+    color: black;
+    border-radius: 0.25em;
+    border: 1px solid #385bfc !important;
+    background-color: white;
+  }
+
+  .react-time-picker__wrapper input{
+    width: 25px !important;
+    height: 35px;
+    /* background-color: white; */
+  }

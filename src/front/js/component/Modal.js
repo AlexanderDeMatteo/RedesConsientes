@@ -4,13 +4,24 @@ import "../../styles/custom_calendar_config.css"
 import { Context } from "../store/appContext.js";
 import { useParams } from "react-router-dom";
 import 'react-calendar/dist/Calendar.css';
+import TimeRangePicker from '@wojtekmaj/react-timerange-picker'
 import { useTransition, animated } from "react-spring";
+import '@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css';
+// import 'react-clock/dist/Clock.css';
+import TimePicker from 'react-time-picker'
+import 'react-time-picker/dist/TimePicker.css';
 
 export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const { actions, store } = useContext(Context)
     const [showcreate, setShowCreate] = useState(false);
     const [DatesCreate, setDatesCreate] = useState({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' });
     const {id} = useParams(0)
+    const [time, setTime] = useState(["00:00", "00:00"])
+    const [timeInicio, setTimeInicio] = useState("12:00")
+    const [amPmInicio, setAmPmInicio] = useState()
+    const [timeFinal, setTimeFinal] = useState("12:00")
+    const [amPmFinal, setAmPmFinal] = useState()
+
 
     // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
 
@@ -31,7 +42,15 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
     async function onCreatetimework(event) {
         event.preventDefault();
-        await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
+        let elemento1 = timeInicio.replace(":","" )
+        let elemento2 = timeFinal.replace(":","" )
+        
+        if(elemento2 >= elemento1 && elemento2 >= elemento1 + 45){
+            alert("hola")
+        }
+        
+        // await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
+        await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date )
         setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
         setShowCreate(!showcreate)
         await actions.getPsicologiScheduleDay(id, fecha)
@@ -89,6 +108,41 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         actions.createSession(event.target.name, calendar_date2)
         console.log(store.psicologySession)
         actions.getPsicologiScheduleDay(id, fecha)
+    }
+
+    function onChangeTime(event) {
+        // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
+        setTime(event)
+        setAmPm(event)
+        console.log(amPm)
+        console.log(time)
+    }
+    function onChangeTimeInicio(event) {
+        // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
+        setTimeInicio(event)
+        let elemento1 = timeInicio.replace(":","" )
+        console.log(elemento1)
+        if(elemento1 > 1159){
+            setAmPmInicio("PM")
+        }
+        else{
+            setAmPmInicio("AM")
+        }
+        console.log(amPmInicio)
+    }
+    function onChangeTimeFinal(event) {
+        // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
+        setTimeFinal(event)
+        let elemento2 = timeFinal.replace(":","" )
+        console.log(elemento2)
+        if(elemento2 > 1159){
+            setAmPmFinal("PM")
+        }
+        else{
+            setAmPmFinal("AM")
+        }
+        console.log(amPmFinal)
+        console.log(timeFinal)
     }
 
 
@@ -175,6 +229,32 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                     </div>
                                                     <div className="col-5">
                                                         <button className="btn btn-primary button_create_date" onClick={onCreatetimework} >Crear Horario</button>
+                                                    </div>
+                                                    <div className="">
+                                                    <TimeRangePicker
+                                                        onChange={onChangeTime}
+                                                        value={time}
+                                                        clockIcon={null}
+                                                        
+                                                    />
+                                                    </div>
+                                                    <div className="row">
+                                                        <div>
+                                                            <p>Hora de inicio</p>
+                                                            <TimePicker 
+                                                            onChange={onChangeTimeInicio}
+                                                            clockIcon={null}
+                                                            value={timeInicio}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p>Hora de cierre</p>
+                                                            <TimePicker
+                                                            onChange={onChangeTimeFinal}
+                                                            clockIcon={null}
+                                                            value={timeFinal}
+                                                            />
+                                                        </div>
                                                     </div>
 
                                                 </div>
