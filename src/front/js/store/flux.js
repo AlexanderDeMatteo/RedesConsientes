@@ -114,7 +114,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getPsicologiScheduleDay: async (ids, fecha) => {
 				const store = getStore()
-				console.log(ids)
+			
 				let response = await fetch(`${API_URL}/api/sessions/${ids}`, {
 					method: 'GET',
 					headers: {
@@ -124,10 +124,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(ids)
 					let date = `${fecha} 00:00:00 GMT`
 					let schedule = body.filter(persona => persona.calendar_date == date)
-					console.log(body)
 					setStore({
 						...store,
 						scheduleSession: schedule
@@ -138,7 +136,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getPsicologiScheduleReservedDay: async (id, fecha) => {
 				const store = getStore()
-				console.log(id)
 				let response = await fetch(`${API_URL}/api/sessions/${id}`, {
 					method: 'GET',
 					headers: {
@@ -148,7 +145,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(id)
 					let date = `${fecha} 00:00:00 GMT`
 					let schedule = body.filter(persona => persona.calendar_date == date && persona.reserved == true)
 					setStore({
@@ -161,7 +157,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			deleteSchedule: async (data) => {
 				const store = getStore()
-				console.log(data)
 				let response = await fetch(`${API_URL}/api/schedule-handle/` + data, {
 					method: 'DELETE',
 					headers: {
@@ -220,7 +215,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					let body = await response.json()
 					let dataFiltada = body.filter((data) => data.id == usuario)
 					let nuevaData = (Object.assign({}, ...dataFiltada));
-					console.log(nuevaData)
 					setStore({ userScheduleData: nuevaData })
 
 
@@ -230,7 +224,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			handle_reserved: async (id) => {
-				console.log(id)
 				let response = await fetch(`${API_URL}/api/session-reserved/${id}`, {
 					method: 'PUT',
 					headers: {
@@ -277,7 +270,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (response.ok) {
 					let body = await response.json()
 					setStore({ userData: body })
-					console.log(body)
 
 				}
 			},
@@ -295,7 +287,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					let body = await response.json()
 					let dataFiltada = body.filter((data) => data.id == usuario)
 					let nuevaData = (Object.assign({}, ...dataFiltada));
-					console.log(nuevaData)
 					setStore({ userDataSelecionado: nuevaData })
 
 
@@ -314,7 +305,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
 					setStore({
 						...store,
 						userPsicologos: body
@@ -348,10 +338,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				
 				});
-				console.log(response)
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
 					setStore({ clientScheduleData: body })
 
 				}
@@ -366,10 +354,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				
 				});
-				console.log(response)
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
 					setStore({ clientScheduleData: body })
 
 				}
@@ -409,7 +395,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 
 				if (response.ok) {
-					console.log(data)
 					if (response.status == 200) {
 						let body = await response.json()
 						return true;

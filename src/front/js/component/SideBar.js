@@ -12,7 +12,6 @@ export const Sidebarx = () => {
     const [isOpen, setIsOpen] = useState(false)
     const { actions, store } = useContext(Context)
     const navigate = useNavigate();
-    console.log(store)
     const toggle = () => setIsOpen(!isOpen)
 
     // const guardarId = async () => {
@@ -43,13 +42,11 @@ export const Sidebarx = () => {
     const id = {
         id: store.userData.id
     };
-    console.log(id)
     let calendar = "calendar"
     let calendar_today = "calendar_today"
     
     function handleClick(a) {
     navigate(`/${a}/${store.userData.id}`);
-    console.log(a)
     }
     
     

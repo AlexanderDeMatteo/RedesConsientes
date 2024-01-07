@@ -25,11 +25,10 @@ export const CalendarToday_custom = () => {
         enter: { x: 0, y: 0, opacity: 1 },
 
     });
-    console.log(fecha)
 //     ids=store.userData.id
 //    console.log()
 
-    console.log(items)
+
 
     useEffect(() => {
         actions.getPsicologiScheduleReservedDay(id, fecha)

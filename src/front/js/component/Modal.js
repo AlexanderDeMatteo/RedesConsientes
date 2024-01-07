@@ -1,6 +1,6 @@
 
 import React, { useState, useContext, useEffect, useRef } from "react";
-import "../../styles/custom_calendar_config.css"
+// import "../../styles/custom_calendar_config.css"
 import { Context } from "../store/appContext.js";
 import { useParams } from "react-router-dom";
 import 'react-calendar/dist/Calendar.css';
@@ -10,6 +10,7 @@ import '@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css';
 // import 'react-clock/dist/Clock.css';
 import TimePicker from 'react-time-picker'
 import 'react-time-picker/dist/TimePicker.css';
+import "../../styles/modal.css";
 
 export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const { actions, store } = useContext(Context)
@@ -18,9 +19,9 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const {id} = useParams(0)
     const [time, setTime] = useState(["00:00", "00:00"])
     const [timeInicio, setTimeInicio] = useState("12:00")
-    const [amPmInicio, setAmPmInicio] = useState()
+    const [amPmInicio, setAmPmInicio] = useState("PM")
     const [timeFinal, setTimeFinal] = useState("12:00")
-    const [amPmFinal, setAmPmFinal] = useState()
+    const [amPmFinal, setAmPmFinal] = useState("PM")
 
 
     // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
@@ -40,20 +41,37 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
     }, [fecha])
 
+    function range(start, stop=undefined, step=1) {
+        const startArray = stop  === undefined ? 0 : start;
+        const stopArray = stop  === undefined ? start : stop;
+        return Array.from({ length: (stopArray - startArray) / step + 1}, (_, i) => startArray + (i * step));
+    }
+
     async function onCreatetimework(event) {
         event.preventDefault();
-        let elemento1 = timeInicio.replace(":","" )
-        let elemento2 = timeFinal.replace(":","" )
-        
-        if(elemento2 >= elemento1 && elemento2 >= elemento1 + 45){
-            alert("hola")
+        let elemento1 = parseInt(timeInicio.replace(":","" ))
+        let elemento2 = parseInt(timeFinal.replace(":","" ))
+        let duracionMin= 45
+        console.log(elemento1)
+        console.log(amPmInicio)
+        console.log(elemento2)
+        console.log(amPmFinal)
+        console.log(elemento2 > elemento1 && elemento2 >= elemento1 + 45)
+        console.log((elemento1 + duracionMin))
+        if(elemento2 >= elemento1 && elemento2 >= (elemento1 + duracionMin)){
+            alert("horario permitido")
+            range(elemento1,elemento2)
+            console.log(range(elemento1,elemento2))
+            // await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
+            await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date )
+            setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
+            setShowCreate(!showcreate)
+            await actions.getPsicologiScheduleDay(id, fecha)
+        }
+        else{
+            alert("error en el horario")
         }
         
-        // await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
-        await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date )
-        setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
-        setShowCreate(!showcreate)
-        await actions.getPsicologiScheduleDay(id, fecha)
     }
     function deleteDate(event) {
         event.preventDefault();
@@ -122,7 +140,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         setTimeInicio(event)
         let elemento1 = timeInicio.replace(":","" )
         console.log(elemento1)
-        if(elemento1 > 1159){
+        if(elemento1 >= 1200){
             setAmPmInicio("PM")
         }
         else{
@@ -135,7 +153,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         setTimeFinal(event)
         let elemento2 = timeFinal.replace(":","" )
         console.log(elemento2)
-        if(elemento2 > 1159){
+        if(elemento2 >= 1200){
             setAmPmFinal("PM")
         }
         else{
@@ -211,7 +229,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                 {/* <div className="card-body"> */}
                                                 {/* <label htmlFor="exampleInputEmail1">Horarios</label> */}
                                                 <div className="row">
-                                                    <div className="col-3">
+                                                    {/* <div className="col-3">
                                                         De: <input onChange={handleChange} name='horaincio' type="text" value={DatesCreate.horaincio} className="form-control" placeholder="Hora de Inicio" />
                                                         <select name='TIMEinicio' onChange={selectTime} class="custom-select form-control">
                                                             <option value="1" selected>AM</option>
@@ -237,7 +255,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                         clockIcon={null}
                                                         
                                                     />
-                                                    </div>
+                                                    </div> */}
                                                     <div className="row">
                                                         <div>
                                                             <p>Hora de inicio</p>

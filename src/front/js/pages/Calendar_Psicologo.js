@@ -21,14 +21,6 @@ export const Calendar_Psicologo = () => {
     const dateValue= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
     const startDate= new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate())
     
-
-    console
-
-    console.log(fecha)
-    console.log(dayNumber)
-    console.log(day)
-    console.log(month)
-    console.log(year)
     
     const transition = useTransition(store.psicologySession, {
         from: { x: 0, y: 50, opacity: 0 },
@@ -39,7 +31,6 @@ export const Calendar_Psicologo = () => {
     
     useEffect(() => {
         actions.getPsicologiScheduleDay(id, fecha)
-        // console.log(masculinos)
     }, [selectedDate])
 
     function onChangeCalendar(event) {
@@ -124,7 +115,7 @@ export const Calendar_Psicologo = () => {
                                                         <div className="card-tools button-agend">
                                                             <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a>
                                                         </div>
-                                                        {console.log(item.id)}
+                                                       
                                                     </div> </animated.div> : '')}
 
 
