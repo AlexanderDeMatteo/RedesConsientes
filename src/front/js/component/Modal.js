@@ -196,13 +196,13 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
     return (
         <>
-
+            {!store.userData.is_psicologo ? " " : 
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalagenda">
                 añadir horario disponible
-            </button>
+            </button>}
 
             <div class="modal fade" id="modalagenda" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Añadir horario para {calendar_date2}</h5>
@@ -328,7 +328,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" >Guardar</button>
+
                         </div>
                     </div>
                 </div>

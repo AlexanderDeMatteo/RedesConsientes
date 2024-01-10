@@ -114,12 +114,12 @@ export const Calendar_custom = () => {
 
 
                                     <form className="form-horizontal">
-                                        <div className="card-body">
-                                            <div id="external-events">
+                                        <div className="card-body" >
+                                            <div clase="time-card" id="external-events">
                                                 {transition((style, item) =>
                                                     item ? <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`} ><div className="card-header">
                                                         <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
-                                                        {!store.userData.is_psicologo ? <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a> : ""}
+                                                        {!store.userData.is_psicologo ? <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a> : <button type="button" id="delete-date" name={item.id} className="close button_delete_date" aria-hidden="true">&times;</button>}
                                                         
                                                     </div> </animated.div> : '')}
 

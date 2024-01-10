@@ -142,3 +142,12 @@
     height: 35px;
     /* background-color: white; */
   }
+
+  #delete-date{
+    display: none !important;
+  }
+
+  .time-card .card:hover {
+    display: block;
+    background-color: red;
+  }

@@ -1,5 +1,5 @@
 .modal-backdrop{
-z-index: 2;
+z-index: -1;
 }
     
 .modal-dialog{
@@ -18,5 +18,11 @@ background-color: #007bff;
 }
 
 .modal-header h5{
-    color: white;
-    }
+  color: white;
+}
+
+#modalagenda{
+  display: none;
+  padding-top: 30px;
+  overflow: hidden;
+}
