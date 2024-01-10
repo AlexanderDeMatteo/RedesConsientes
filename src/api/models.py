@@ -312,6 +312,7 @@ class Session(db.Model):
     # schedule = db.relationship("Schedule", back_populates="sessions")
     start_time = db.Column(db.String(10), nullable=False, unique=False)
     end_time = db.Column(db.String(10), nullable=False, unique=False)
+    duration_time = db.Column(db.Numeric(10), nullable=False, unique=False)
     reserved = db.Column(db.Boolean(), nullable=True, default=False)
     calendar_date = db.Column(db.Date, nullable=False, unique=False)
     room_number = db.Column(db.String(200), nullable=False, unique=True)
@@ -327,6 +328,7 @@ class Session(db.Model):
             "room_number": self.room_number,
             "start_time": self.start_time,
             "end_time": self.end_time,
+            "duration_time":self.duration_time
 
         }
     

@@ -52,25 +52,55 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         let elemento1 = parseInt(timeInicio.replace(":","" ))
         let elemento2 = parseInt(timeFinal.replace(":","" ))
         let duracionMin= 45
-        console.log(elemento1)
-        console.log(amPmInicio)
-        console.log(elemento2)
-        console.log(amPmFinal)
-        console.log(elemento2 > elemento1 && elemento2 >= elemento1 + 45)
-        console.log((elemento1 + duracionMin))
-        if(elemento2 >= elemento1 && elemento2 >= (elemento1 + duracionMin)){
-            alert("horario permitido")
-            range(elemento1,elemento2)
-            console.log(range(elemento1,elemento2))
-            // await actions.createSchedule(DatesCreate.horaincio + DatesCreate.TIMEinicio, DatesCreate.horafina + DatesCreate.TIMEfinal, calendar_date )
-            await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date )
-            setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
-            setShowCreate(!showcreate)
-            await actions.getPsicologiScheduleDay(id, fecha)
+        let durationTime = elemento2 - elemento1
+        let schedule = store.scheduleSession
+        console.log(schedule)
+            if(elemento2 >= elemento1 && elemento2 >= (elemento1 + duracionMin)){
+                let filterStartTime = schedule.filter(schedule => {
+                    const scheduleStartTime = Number(schedule.start_time.replace(":", "").replace("PM", ""));
+                    const scheduleEndTime = Number(schedule.end_time.replace(":", "").replace("PM", ""))
+                    let orden = `${scheduleStartTime} ${scheduleEndTime}`
+                    console.log(orden)
+                    const statusInicio = elemento1 < scheduleStartTime || elemento1 > scheduleEndTime
+                    const statusFinal = elemento2 > scheduleEndTime || elemento2 < scheduleStartTime
+                    console.log(statusFinal)
+                    console.log(statusInicio)
+                        if(statusInicio == false && statusFinal == false){
+                            alert("el horario no esta disponible, verifica ambas horas")
+                            console.log(statusInicio == false && statusFinal == false)
+                            console.log(filterStartTime)
+                            return true
+                        }
+                        else if(statusInicio == false){
+                            alert("el horario no esta disponible, verificar la hora de inicio")
+                            console.log(statusInicio == false)
+                            console.log(filterStartTime)
+                        return true
+                        }
+                        else if(statusFinal == false){
+                            alert("el horario no esta disponible, verificar la hora final")
+                            statusInicio == false
+                            console.log(statusFinal == false)
+                        return true
+                        }else{
+                            console.log(filterStartTime)
+                        return false
+                    }
+                    
+                } );
+                console.log(filterStartTime)
+                if(filterStartTime == true) {
+                    alert("horario permitido")
+                    await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
+                    setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
+                    setShowCreate(!showcreate)
+                    await actions.getPsicologiScheduleDay(id, fecha)
+                    console.log(filterStartTime)
+                } 
         }
         else{
-            alert("error en el horario")
-        }
+            alert("error")
+            }
         
     }
     function deleteDate(event) {
@@ -245,9 +275,9 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
                                                         </select>
                                                     </div>
-                                                    <div className="col-5">
-                                                        <button className="btn btn-primary button_create_date" onClick={onCreatetimework} >Crear Horario</button>
-                                                    </div>
+                                                 <div className="col-5">
+                                                    <button className="btn btn-primary button_create_date" onClick={onCreatetimework} >Crear Horario</button>
+                                                 </div>
                                                     <div className="">
                                                     <TimeRangePicker
                                                         onChange={onChangeTime}
@@ -274,6 +304,9 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                             />
                                                         </div>
                                                     </div>
+                                                    <div className="col-5">
+                                                    <button className="btn btn-primary button_create_date" onClick={onCreatetimework} >Crear Horario</button>
+                                                 </div>
 
                                                 </div>
                                                 {/* </div> */}

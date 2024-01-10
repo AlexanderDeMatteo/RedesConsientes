@@ -168,14 +168,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			createSchedule: async (start, end, date) => {
+			createSchedule: async (start, end, date, durationTime) => {
 				let response = await fetch(`${API_URL}/api/session-create`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${getAuthToken("token")}`,
 					},
-					body: JSON.stringify({ 'start_time': start, "end_time": end, "calendar_date":date })
+					body: JSON.stringify({ 'start_time': start, "end_time": end, "calendar_date":date, "duration_time":durationTime })
 				});
 				if (response.ok) {
 					console.log(response.statusText)
