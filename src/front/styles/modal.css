@@ -2,12 +2,10 @@
 z-index: -1;
 }
     
-.modal-dialog{
-  margin-top: 100px;
-}
-.modal{
+
+/* .modal{
 background-color: none !important;
-}
+} */
 
 .modal-content{
 color: black;
@@ -24,5 +22,5 @@ background-color: #007bff;
 #modalagenda{
   display: none;
   padding-top: 30px;
-  overflow: hidden;
+  overflow: none;
 }
