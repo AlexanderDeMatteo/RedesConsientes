@@ -659,7 +659,7 @@ export const Perfil = () => {
                                 {!show ? (
                                   <input
                                     onChange={handleChange}
-                                    type="number"
+                                    type="tel"
                                     className="form-control"
                                     name="phone_number"
                                     placeholder="numero telefonico"

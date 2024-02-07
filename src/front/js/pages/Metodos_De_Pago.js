@@ -28,7 +28,7 @@ export const MetodosDePago = () => {
 
     useEffect(() => {
         // actions.privateData()
-        actions.handle_user_data();
+        actions.handle_payment_data();
     }, []);
 
     function changeSelect(e) {
@@ -59,9 +59,6 @@ export const MetodosDePago = () => {
         }
     }
 
-    function handleModal() {
-        show.modal;
-    }
 
     function Editar() {
         if (!show) {
@@ -87,7 +84,7 @@ export const MetodosDePago = () => {
     function handleChange(event) {
         console.log(event.target.value)
         console.log(event.target.name)
-        actions.handle_edit(event.target.value, event.target.name);
+        actions.handle_payment_edit(event.target.value, event.target.name);
 
     }
 
@@ -106,9 +103,9 @@ export const MetodosDePago = () => {
 
 
     const guardar = async () => {
-        const response = await fetch(`${API_URL}/api/user-data`, {
+        const response = await fetch(`${API_URL}/api/payment-accounts`, {
             method: "PUT",
-            body: JSON.stringify(store.userData),
+            body: JSON.stringify(store.userPaymentData),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -116,8 +113,9 @@ export const MetodosDePago = () => {
         });
         if (response.ok) {
             alert("datos actualizados");
-            actions.handle_user_data();
+            actions.handle_payment_data();
         }
+
     };
     return (
         <div>
@@ -203,13 +201,13 @@ export const MetodosDePago = () => {
                                                                             onChange={handleChange}
                                                                             type="email"
                                                                             className="form-control"
-                                                                            name="email"
+                                                                            name="zell_email"
                                                                             placeholder="Correo"
-                                                                            value={store.userData.email || ""}
+                                                                            value={store.userPaymentData.zell_email || ""}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.email}
+                                                                            {store.userPaymentData.zell_email}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -250,13 +248,13 @@ export const MetodosDePago = () => {
                                                                         onChange={handleChange}
                                                                         type="email"
                                                                         className="form-control"
-                                                                        name="name"
-                                                                        placeholder="Nombre"
-                                                                        value={store.userData.name}
+                                                                        name="binance_route"
+                                                                        placeholder="Ruta USDT"
+                                                                        value={store.userPaymentData.binance_route}
                                                                     />
                                                                 ) : (
                                                                     <p className="text-muted mb-0">
-                                                                        {store.userData.name}
+                                                                        {store.userPaymentData.binance_route}
                                                                     </p>
                                                                 )}
                                                             </div>
@@ -292,15 +290,15 @@ export const MetodosDePago = () => {
                                                                     {!show ? (
                                                                         <input
                                                                             onChange={handleChange}
-                                                                            type="email"
+                                                                            type="text"
                                                                             className="form-control"
-                                                                            name="name"
-                                                                            placeholder="Nombre"
-                                                                            value={store.userData.name}
+                                                                            name="paypal_name"
+                                                                            placeholder="Nombre de la cuenta Paypal"
+                                                                            value={store.userPaymentData.paypal_name}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.name}
+                                                                            {store.userPaymentData.paypal_name}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -318,15 +316,15 @@ export const MetodosDePago = () => {
                                                                     {!show ? (
                                                                         <input
                                                                             onChange={handleChange}
-                                                                            type="email"
+                                                                            type="text"
                                                                             className="form-control"
-                                                                            name="last_name"
-                                                                            placeholder="Apellido"
-                                                                            value={store.userData.last_name || ""}
+                                                                            name="paypal_user"
+                                                                            placeholder="Usuario de Paypal"
+                                                                            value={store.userPaymentData.paypal_user || ""}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.last_name}
+                                                                            {store.userPaymentData.paypal_user}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -347,13 +345,13 @@ export const MetodosDePago = () => {
                                                                             onChange={handleChange}
                                                                             type="email"
                                                                             className="form-control"
-                                                                            name="email"
+                                                                            name="paypal_email"
                                                                             placeholder="Correo"
-                                                                            value={store.userData.email || ""}
+                                                                            value={store.userPaymentData.paypal_email || ""}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.email}
+                                                                            {store.userPaymentData.paypal_email}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -394,13 +392,13 @@ export const MetodosDePago = () => {
                                                                             onChange={handleChange}
                                                                             type="email"
                                                                             className="form-control"
-                                                                            name="last_name"
-                                                                            placeholder="Apellido"
-                                                                            value={store.userData.last_name || ""}
+                                                                            name="pagomovil_bank"
+                                                                            placeholder="ingrese el Banco"
+                                                                            value={store.userPaymentData.pagomovil_bank || ""}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.last_name}
+                                                                            {store.userPaymentData.pagomovil_bank}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -421,13 +419,13 @@ export const MetodosDePago = () => {
                                                                             onChange={handleChange}
                                                                             type="email"
                                                                             className="form-control"
-                                                                            name="name"
-                                                                            placeholder="Nombre"
-                                                                            value={store.userData.name}
+                                                                            name="pagomovil_ci"
+                                                                            placeholder="ingresa cedula de identidad"
+                                                                            value={store.userPaymentData.pagomovil_ci}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.name}
+                                                                            {store.userPaymentData.pagomovil_ci}
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -448,15 +446,15 @@ export const MetodosDePago = () => {
                                                                     {!show ? (
                                                                         <input
                                                                             onChange={handleChange}
-                                                                            type="number"
+                                                                            type="tel"
                                                                             className="form-control"
-                                                                            name="phone_number"
-                                                                            placeholder="numero telefonico"
-                                                                            value={store.userData.phone_number || ""}
+                                                                            name="pagomovil_phone"
+                                                                            placeholder="ingresa el numero telefonico"
+                                                                            value={store.userPaymentData.pagomovil_phone || ""}
                                                                         />
                                                                     ) : (
                                                                         <p className="text-muted mb-0">
-                                                                            {store.userData.phone_number}
+                                                                            {store.userPaymentData.pagomovil_phone}
                                                                         </p>
                                                                     )}
                                                                 </div>

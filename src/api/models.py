@@ -2,6 +2,7 @@ from email.policy import default
 from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
+import string
 
 db = SQLAlchemy()
 
@@ -19,8 +20,16 @@ class User(db.Model):
     address = db.relationship("UserAddress", backref="user", uselist=False)
     # PaidMethod = db.relationship("UserPaymentMethod", backref="user", uselist=False)
     user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
+    payment_account = db.relationship("PaymentAccount", backref="user", lazy="select")
     session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id,  User.id == Session.client_id)",)
-    # schedule_id = db.relationship('Schedule', backref='user', uselist=False)
+    # Relación para psicólogos y sus tareas asignadas
+    # psychologist_tasks = db.relationship('PsychologistTask', back_populates='psychologist')
+    # Relación para clientes y sus tareas asignadas
+    tasks_assigned_to_client = db.relationship('ClientTask', back_populates='client')
+    # client_tasks = db.relationship('ClientTask', backref='assigned_to_client', foreign_keys='ClientTask.client_id')
+    selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    selected_psicologo = db.relationship('User', remote_side=[id])
+    is_psicologo_selected = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -64,45 +73,85 @@ class User(db.Model):
             db.session.rollback()
             return False
 
-# class UserPaymentMethod(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey(
-#         'user.id'), unique=True, nullable=False)
 
-#     name = db.Column(db.String(120), unique=False, nullable=True)
-#     email = db.Column(db.String(120), unique=False, nullable=True)
-#     username = db.Column(db.String(120), unique=False, nullable=True)
-#     numero_telefono = db.Column(db.String(300), nullable=True)
-#     usdt = db.Column(db.Boolean(), unique=False, nullable=True, default=False)
+# class PsychologistTask(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     description = db.Column(db.String(250), nullable=False)
+#     completed = db.Column(db.Boolean, default=False)
+#     psychologist_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#     psychologist = db.relationship('User', back_populates='psychologist_tasks')
 
 #     def serialize(self):
 #         return {
 #             "id": self.id,
-#             "user_id": self.user_id,
-#             "name": self.name,
-#             "email": self.email,
-#             "username": self.username,
-#             "numero_telefono": self.numero_telefono,
-#             "usdt": self.usdt,
+#             "description": self.description,
+#             "completed": self.completed,
+#             "psychologist_id": self.psychologist_id,
+#             "psychologist": self.psychologist,
 #         }
+    
+#     def update(self, description):
+#         try:
+#             self.description = description
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             return False
+        
+#     def filter_input(data):
+#         for char in string.punctuation:
+#             data = data.replace(char, '')
+#         return data
 
-    # def update(self, ref_user):
-    #     if "name" in ref_user:
-    #         self.name = ref_user["name"]
-    #     if "email" in ref_user:
-    #         self.email = ref_user["email"]
-    #     if "username" in ref_user:
-    #         self.username = ref_user["username"]
-    #     if "numero_telefono" in ref_user:
-    #         self.numero_telefono = ref_user["numero_telefono"]
-    #     if "usdt" in ref_user:
-    #         self.usdt = ref_user["usdt"]
-    #     try:
-    #         db.session.commit()
-    #         return True
-    #     except Exception as error:
-    #         db.session.rollback()
-    #         return False
+#     def create_task(request):
+#         # Verificar si el elemento `descripción` existe
+#         if "descripción" in request:
+#             # Obtener la descripción de la tarea
+#             descripción = request["descripción"]
+#         else:
+#             # La descripción no existe
+#             descripción = None
+
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'description': self.description,
+    #         # ... otros atributos ...
+    #     }
+
+class ClientTask(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(200), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    client = db.relationship('User', back_populates='tasks_assigned_to_client')
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+            "completed": self.completed,
+            "client_id": self.client_id,
+            "client": self.client,
+        }
+    def update(self, completed):
+        try:
+            self.completed = completed
+            db.session.commit()
+            return True
+        except Exception as error:
+            db.session.rollback()
+            return False
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'description': self.description,
+            'completed': self.completed,
+            'client_id': self.client_id,
+        }
+
 
 class UserAddress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -163,14 +212,6 @@ class UserProfileInfo(db.Model):
     motivo_consulta = db.Column(db.String(600), unique=False, nullable=True)
     psych_strategies = db.Column(db.String(1000), unique=False, nullable=True)
     PsychExperiences = db.Column(db.String(1000), unique=False, nullable=True)
-    # TodoList_info = db.relationship(
-    #     'TodoList', backref='userprofileinfo', uselist=True)
-    # TodoListContainer_info = db.relationship(
-    #     'TodoListContainer', backref='userprofileinfo', uselist=True)    
-    # experience = db.relationship(
-    #     "PsychExperiences", uselist=False, backref="userprofileinfo")
-    # psych_strategies = db.relationship(
-    #     'PsychTherapeuticStrategies', backref='userprofileinfo', uselist=True)
 
     def __init__(self, fpv_number, user_id):
         self.fpv_number = fpv_number,
@@ -242,65 +283,6 @@ class UserProfileInfo(db.Model):
         except Exception as error:
             db.session.rollback()
             return False
-
-
-
-
-
-# class Schedule(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     psychologist_id = db.Column(
-#         db.Integer, db.ForeignKey('user.id'), nullable=False)
-#     # schedule_reserved_id = db.relationship(
-#     #     'ScheduleReserved', backref='schedule', uselist=True)
-
-#     start_time = db.Column(db.String(10), nullable=False, unique=False)
-#     end_time = db.Column(db.String(10), nullable=False, unique=False)
-#     # session_id = db.relationship(
-#     #     "Session", back_populates="schedule", uselist=False)
-#     sessions = db.relationship(
-#         "Session", back_populates="schedule", uselist=False)
-
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#             "psychologist_id": self.psychologist_id,
-#             "start_time": self.start_time,
-#             "end_time": self.end_time,
-#         }
-
-#     @classmethod
-#     def create_schedule(cls, schedules):
-#         try:
-#             new_schedule_data = cls(**schedules)
-#             db.session.add(new_schedule_data)
-#             db.session.commit()
-#             return new_schedule_data
-#         except Exception as error:
-#             db.session.rollback()
-#             return error
-
-#     def delete_schedule(self):
-#         db.session.delete(self)
-#         try:
-#             db.session.commit()
-#             return True
-#         except Exception as error:
-#             db.session.rollback()
-#             return False
-
-#     def update_schedule(self, schedule):
-#         if "start_time" in schedule:
-#             self.start_time = schedule["start_time"]
-#         if "end_time" in schedule:
-#             self.end_time = schedule["end_time"]
-#         try:
-#             db.session.commit()
-#             return True
-#         except Exception as error:
-#             db.session.rollback()
-#             return False
-
 
 class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -398,206 +380,206 @@ class PsychoConsultation(db.Model):
     monto = db.Column(db.String(25), unique=False, nullable=True)
 
 
-class PsychAcademicInfo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer,  db.ForeignKey(
-        'user_profile_info.user_id'), nullable=False)
-    description = db.Column(db.String(300))
-    institute = db.Column(db.String(100))
-    graduation_date = db.Column(db.String(30))
-    certificate_url = db.Column(db.String(300))
+# class PsychAcademicInfo(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer,  db.ForeignKey(
+#         'user_profile_info.user_id'), nullable=False)
+#     description = db.Column(db.String(300))
+#     institute = db.Column(db.String(100))
+#     graduation_date = db.Column(db.String(30))
+#     certificate_url = db.Column(db.String(300))
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "institute": self.institute,
-            "description": self.description,
-            "graduation_date": self.graduation_date,
-            "certificate_url": self.certificate_url
-        }
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "institute": self.institute,
+#             "description": self.description,
+#             "graduation_date": self.graduation_date,
+#             "certificate_url": self.certificate_url
+#         }
 
-    # Method to create academic information
-    @classmethod
-    def create(cls, academic_info):
-        try:
-            new_academic_info = cls(**academic_info)
-            db.session.add(new_academic_info)
-            db.session.commit()
-            return new_academic_info
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return None
+#     # Method to create academic information
+#     @classmethod
+#     def create(cls, academic_info):
+#         try:
+#             new_academic_info = cls(**academic_info)
+#             db.session.add(new_academic_info)
+#             db.session.commit()
+#             return new_academic_info
+#         except Exception as error:
+#             db.session.rollback()
+#             print(error)
+#             return None
 
-    # Method to delete academic information
-    def delete(self):
-        db.session.delete(self)
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
+#     # Method to delete academic information
+#     def delete(self):
+#         db.session.delete(self)
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             return False
 
-    # Method to update a academic info of an Psychologist
-    def update(self, info):
-        if "institute" in info:
-            self.institute = info["institute"]
-        if "description" in info:
-            self.description = info["description"]
-        if "graduation_date" in info:
-            self.graduation_date = info["graduation_date"]
-        if "certificate_url" in info:
-            self.certificate_url = info["certificate_url"]
+#     # Method to update a academic info of an Psychologist
+#     def update(self, info):
+#         if "institute" in info:
+#             self.institute = info["institute"]
+#         if "description" in info:
+#             self.description = info["description"]
+#         if "graduation_date" in info:
+#             self.graduation_date = info["graduation_date"]
+#         if "certificate_url" in info:
+#             self.certificate_url = info["certificate_url"]
 
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return False
-
-
-class PsychExperiences(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        'user_profile_info.user_id'), nullable=False)
-    description = db.Column(db.String(500), unique=False, nullable=True)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "description": self.description
-        }
-
-    # Method to create experience information
-    @classmethod
-    def create(cls, experience_info):
-        try:
-            new_experience_info = cls(**experience_info)
-            db.session.add(experience_info)
-            db.session.commit()
-            return new_experience_info
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return None
-
-    # Method to delete experience information
-    def delete(self):
-        db.session.delete(self)
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
-
-    # Method to update a experience info of an Psychologist
-    def update(self, xp):
-        if "description" in xp:
-            self.description = xp["description"]
-
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return False
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             print(error)
+#             return False
 
 
-class PsychTherapeuticStrategies(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(500))
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        'user_profile_info.user_id'), nullable=False)
-    url = db.Column(db.String(300))
-    __table_args__ = (db.UniqueConstraint(
-        'user_id',
-        'url',
-        'description',
-        name='unique_psych_image_url'
-    ),)
+# class PsychExperiences(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey(
+#         'user_profile_info.user_id'), nullable=False)
+#     description = db.Column(db.String(500), unique=False, nullable=True)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "url": self.url,
-            "description": self.description
-        }
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "description": self.description
+#         }
 
-    # Method to create strategie information
-    @classmethod
-    def create(cls, strategie):
-        try:
-            new_strategie = cls(**strategie)
-            db.session.add(strategie)
-            db.session.commit()
-            return strategie
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return None
+#     # Method to create experience information
+#     @classmethod
+#     def create(cls, experience_info):
+#         try:
+#             new_experience_info = cls(**experience_info)
+#             db.session.add(experience_info)
+#             db.session.commit()
+#             return new_experience_info
+#         except Exception as error:
+#             db.session.rollback()
+#             print(error)
+#             return None
 
-    # Method to delete strategie information
-    def delete(self):
-        db.session.delete(self)
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
+#     # Method to delete experience information
+#     def delete(self):
+#         db.session.delete(self)
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             return False
 
-    # Method to update a strategie info of an Psychologist
-    def update(self, strategie):
-        if "description" in strategie:
-            self.description = strategie["description"],
-        if "url" in strategie:
-            self.url = strategie['url']
+#     # Method to update a experience info of an Psychologist
+#     def update(self, xp):
+#         if "description" in xp:
+#             self.description = xp["description"]
 
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return False
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             print(error)
+#             return False
 
 
-class TodoList(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    # user_id = db.Column(db.Integer,  db.ForeignKey(
-    #     'user_profile_info.user_id'), nullable=False)
-    todo_description = db.Column(db.String(300))
-    done = db.Column(db.Boolean(False))
+# class PsychTherapeuticStrategies(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     description = db.Column(db.String(500))
+#     user_id = db.Column(db.Integer, db.ForeignKey(
+#         'user_profile_info.user_id'), nullable=False)
+#     url = db.Column(db.String(300))
+#     __table_args__ = (db.UniqueConstraint(
+#         'user_id',
+#         'url',
+#         'description',
+#         name='unique_psych_image_url'
+#     ),)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "todo_description": self.description,
-            "done": self.done,
-        }
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "url": self.url,
+#             "description": self.description
+#         }
 
-class TodoListContainer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    # user_id = db.Column(db.Integer,  db.ForeignKey(
-    #     'user_profile_info.user_id'), nullable=False)
-    todo_list = db.Column(db.String(300))
+#     # Method to create strategie information
+#     @classmethod
+#     def create(cls, strategie):
+#         try:
+#             new_strategie = cls(**strategie)
+#             db.session.add(strategie)
+#             db.session.commit()
+#             return strategie
+#         except Exception as error:
+#             db.session.rollback()
+#             print(error)
+#             return None
+
+#     # Method to delete strategie information
+#     def delete(self):
+#         db.session.delete(self)
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             return False
+
+#     # Method to update a strategie info of an Psychologist
+#     def update(self, strategie):
+#         if "description" in strategie:
+#             self.description = strategie["description"],
+#         if "url" in strategie:
+#             self.url = strategie['url']
+
+#         try:
+#             db.session.commit()
+#             return True
+#         except Exception as error:
+#             db.session.rollback()
+#             print(error)
+#             return False
 
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "todo_list": self.description,
-        }
+# class TodoList(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     # user_id = db.Column(db.Integer,  db.ForeignKey(
+#     #     'user_profile_info.user_id'), nullable=False)
+#     todo_description = db.Column(db.String(300))
+#     done = db.Column(db.Boolean(False))
+
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "todo_description": self.description,
+#             "done": self.done,
+#         }
+
+# class TodoListContainer(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     # user_id = db.Column(db.Integer,  db.ForeignKey(
+#     #     'user_profile_info.user_id'), nullable=False)
+#     todo_list = db.Column(db.String(300))
+
+
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "todo_list": self.description,
+#         }
 
 class MiPsicologo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -605,3 +587,60 @@ class MiPsicologo(db.Model):
         'user.id'), nullable=False)
     Psicologo_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'), nullable=False)
+
+class PaymentAccount(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    zell_email = db.Column(db.String(50), nullable=True)
+    binance_route = db.Column(db.String(100), nullable=True)
+    paypal_user = db.Column(db.String(50), nullable=True)
+    paypal_name = db.Column(db.String(50), nullable=True)
+    paypal_email = db.Column(db.String(50), nullable=True)
+    pagomovil_bank = db.Column(db.String(50), nullable=True)
+    pagomovil_ci = db.Column(db.String(50), nullable=True)
+    pagomovil_phone = db.Column(db.String(50), nullable=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "zell_email": self.zell_email,
+            "binance_route": self.binance_route,
+            "paypal_user": self.paypal_user,
+            "paypal_name": self.paypal_name,
+            "paypal_email": self.paypal_email,
+            "pagomovil_bank": self.pagomovil_bank,
+            "pagomovil_ci": self.pagomovil_ci,
+            "pagomovil_phone": self.pagomovil_phone
+        }
+
+    @classmethod
+    def create(cls, payment_account_data):
+        try:
+            new_account = cls(**payment_account_data)
+            db.session.add(new_account)
+            db.session.commit()
+            return new_account
+        except Exception as error:
+            db.session.rollback()
+            print(error)
+            return None
+
+    def update(self, data):
+        for key, value in data.items():
+            if key in self.__dict__:
+                setattr(self, key, value)
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            db.session.rollback()
+            return False
+
+    def delete(self):
+        db.session.delete(self)
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            db.session.rollback()
+            return False

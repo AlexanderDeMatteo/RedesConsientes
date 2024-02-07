@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import PsychAcademicInfo, PsychExperiences, PsychTherapeuticStrategies, Session, UserProfileInfo, db, User
+from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -453,84 +453,239 @@ def handle_unbook_session(session_id):
         else:
             return jsonify({"message": "error"}), 500
 
-# Handle the creation of schedules for the sessions of each professor
-
-# @api.route("/schedule/<int:id>", methods=['GET'])
-# @api.route("/schedule", methods=['GET', 'POST'])
+@api.route('/select-psicologo/<int:psychologist_id>', methods=['POST'])
 # @jwt_required()
-# def handle_schedule(id=None):
-#     current_psychologist = get_jwt_identity()
-#     psychologist = User.query.filter_by(id=current_psychologist).where(User.is_psicologo == True).one_or_none()
-#     print(psychologist)
-#     if request.method == 'POST':
-#         schedule_data = request.json
-#         schedule_data["psychologist_id"] = psychologist.id
-#         schedule = Schedule.create_schedule(schedule_data)
-#         today = date.today()
-#         print(today)
-#         print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-#         if schedule is not None:
-#             return jsonify({"message": "schedule created succesfully"}), 201
-#         return jsonify({"message": "info error"}), 400
-#     elif request.method == 'GET':
-#         if psychologist is not None:
-#             schedules_current_id = Schedule.query.filter_by(psychologist_id=psychologist.id).all()
-#             print(schedules_current_id)
-#             response = []
-#             if schedules_current_id is not None:
-#                 for schedule_single in schedules_current_id:
-#                     response.append(schedule_single.serialize())
-#                 return jsonify(response), 200
-#             else:
-#                 return jsonify({"message": "no schedules"})
-#         else:
-#             schedules = Schedule.query.filter_by(psychologist_id=id).all()
-#             response = [schedule.serialize() for schedule in schedules]
-#             return jsonify(response), 200
+def select_psicologo(psychologist_id):
+    # Obtén el usuario/cliente actual (seguramente a través de la autenticación)
+    user_id = 3 #get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
+    user = User.query.get(user_id)
 
+    # Verifica que el usuario sea un cliente y actualiza selected_psicologo_id
+    if not user.is_psicologo:
+        if user.is_psicologo_selected:
+            if user.selected_psicologo_id == psychologist_id:
+                user.selected_psicologo_id = None
+                user.is_psicologo_selected= False
+                db.session.commit()
+                return jsonify({'message': ' Psicologo deseleccionado exitosamente '}), 200
+            return jsonify({'message': 'Deselecciona primero el psiologo en la pestaña mi psicologo'}), 400
+        user.selected_psicologo_id = psychologist_id
+        user.is_psicologo_selected= True
+        db.session.commit()
+        return jsonify({'message': 'Psicólogo seleccionado exitosamente'}), 200
+    
+    return jsonify({'message': 'No se puede seleccionar un psicólogo como cliente'}), 400
 
-# @api.route("/schedule-handle/<int:schedule_id>", methods=['DELETE', 'PUT'])
-# @jwt_required()
-# def handle_modification_schedule(schedule_id):
-#     current_psychologist = get_jwt_identity()
-#     psychologist = User.query.filter_by(id=current_psychologist).where(
-#         User.is_psicologo == True).one_or_none()
-#     if request.method == 'DELETE':
-#         schedule_to_delete = Schedule.query.filter_by(
-#             id=schedule_id).one_or_none()
-#         if schedule_to_delete.psychologist_id != psychologist.id:
-#             return jsonify({"message": "not the owner of the schedule"}), 402
-#         else:
-#             if schedule_to_delete is None:
-#                 return jsonify({"message": "schedule not found"}), 404
-#             removed = schedule_to_delete.delete_schedule()
-#             if removed == False:
-#                 return jsonify({"status": False, "message": "something happened"}), 500
-#             else:
-#                 return jsonify({"status": True, "message": "service deleted"}), 204
-#     elif request.method == 'PUT':
-#         schedule_to_modify = Schedule.query.filter_by(
-#             id=schedule_id).one_or_none()
-#         if schedule_to_modify.psychologist_id != psychologist.id:
-#             return jsonify({"message": "not the owner of the schedule"}), 402
-#         data = request.json
-#         if schedule_to_modify is not None:
-#             modified = schedule_to_modify.update_schedule(data)
-#             if modified == True:
-#                 return jsonify({"message": "schedule modified"}), 200
-#             return jsonify({"message": "error"})
+# Endpoint para obtener usuarios relacionados con el psicólogo actualmente autenticado
+@api.route('/usuarios_relacionados', methods=['GET'])
+@jwt_required()
+def obtener_usuarios_relacionados():
+    user_id = get_jwt_identity()  # Obtiene el ID del usuario actual
+    user = User.query.get(user_id)
+    if not user.is_psicologo:
+        # Asegúrate de que el usuario actual esté autenticado y sea un psicólogo
+        return jsonify({'message': 'Acceso no autorizado'}), 403
 
-# @api.route("/refresh", methods=["POST"])
-# @jwt_required(refresh=True)
-# def refresh():
-#     current_user = get_jwt_identity()
-#     access_token = create_access_token(identity=current_user)
-#     return jsonify(access_token=access_token)
+    # Filtra los resultados por el ID del usuario actual como psicólogo
+    clientes_seleccionados = User.query.filter(User.selected_psicologo_id == user_id, User.is_psicologo == False).all()
 
+    # Convierte los resultados en un formato JSON para la respuesta
+    resultados = []
+    for cliente in clientes_seleccionados:
+        resultados.append({
+            'id': cliente.id,
+            'name': cliente.name,
+            'last_name': cliente.last_name,
+            # Otras propiedades que deseas incluir en la respuesta
+        })
 
-#     @app.route('/personajes', methods=['GET'])
-# def listapersonajes():
-#     personajes = Personajes.query.all()
-#     personajes_serializado = list(
-#     map(lambda personaje: personaje.serialize(), personajes))
-#     return jsonify(personajes_serializado), 200
+    return jsonify(resultados)
+
+@api.route('/psychologists/<int:psychologist_id>/patients/<int:patient_id>/tasks', methods=['POST'])
+@jwt_required()
+def create_task(psychologist_id, patient_id):
+    # Autenticar al psicólogo
+    user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
+    user = User.query.get(user_id)
+    if not user.is_psicologo:
+        # Asegúrate de que el usuario actual esté autenticado y sea un psicólogo
+        return jsonify({'message': 'Acceso no autorizado'}), 403
+
+    # Crear la nueva tarea
+    new_task = ClientTask(
+        description=request.json[0]['description'],
+        client_id=patient_id,
+    )
+    db.session.add(new_task)
+    db.session.commit()
+    print(new_task)
+
+    # Devolver la nueva tarea
+    return jsonify({
+    'id': new_task.id,
+    'description': new_task.description,
+    # ... otros atributos ...
+}), 201
+
+@api.route('/psychologists/<int:psychologist_id>/patients/<int:patient_id>/tasks', methods=['GET'])
+@jwt_required()
+def get_tasks(psychologist_id, patient_id):
+    # Obtener las tareas
+    tasks = ClientTask.query.filter_by(client_id=patient_id).all()
+    if not tasks:
+        return jsonify({'message': 'No se encontraron tareas'}), 404
+
+    # Devolver las tareas
+    return jsonify([task.to_dict() for task in tasks]), 200
+
+@api.route('/tasks/<int:task_id>', methods=['PUT'])
+@jwt_required()
+def edit_task(task_id):
+    user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
+    user = User.query.get(user_id)
+    if not user.is_psicologo:
+        # Asegúrate de que el usuario actual esté autenticado y sea un psicólogo
+        return jsonify({'message': 'Acceso no autorizado'}), 403
+    
+    # Buscar la tarea
+    task = ClientTask.query.get(task_id)
+    if not task:
+        return jsonify({'error': 'Tarea no encontrada'}), 404
+
+    # Obtener los datos de la solicitud
+    data = request.get_json()
+
+    # Validar los datos manualmente
+    if not data or 'description' not in data:
+        return jsonify({'error': 'Faltan datos requeridos'}), 400
+
+    # Actualizar los atributos de la tarea
+    task.description = data['description']
+
+    # Guardar los cambios en la base de datos
+    try:
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({'error': 'Error al actualizar la tarea'}), 500
+
+    # Devolver la tarea actualizada
+    return jsonify(task.to_dict()), 200
+
+    # Devolver respuesta
+    return jsonify(task.to_dict()), 200
+
+@api.route('/tasks/<int:task_id>/complete', methods=['PUT'])
+@jwt_required()
+def complete_task(task_id):
+    # Buscar la tarea
+    task = ClientTask.query.get(task_id)
+    if not task:
+        return jsonify({'error': 'Tarea no encontrada'}), 404
+
+    # Obtener los datos de la solicitud
+    data = request.get_json()
+
+    # Validar los datos
+    if not data or 'completed' not in data:
+        return jsonify({'error': 'Faltan datos requeridos'}), 400
+
+    # Actualizar el estado de la tarea
+    task.completed = data['completed']
+
+    # Guardar los cambios en la base de datos
+    try:
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({'error': 'Error al actualizar la tarea'}), 500
+
+    # Devolver respuesta
+    return jsonify({'message': 'Tarea completada'}), 200
+
+@api.route('/tasks/<int:task_id>', methods=['DELETE'])
+@jwt_required()
+def delete_task(task_id):
+    user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
+    user = User.query.get(user_id)
+    if not user.is_psicologo:
+        # Asegúrate de que el usuario actual esté autenticado y sea un psicólogo
+        return jsonify({'message': 'Acceso no autorizado'}), 403
+
+    # Buscar la tarea
+    task = ClientTask.query.get(task_id)
+    if not task:
+        return jsonify({'error': 'Tarea no encontrada'}), 404
+
+    # Eliminar la tarea
+    db.session.delete(task)
+    db.session.commit()
+
+    # Devolver respuesta
+    return jsonify({'message': 'Tarea eliminada'}), 200
+
+@api.route('/payment-accounts', methods=['GET', 'PUT'])
+@jwt_required()
+def handle_payment_account():
+    current_user = get_jwt_identity()
+
+    if request.method == 'GET':
+        user = User.query.filter_by(id=current_user).one_or_none()
+        user_payment_info = PaymentAccount.query.filter_by(user_id = current_user).one_or_none()
+        if user is None:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+        else:
+            return jsonify(user_payment_info.serialize()),200
+
+    if request.method == 'PUT':
+        data = request.json
+
+        try:
+            user_payment_info = PaymentAccount.query.filter_by(user_id = current_user).one_or_none()
+            if user_payment_info is None:
+                create_payment_account_info = PaymentAccount(
+                    user_id=current_user,
+                    **data
+                )
+                db.session.add(create_payment_account_info)
+            else:
+                user_payment_info.update(data)  # Actualizar la primera cuenta de pago
+            db.session.commit()
+            return jsonify({"message": "Datos actualizados correctamente"}), 200
+        except Exception as error:
+            db.session.rollback()
+            print(error)
+            return jsonify({"message": "Error al actualizar los datos"}), 500
+
+@api.route("/user-patient-data/<int:id>", methods=['GET'])
+@jwt_required()
+def handle_patient_data_seleccinado(id):
+    selected_user_id = id
+
+    # Obtiene el usuario actual desde el token JWT
+    current_user_id = get_jwt_identity()  # Reemplaza con la función que obtiene el ID del usuario
+
+    # Filtra los usuarios por el ID del psicólogo actual y que no sean psicólogos
+    usuario_filtrado = User.query.filter(
+        User.id == selected_user_id,
+        User.selected_psicologo_id == current_user_id,
+        User.is_psicologo == False
+    ).first()
+
+    if not usuario_filtrado:
+        return jsonify({"message": "Usuario no encontrado o no es paciente del psicólogo actual"}), 404
+
+    # Si el usuario existe, buscamos su perfil
+    profile_info = usuario_filtrado.user_info
+
+    if request.method == 'GET':
+        if usuario_filtrado is None:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+
+        if profile_info is None:
+            return jsonify(usuario_filtrado.serialize()), 200
+        else:
+            user_info = usuario_filtrado.serialize()
+            profile_info = profile_info.serialize()
+            full_info = {**user_info, **profile_info}
+            return jsonify(full_info), 200

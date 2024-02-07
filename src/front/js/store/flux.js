@@ -11,13 +11,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			userData: {},
 			userDataSelecionado: {},
+			userPatientSelecionado: {},
 			userPsicologos: JSON.parse(sessionStorage.getItem("psicos")) || [],
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
 			userFpvData: {},
 			userScheduleData:{},
 			userSession:{},
 			scheduleSession:{},
-			clientScheduleData:{}
+			clientScheduleData:{},
+			userPaymentData:{},
+			userPatients:{}
 		},
 
 		actions: {
@@ -257,6 +260,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			handle_payment_data: async () => {
+				let response = await fetch(`${API_URL}/api/payment-accounts`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					// body: JSON.stringify([])
+				});
+
+				if (response.ok) {
+					let body = await response.json()
+					console.log(body)
+					setStore({ userPaymentData: body })
+
+				}
+			},
+
 			handle_user_data: async () => {
 				let response = await fetch(`${API_URL}/api/user-data`, {
 					method: 'GET',
@@ -271,6 +292,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					let body = await response.json()
 					setStore({ userData: body })
 
+				}
+			},
+
+			handle_patient_data: async () => {
+				let response = await fetch(`${API_URL}/api/usuarios_relacionados`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					// body: JSON.stringify([])
+				});
+
+				if (response.ok) {
+					let body = await response.json()
+					setStore({ userPatients: body })
+				}
+			},
+
+			handle_patient_data_seleccinado: async (usuario) => {
+				const store = getStore()
+				let response = await fetch(`${API_URL}/api/user-patient-data/${usuario}`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				if (response.ok) {
+					let body = await response.json()
+					setStore({ userDataSelecionado: body })
 				}
 			},
 
@@ -364,6 +416,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			handle_edit: (data, prop) => {
 				let store = getStore()
 				let userProp = (store.userData[`${prop}`] = data)
+				setStore(prev => ({
+					...prev, userProp
+				}))
+			},
+
+			handle_payment_edit: (data, prop) => {
+				let store = getStore()
+				let userProp = (store.userPaymentData[`${prop}`] = data)
 				setStore(prev => ({
 					...prev, userProp
 				}))

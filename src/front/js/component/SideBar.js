@@ -132,7 +132,7 @@ export const Sidebarx = () => {
                         {/* <span className="tooltip">Administración de Pacientes</span> */}
                         {contentAdmPaciente && <ul className="ulContent">
                             <li>
-                                <a>
+                                <a href="/Expedientes">
                                     <i class="fa-regular fa-folder"></i>
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Expedientes</span>
                                 </a>

@@ -25,6 +25,8 @@ import PrivateRoutes from "../utils/PrivateRoutes";
 import ReservedSession from "./pages/ReservedSession";
 import Calendar from "react-calendar";
 import { Calendar_Psicologo } from "./pages/Calendar_Psicologo";
+import { Expedientes } from "./pages/Expedientes";
+import { PerfilPacienteSeleccionado } from "./pages/Perfil_Paciente_Seleccionado";
 
 
 //create your first component
@@ -170,6 +172,32 @@ const Layout = () => {
                 </div>
               </div>}
               path="/session/:id/:room"
+              />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+            <div className="contenedor">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                  <Expedientes/>
+                </div>
+              </div>}
+              path="/Expedientes"
+              />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+            <div className="contenedor">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                <PerfilPacienteSeleccionado />
+                </div>
+              </div>}
+              path="/Expedientes/:id"
               />
             </Route>
             <Route element={<h1>Not found!</h1>} path={"*"}/>

@@ -11,7 +11,7 @@ import '@wojtekmaj/react-timerange-picker/dist/TimeRangePicker.css';
 import TimePicker from 'react-time-picker'
 import 'react-time-picker/dist/TimePicker.css';
 import "../../styles/modal.css";
-import Alert from 'react-bootstrap/Alert';
+
 
 export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const { actions, store } = useContext(Context)
