@@ -3,11 +3,7 @@ import { Link, Redirect, useHistory } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Navbar } from "../component/navbar";
 import "../../styles/pagina_principal.css";
-import Imager from "../component/perfil_componentes/consulta.jpg";
-import Imager1 from "../component/perfil_componentes/consulta2.jpg";
-import Imager2 from "../component/perfil_componentes/consulta3.jpeg";
-import Imager3 from "../component/perfil_componentes/consulta3.jpeg";
-import Imager4 from "../component/perfil_componentes/consulta4.jpg";
+import { useNavigate } from 'react-router-dom';
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
 // import { Imagenes } from "../component/perfil_components/imagenes";
 import { AboutMe } from "../component/perfil_componentes/AboutMe";
@@ -21,9 +17,41 @@ export const PerfilPacienteSeleccionado = () => {
     console.log("aaaaaaaaaaa", store.userDataSelecionado)
     const [selectedTab, setSelectedTab] = React.useState({
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
+        li_1: { nav: "nav-link", tab: "tab-pane" },
+        li_2: { nav: "nav-link", tab: "tab-pane" },
     });
+      const [tasks, setTasks] = useState([]);
+      const [newTask, setNewTask] = useState('');
+    
 
-    console.log(store.userDataSelecionado)
+
+    function changeSelect(e) {
+        const { name } = e.target;
+        console.log(store);
+        if (e.target.name && selectedTab[name].nav === "nav-link") {
+          Object.filter = (obj, predicate) =>
+            Object.keys(obj)
+              .filter((key) => predicate(obj[key]))
+              .reduce((res, key) => ((res[key] = obj[key]), res), {});
+          let result = Object.filter(
+            selectedTab,
+            (score) => score.nav === "nav-link active"
+          );
+          let [firstKey] = Object.keys(result);
+    
+          setSelectedTab((prevSelected) => ({
+            ...prevSelected,
+            [name]: { nav: "nav-link active", tab: "active tab-pane" },
+            [firstKey]: { nav: "nav-link", tab: "tab-pane" },
+          }));
+        } else if (e.target.name) {
+          console.log("bbb");
+          setSelectedTab((prevSelected) => ({
+            ...prevSelected,
+            [name]: { nav: "nav-link", tab: "tab-pane" },
+          }));
+        }
+      }
 
     useEffect(() => {
         // actions.privateData()
@@ -71,11 +99,8 @@ export const PerfilPacienteSeleccionado = () => {
                                             />
                                         </div>
                                         <h5 className="my-3 text-center">
-                                            {store.userDataSelecionado.name}
+                                           {`${store.userDataSelecionado.name} ${store.userDataSelecionado.last_name}`}
                                         </h5>
-                                        <p className="text-muted mb-1 text-center">
-                                            {store.userDataSelecionado.area_de_especialidad}
-                                        </p>
                                         <p className="text-muted mb-2 text-center">
                                             {store.userDataSelecionado.phone_number}
                                         </p>
@@ -83,11 +108,6 @@ export const PerfilPacienteSeleccionado = () => {
                                             {store.userDataSelecionado.email}
                                         </p>
 
-
-
-                                        <a href="#" className="btn btn-primary btn-block">
-                                            <b>Seleccionar psicologo   </b>
-                                        </a>
                                     </div>
 
 
@@ -103,80 +123,142 @@ export const PerfilPacienteSeleccionado = () => {
                                 <div className="card">
                                     <div className="card-header p-2">
                                         <ul className="nav nav-pills">
-                                            <li className="nav-item">
-                                                <a
-                                                    className={selectedTab["li_0"].nav}
-                                                    name="li_0"
-                                                    data-toggle="tab"
-                                                >
-                                                    Información
-                                                </a>
-                                            </li>
+                                        <li onClick={changeSelect} className="nav-item">
+                        <a
+                          className={selectedTab["li_0"].nav}
+                          name="li_0"
+                          data-toggle="tab"
+                        >
+                          Información
+                        </a>
+                      </li>
+                      <li onClick={changeSelect} className="nav-item">
+                        <a
+                          className={selectedTab["li_1"].nav}
+                          name="li_1"
+                          data-toggle="tab"
+                        >
+                          Motivo de Consulta
+                        </a>
+                      </li>
+                      <li onClick={changeSelect} className="nav-item">
+                        <a
+                          className={selectedTab["li_2"].nav}
+                          name="li_2"
+                          data-toggle="tab"
+                        >
+                          Lista de Tareas
+                        </a>
+                      </li>
 
                                         </ul>
                                     </div>
+
+
                                     <div className="card-body">
                                         <div className="tab-content">
                                             <div className={selectedTab["li_0"]["tab"]} id="timeline">
-                                                <div className="post clearfix">
-                                                    <div className="user-block">
-                                                        {/* <span className="username"> */}
-                                                        <strong>
-
-                                                            <a >Estrategia Terapeutica o enfoque terapeutico</a>
-                                                        </strong>
-                                                        {/* <a href="#" className="float-right btn-tool"><i className="fas fa-times"></i></a> */}
-                                                        {/* </span> */}
-
-                                                    </div>
-                                                    <p>
-                                                        {store.userDataSelecionado.psych_strategies}
-                                                    </p>
-
-
+                                                
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Name
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.name}
+                                                        </a>
+                                                    </div>       
                                                 </div>
 
-
-                                                <div className="post">
-                                                    <div className="user-block">
-                                                        {/* <span className="username"> */}
-                                                        <strong>
-
-                                                            <a >Experiencias</a>
-                                                        </strong>
-                                                        {/* <a href="#" className="float-right btn-tool"><i className="fas fa-times"></i></a> */}
-                                                        {/* </span> */}
-
-                                                    </div>
-
-                                                    <div className="row mb-3">
-                                                        <div className="col-sm-6">
-                                                            <img className="img-fluid" src={Imager} alt="Photo" />
-                                                        </div>
-
-                                                        <div className="col-sm-6">
-                                                            <div className="row">
-                                                                <div className="col-sm-6">
-                                                                    <img className="img-fluid mb-3" src={Imager1} alt="Photo" />
-                                                                    <img className="img-fluid mb-3" src={Imager2} alt="Photo" />
-                                                                </div>
-
-                                                                <div className="col-sm-6">
-                                                                    <img className="img-fluid mb-3" src={Imager3} alt="Photo" />
-                                                                    <img className="img-fluid mb-3" src={Imager4} alt="Photo" />
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-                                                    <p>
-                                                        {store.userDataSelecionado.PsychExperiences
-                                                        }
-                                                    </p>
-
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Name
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.last_name}
+                                                        </a>
+                                                    </div>       
                                                 </div>
+
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Name
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.dob}
+                                                        </a>
+                                                    </div>       
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Name
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.email}
+                                                        </a>
+                                                    </div>       
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Name
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.gender}
+                                                        </a>
+                                                    </div>       
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Name
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.phone_number}
+                                                        </a>
+                                                    </div>       
+                                                </div>
+                                            </div>
+                                            <div className={selectedTab["li_1"]["tab"]} id="timeline">
+                                                
+                                                <div className="form-group row">
+                                                    <label
+                                                        for="inputName"
+                                                        className="col-sm-2 "
+                                                    >
+                                                        Motivo de consulta
+                                                    </label>
+                                                    <div className="col-sm-10">
+                                                        <a className="text-muted mb-1">
+                                                            {store.userDataSelecionado.motivo_consulta}
+                                                        </a>
+                                                    </div>       
+                                                </div>
+                                            </div>
+                                            <div className={selectedTab["li_2"]["tab"]} id="timeline">
+                                                
+                                                
                                             </div>
                                         </div>
                                     </div>
