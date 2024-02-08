@@ -207,106 +207,106 @@ def handle_user_data_seleccinado(id):
     
 
 
-@api.route("/specialty-area", methods=['GET'])
-def handle_specialty_area():
-    specialty_areas = ["Psicología Cognitiva", "Psicología Clínica", "Neuro Psicología", "Psicólogia Biológica", "Psicología Comparativa o Etiología", "Psicología Educativa", "Psicología Evolutiva", "Psicología del Deporte", "Psicología Jurídica", "Psicología de la Personalidad", "Psicología de la Salud",
-                       "Psicología de Parejas", "Psicología Familiar", "Psicología Empresarial y Organizacional", "Psicología Militar", "Psicología Escolar", "Psicología Gerontológica", "Psicología Experimental", "Psicología Del Desarrollo", "Psicología de Ingeniería", "Psicología del Marketing", "Sexología", "Psicología comunitaria"]
-    return jsonify({"ok": True, "result": specialty_areas}), 200
+# @api.route("/specialty-area", methods=['GET'])
+# def handle_specialty_area():
+#     specialty_areas = ["Psicología Cognitiva", "Psicología Clínica", "Neuro Psicología", "Psicólogia Biológica", "Psicología Comparativa o Etiología", "Psicología Educativa", "Psicología Evolutiva", "Psicología del Deporte", "Psicología Jurídica", "Psicología de la Personalidad", "Psicología de la Salud",
+#                        "Psicología de Parejas", "Psicología Familiar", "Psicología Empresarial y Organizacional", "Psicología Militar", "Psicología Escolar", "Psicología Gerontológica", "Psicología Experimental", "Psicología Del Desarrollo", "Psicología de Ingeniería", "Psicología del Marketing", "Sexología", "Psicología comunitaria"]
+#     return jsonify({"ok": True, "result": specialty_areas}), 200
 
 
-# Preguntar en reunion, como se hará para actualizar la información academica del psicologo
-# Get and create academic information for a psycologist
-@api.route('/academic', methods=['GET', 'POST'])
-@jwt_required()
-def get_and_create_academic_data():
-    user_id = get_jwt_identity()
-    if request.method == "GET":
-        academic_data = PsychAcademicInfo.query.filter_by(
-            user_id=user_id).all()
-        return jsonify([academic.serialize() for academic in academic_data])
-    elif request.method == "POST":
-        academic_info = request.json
-        academic_info["user_id"] = user_id
-        new_academic = PsychAcademicInfo.create(academic_info)
-        if new_academic:
-            return jsonify({'message': 'Academic data successfully added', 'academic_data': new_academic.serialize()}), 201
-        return jsonify({'message': 'Error adding academic data'}), 500
+# # Preguntar en reunion, como se hará para actualizar la información academica del psicologo
+# # Get and create academic information for a psycologist
+# @api.route('/academic', methods=['GET', 'POST'])
+# @jwt_required()
+# def get_and_create_academic_data():
+#     user_id = get_jwt_identity()
+#     if request.method == "GET":
+#         academic_data = PsychAcademicInfo.query.filter_by(
+#             user_id=user_id).all()
+#         return jsonify([academic.serialize() for academic in academic_data])
+#     elif request.method == "POST":
+#         academic_info = request.json
+#         academic_info["user_id"] = user_id
+#         new_academic = PsychAcademicInfo.create(academic_info)
+#         if new_academic:
+#             return jsonify({'message': 'Academic data successfully added', 'academic_data': new_academic.serialize()}), 201
+#         return jsonify({'message': 'Error adding academic data'}), 500
 
 
-# Obtener y actualizar datos académicos por ID
-@api.route('/academic/<int:academic_id>', methods=['GET', 'PUT', 'DELETE'])
-@jwt_required()
-def get_and_update_academic_data_by_id(academic_id):
-    user_id = get_jwt_identity()
-    academic = PsychAcademicInfo.query.filter_by(
-        id=academic_id, user_id=user_id).first()
-    print(academic)
-    if academic:
-        if request.method == "GET":
-            return jsonify(academic.serialize())
-        elif request.method == "PUT":
-            academic_info = request.json
-            if academic.update(academic_info):
-                return jsonify({'message': 'Academic data successfully updated'})
-            return jsonify({'message': 'Error updating academic data'}), 500
-        elif request.method == "DELETE":
-            if academic.delete():
-                return jsonify({'message': 'Academic data successfully removed'})
-            return jsonify({'message': 'Error deleting academic data'}), 500
-    return jsonify({'message': 'Academic data not found'}), 404
+# # Obtener y actualizar datos académicos por ID
+# @api.route('/academic/<int:academic_id>', methods=['GET', 'PUT', 'DELETE'])
+# @jwt_required()
+# def get_and_update_academic_data_by_id(academic_id):
+#     user_id = get_jwt_identity()
+#     academic = PsychAcademicInfo.query.filter_by(
+#         id=academic_id, user_id=user_id).first()
+#     print(academic)
+#     if academic:
+#         if request.method == "GET":
+#             return jsonify(academic.serialize())
+#         elif request.method == "PUT":
+#             academic_info = request.json
+#             if academic.update(academic_info):
+#                 return jsonify({'message': 'Academic data successfully updated'})
+#             return jsonify({'message': 'Error updating academic data'}), 500
+#         elif request.method == "DELETE":
+#             if academic.delete():
+#                 return jsonify({'message': 'Academic data successfully removed'})
+#             return jsonify({'message': 'Error deleting academic data'}), 500
+#     return jsonify({'message': 'Academic data not found'}), 404
 
 
-# Endpoint to delete, update and get a experience by id
-@api.route('/psych-experiences/<int:id>', methods=['DELETE', 'PUT', 'GET'])
-def handle_one_experience(id):
-    psych_xp = PsychExperiences.query.filter_by(id=id).one_or_none()
-    if request.method == 'DELETE':
-        if psych_xp is None:
-            return jsonify({"message": "Experience not found"}), 404
-        deleted = psych_xp.delete()
-        if deleted == False:
-            return jsonify({"message": "Something happen try again!"}), 500
-        return jsonify({"message": "Experience deleted"}), 204
-    elif request.method == 'GET':
-        if psych_xp is None:
-            return jsonify({"message": "Experience not found"}), 404
-        return jsonify(psych_xp.serialize()), 200
-    elif request.method == 'PUT':
-        if psych_xp is not None:
-            updated = psych_xp.update(request.json)
-            if updated:
-                return jsonify({"message": "Experience updated"}), 200
-            else:
-                return jsonify({"message": "Something went wrong!"}), 500
-        return jsonify({"message": "Experience does not exist!"}), 404
+# # Endpoint to delete, update and get a experience by id
+# @api.route('/psych-experiences/<int:id>', methods=['DELETE', 'PUT', 'GET'])
+# def handle_one_experience(id):
+#     psych_xp = PsychExperiences.query.filter_by(id=id).one_or_none()
+#     if request.method == 'DELETE':
+#         if psych_xp is None:
+#             return jsonify({"message": "Experience not found"}), 404
+#         deleted = psych_xp.delete()
+#         if deleted == False:
+#             return jsonify({"message": "Something happen try again!"}), 500
+#         return jsonify({"message": "Experience deleted"}), 204
+#     elif request.method == 'GET':
+#         if psych_xp is None:
+#             return jsonify({"message": "Experience not found"}), 404
+#         return jsonify(psych_xp.serialize()), 200
+#     elif request.method == 'PUT':
+#         if psych_xp is not None:
+#             updated = psych_xp.update(request.json)
+#             if updated:
+#                 return jsonify({"message": "Experience updated"}), 200
+#             else:
+#                 return jsonify({"message": "Something went wrong!"}), 500
+#         return jsonify({"message": "Experience does not exist!"}), 404
 
-# Endpoint to delete, update and get a strategie by id
+# # Endpoint to delete, update and get a strategie by id
 
 
-@api.route('/psych-strategies/<int:id>', methods=['DELETE', 'PUT', 'GET'])
-def handle_one_strategie(id):
-    psych_strategie = PsychTherapeuticStrategies.query.filter_by(
-        id=id).one_or_none()
-    if request.method == 'DELETE':
-        if psych_strategie is None:
-            return jsonify({"message": "Strategie not found"}), 404
-        deleted = psych_strategie.delete()
-        if deleted == False:
-            return jsonify({"message": "Something happen try again!"}), 500
-        return jsonify({"message": "Strategie deleted"}), 204
-    elif request.method == 'GET':
-        if psych_strategie is None:
-            return jsonify({"message": "Strategie not found"}), 404
-        return jsonify(psych_strategie.serialize()), 200
-    elif request.method == 'PUT':
-        if psych_strategie is not None:
-            updated = psych_strategie.update(request.json)
-            if updated:
-                return jsonify({"message": "Strategie updated"}), 200
-            else:
-                return jsonify({"message": "Something went wrong!"}), 500
-        return jsonify({"message": "Strategie does not exist!"}), 404
-# Get Session by ID of the professor, but returns all sessions of the current day. If there's no sessions, will return the same statement
+# @api.route('/psych-strategies/<int:id>', methods=['DELETE', 'PUT', 'GET'])
+# def handle_one_strategie(id):
+#     psych_strategie = PsychTherapeuticStrategies.query.filter_by(
+#         id=id).one_or_none()
+#     if request.method == 'DELETE':
+#         if psych_strategie is None:
+#             return jsonify({"message": "Strategie not found"}), 404
+#         deleted = psych_strategie.delete()
+#         if deleted == False:
+#             return jsonify({"message": "Something happen try again!"}), 500
+#         return jsonify({"message": "Strategie deleted"}), 204
+#     elif request.method == 'GET':
+#         if psych_strategie is None:
+#             return jsonify({"message": "Strategie not found"}), 404
+#         return jsonify(psych_strategie.serialize()), 200
+#     elif request.method == 'PUT':
+#         if psych_strategie is not None:
+#             updated = psych_strategie.update(request.json)
+#             if updated:
+#                 return jsonify({"message": "Strategie updated"}), 200
+#             else:
+#                 return jsonify({"message": "Something went wrong!"}), 500
+#         return jsonify({"message": "Strategie does not exist!"}), 404
+# # Get Session by ID of the professor, but returns all sessions of the current day. If there's no sessions, will return the same statement
 
 @api.route("/sessions/today/client/<int:client_id>", methods=['GET'])
 def handle_sessions_client_today(client_id):
@@ -457,7 +457,7 @@ def handle_unbook_session(session_id):
 # @jwt_required()
 def select_psicologo(psychologist_id):
     # Obtén el usuario/cliente actual (seguramente a través de la autenticación)
-    user_id = 3 #get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
+    user_id = 1 #get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
     user = User.query.get(user_id)
 
     # Verifica que el usuario sea un cliente y actualiza selected_psicologo_id
@@ -501,9 +501,9 @@ def obtener_usuarios_relacionados():
 
     return jsonify(resultados)
 
-@api.route('/psychologists/<int:psychologist_id>/patients/<int:patient_id>/tasks', methods=['POST'])
+@api.route('/patients/<int:patient_id>/tasks', methods=['POST'])
 @jwt_required()
-def create_task(psychologist_id, patient_id):
+def create_task(patient_id):
     # Autenticar al psicólogo
     user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
     user = User.query.get(user_id)
@@ -511,25 +511,39 @@ def create_task(psychologist_id, patient_id):
         # Asegúrate de que el usuario actual esté autenticado y sea un psicólogo
         return jsonify({'message': 'Acceso no autorizado'}), 403
 
+    # Validación de datos
+    try:
+        description = request.json['description']
+        if not description:
+            raise ValueError('La descripción no puede estar vacía.')
+    except KeyError:
+        return jsonify({'message': 'Falta la descripción en la solicitud.'}), 400
+
     # Crear la nueva tarea
     new_task = ClientTask(
-        description=request.json[0]['description'],
+        description=description,
         client_id=patient_id,
+        # ... otros atributos ...
     )
-    db.session.add(new_task)
-    db.session.commit()
-    print(new_task)
+
+    # Manejo de errores
+    try:
+        db.session.add(new_task)
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({'message': f'Error al crear la tarea: {error}.'}), 400
 
     # Devolver la nueva tarea
     return jsonify({
-    'id': new_task.id,
-    'description': new_task.description,
-    # ... otros atributos ...
-}), 201
+        'id': new_task.id,
+        'description': new_task.description,
+        # ... otros atributos ...
+    }), 201
 
-@api.route('/psychologists/<int:psychologist_id>/patients/<int:patient_id>/tasks', methods=['GET'])
+@api.route('/psychologists/patients/<int:patient_id>/tasks', methods=['GET'])
 @jwt_required()
-def get_tasks(psychologist_id, patient_id):
+def get_tasks(patient_id):
     # Obtener las tareas
     tasks = ClientTask.query.filter_by(client_id=patient_id).all()
     if not tasks:

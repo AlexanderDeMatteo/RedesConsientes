@@ -9,21 +9,17 @@ import psicologo_img from "../component/perfil_componentes/psicologo.png";
 import { AboutMe } from "../component/perfil_componentes/AboutMe";
 // import { uploadFile } from "../component/drag_and_drop";
 import { useParams } from "react-router-dom";
+import { TodoList } from "../component/todoList";
 
 export const PerfilPacienteSeleccionado = () => {
     const API_URL = process.env.BACKEND_URL;
     const { id } = useParams();
     const { actions, store } = useContext(Context);
-    console.log("aaaaaaaaaaa", store.userDataSelecionado)
     const [selectedTab, setSelectedTab] = React.useState({
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
         li_1: { nav: "nav-link", tab: "tab-pane" },
         li_2: { nav: "nav-link", tab: "tab-pane" },
     });
-      const [tasks, setTasks] = useState([]);
-      const [newTask, setNewTask] = useState('');
-    
-
 
     function changeSelect(e) {
         const { name } = e.target;
@@ -52,18 +48,11 @@ export const PerfilPacienteSeleccionado = () => {
           }));
         }
       }
-
+    
     useEffect(() => {
         // actions.privateData()
         actions.handle_patient_data_seleccinado(id);
     }, []);
-
-
-
-    // let pepe = store.userDataSelecionado 
-    // console.log(pepe)
-    // const perfilSeleccionado = pepe.filter(usuario => usuario.edad)
-    // console.log("aaaaaaaa", perfilSeleccionado)
 
     return (
 
@@ -257,9 +246,10 @@ export const PerfilPacienteSeleccionado = () => {
                                                 </div>
                                             </div>
                                             <div className={selectedTab["li_2"]["tab"]} id="timeline">
-                                                
-                                                
-                                            </div>
+                                            <h1>Lista de tareas para la proxima sesion</h1>
+                                            <TodoList id={id}/>
+                                            
+                                        </div>
                                         </div>
                                     </div>
                                 </div>

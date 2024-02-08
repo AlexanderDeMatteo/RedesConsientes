@@ -15,6 +15,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userPsicologos: JSON.parse(sessionStorage.getItem("psicos")) || [],
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
 			userFpvData: {},
+			patientTask: {},
 			userScheduleData:{},
 			userSession:{},
 			scheduleSession:{},
@@ -462,34 +463,83 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			// 	handleList: async (e) => {
-			// 	if (e.key === "Enter" && addTodolist != "") {
-			// 		let newTask = [...todoList, { label: e.target.value, done: false }];
-			// 		const response = await fetch(apiUrl, {
-			// 			method: "PUT",
-			// 			body: JSON.stringify(newTask),
-			// 			headers: {
-			// 				"Content-Type": "application/json",
-			// 			},
-			// 		});
-			// 		setAddTodolist("");
-			// 		if (response.ok) {
-			// 			getTodoList();
-			// 		}
+			get_patient_task: async (id) => {
+				let response = await fetch(`${API_URL}/api/psychologists/patients/${id}/tasks`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				
+				});
+				console.log(id)
+				if (response.ok) {
+					console.log(response)
+					let body = await response.json()
+					console.log(body)
+					setStore({ patientTask: body })
+
+				}
+			},
+
+			post_patient_task: async (id, newTask) => {
+				let response = await fetch(`${API_URL}/api/patients/${id}/tasks`, {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					body: JSON.stringify(newTask)
+				});
+				if (response.ok) {
+					alert("tarea añadida con exito")
+				}
+			},
+
+			put_patient_task: async (taskId, task) => {
+				let response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
+					method: 'PUT',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					body: JSON.stringify({"description" : task} )
+				});
+				if (response.ok) {
+					alert("tarea editada con exito")
+				}
+			},
+
+			// complete_patient_task: async (taskId) => {
+			// 	let response = await fetch(`${API_URL}/api/tasks/${taskId}/complete`, {
+			// 		method: 'PUT',
+			// 		headers: {
+			// 			"Content-Type": "application/json",
+			// 			Authorization: `Bearer ${getAuthToken("token")}`
+			// 		},
+			// 		body: JSON.stringify({"description" : task} )
+			// 	});
+			// 	if (response.ok) {
+			// 		alert("tarea completada con exito")
 			// 	}
-			// };
-
-
-			// userData: async () => {
-			// 	getUserData: async () => {
-			// 		const store = getStore()
-			// 		let response = await fetch(`${store.API_URL}`);
-			// 		if (response.ok) {
-			// 			let body = await response.json()
-			// 			setStore({ UserData: body.results })
-			// 		}
-			// 	},
 			// },
+
+			delete_patient_task: async (taskId) => {
+				let response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
+					method: 'DELETE',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				console.log(taskId)
+				if (response.ok) {
+					alert("tarea eliminada con exito")
+				}
+			},
+		
+
+			
 		}
 	};
 };
