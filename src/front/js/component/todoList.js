@@ -25,10 +25,10 @@ export const TodoList = () => {
     if (event.key === "Enter") {
       try {
         const response = await actions.post_patient_task(id, task);
+        await actions.get_patient_task(id);
+        setIsLoading(false);
+        setTaskList(store.patientTask);
         if (response.ok) {
-          await actions.get_patient_task(id);
-          setIsLoading(false);
-          setTaskList(store.patientTask);
         } else {
           console.log("Error al guardar la tarea:", response.statusText);
         }
@@ -76,6 +76,7 @@ export const TodoList = () => {
         class="form-control" 
         aria-label="Sizing example input" 
         aria-describedby="inputGroup-sizing-sm"
+        required minlength="4" maxlength="110"
       />
       {isLoading ? (
         <div>Cargando...</div>
@@ -85,30 +86,22 @@ export const TodoList = () => {
             <>
               <ul className="lista">
                 {taskList.map((item, index) => (
-                    
-                  <li key={index} className="p-2 g-col-6">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      checked={checked}
-                      onChange={handleCheck}
-                    />
-                    <label className="form-check-label">
+                  <div class="input-group-text">
+                  <li key={index} className="p-0">
+
+                    <label className="form-check-label  w-100"style={{paddingLeft:20}} for="task">
+                      
+                  <input class="form-check-input mt-1" id="task" name="task" type="checkbox" value="" aria-label="Checkbox for following text input" />
                     {`${index + 1}- ${item.description} `}
+                    <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)}></i>
                     </label>
-                    <a onClick={() => deleteTask(item.id)}>
-                      <i className="fa-regular fa-trash-can"></i>
-                    </a>
+
                   </li>
+                </div>  
                 ))}
               </ul>
               <div>Tienes {taskList.length} tareas pendientes</div>
-              <div class="input-group mb-3">
-  <div class="input-group-text">
-    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/>
-  </div>
-  <input type="text" class="form-control" aria-label="Text input with checkbox"/>
-</div>
+
             </>
           ) : (
             <div>No hay tareas disponibles</div>
