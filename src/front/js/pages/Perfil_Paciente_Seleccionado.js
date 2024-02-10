@@ -153,7 +153,7 @@ export const PerfilPacienteSeleccionado = () => {
                                                         for="inputName"
                                                         className="col-sm-2 "
                                                     >
-                                                        Name
+                                                        Nombre
                                                     </label>
                                                     <div className="col-sm-10">
                                                         <a className="text-muted mb-1">
@@ -167,7 +167,7 @@ export const PerfilPacienteSeleccionado = () => {
                                                         for="inputName"
                                                         className="col-sm-2 "
                                                     >
-                                                        Name
+                                                        Apellido
                                                     </label>
                                                     <div className="col-sm-10">
                                                         <a className="text-muted mb-1">
@@ -181,7 +181,7 @@ export const PerfilPacienteSeleccionado = () => {
                                                         for="inputName"
                                                         className="col-sm-2 "
                                                     >
-                                                        Name
+                                                        CI
                                                     </label>
                                                     <div className="col-sm-10">
                                                         <a className="text-muted mb-1">
@@ -194,7 +194,7 @@ export const PerfilPacienteSeleccionado = () => {
                                                         for="inputName"
                                                         className="col-sm-2 "
                                                     >
-                                                        Name
+                                                        Email
                                                     </label>
                                                     <div className="col-sm-10">
                                                         <a className="text-muted mb-1">
@@ -207,7 +207,7 @@ export const PerfilPacienteSeleccionado = () => {
                                                         for="inputName"
                                                         className="col-sm-2 "
                                                     >
-                                                        Name
+                                                        Genero
                                                     </label>
                                                     <div className="col-sm-10">
                                                         <a className="text-muted mb-1">
@@ -220,7 +220,7 @@ export const PerfilPacienteSeleccionado = () => {
                                                         for="inputName"
                                                         className="col-sm-2 "
                                                     >
-                                                        Name
+                                                        Numero
                                                     </label>
                                                     <div className="col-sm-10">
                                                         <a className="text-muted mb-1">

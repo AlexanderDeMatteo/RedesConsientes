@@ -2,14 +2,15 @@ import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { useParams } from "react-router-dom";
 
-export const TodoList = () => {
-  const { id } = useParams();
+export const TodoListPaciente = () => {
   const { actions, store } = useContext(Context);
   const [taskList, setTaskList] = useState([]);
   const [task, setTask] = useState({});
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
   const [checked, setChecked] = useState(true); // Estado del checkbox
-
+  const [id, setId] = useState([])
+  
+console.log(id)
   const handleChange = (event) => {
     setTask({
       ...task,
@@ -48,13 +49,18 @@ export const TodoList = () => {
   };
 
   useEffect(() => {
-    // Maneja la carga de datos y actualiza el estado de carga
-    actions.handle_patient_data_seleccinado(id);
-    actions.get_patient_task(id).then(() => {
+    const fetchData = async () => {
+      // Maneja la carga de datos y actualiza el estado de carga
+      await actions.handle_user_data();
+      setId(store.userData.id);
+      await actions.handle_patient_data_seleccinado(id);
+      const tasks = await actions.get_patient_task(id);
       setIsLoading(false);
-      setTaskList(store.patientTask);
-    });
+      setTaskList(tasks);
+    };
+    fetchData();
   }, []);
+  
   console.log(store.patientTask.completed)
   console.log(store.patientTask)
   useEffect(() => {
@@ -67,18 +73,6 @@ export const TodoList = () => {
   return (
     <div>
     
-      <input
-        placeholder="Introduce la tarea"
-        name="description"
-        value={task.description}
-        onChange={handleChange}
-        onKeyDown={saveTask}
-        type="text"
-        class="form-control" 
-        aria-label="Sizing example input" 
-        aria-describedby="inputGroup-sizing-sm"
-        required minlength="4" maxlength="110"
-      />
       {isLoading ? (
         <div>Cargando...</div>
       ) : (

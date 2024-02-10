@@ -11,6 +11,8 @@ import psicologo_img from "../component/perfil_componentes/psicologo.png";
 import { Imagenes } from "../component/perfil_componentes/Imagenes";
 import { AboutMe } from "../component/perfil_componentes/AboutMe";
 import { useNavigate } from 'react-router-dom';
+import { TodoList } from "../component/todoList";
+import { TodoListPaciente } from "../component/todoListpaciente";
 // import { uploadFile } from "../component/drag_and_drop";
 // import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -32,7 +34,6 @@ export const Perfil = () => {
     li_3: { nav: "nav-link", tab: "tab-pane" },
     li_4: { nav: "nav-link", tab: "tab-pane" },
     li_5: { nav: "nav-link", tab: "tab-pane" },
-    li_6: { nav: "nav-link", tab: "tab-pane" },
   });
 
   useEffect(() => {
@@ -283,29 +284,24 @@ export const Perfil = () => {
                           Perfil
                         </a>
                       </li>
-                      {/* <li onClick={changeSelect} className="nav-item">
-                        <a
-                          className={selectedTab["li_2"]["nav"]}
-                          name="li_2"
-                          data-toggle="tab"
-                        >
-                          Estrategia Terapeutica
-                        </a>
-                      </li>
-                      <li onClick={changeSelect} className="nav-item">
-                        <a
-                          className={selectedTab["li_3"]["nav"]}
-                          name="li_3"
-                          data-toggle="tab"
-                        >
-                          Experiencias
-                        </a>
-                      </li> */}
+                      
+                      {store.userData.is_psicologo ? (
+                        < li onClick={changeSelect} className="nav-item">
+                          <a
+                            className={selectedTab["li_2"]["nav"]}
+                            name="li_2"
+                            data-toggle="tab"
+                          >
+                            Redes
+                          </a>
+                        </li>)
+                        : ("")}
+
                       {store.userData.is_psicologo ? (
                         <li onClick={changeSelect} className="nav-item">
                           <a
-                            className={selectedTab["li_5"]["nav"]}
-                            name="li_5"
+                            className={selectedTab["li_3"]["nav"]}
+                            name="li_3"
                             data-toggle="tab"
                           >
                             Perfil profesional
@@ -314,29 +310,37 @@ export const Perfil = () => {
                       ) : (
                         <li onClick={changeSelect} className="nav-item">
                           <a
-                            className={selectedTab["li_6"]["nav"]}
-                            name="li_6"
+                            className={selectedTab["li_4"]["nav"]}
+                            name="li_4"
                             data-toggle="tab"
                           >
                             Perfil Paciente
                           </a>
                         </li>
+                        
                       )}
 
-                      {store.userData.is_psicologo ? (
-                        < li onClick={changeSelect} className="nav-item">
+                      {!store.userData.is_psicologo ? (
+                        <li onClick={changeSelect} className="nav-item">
                           <a
-                            className={selectedTab["li_4"]["nav"]}
-                            name="li_4"
+                            className={selectedTab["li_5"]["nav"]}
+                            name="li_5"
                             data-toggle="tab"
                           >
-                            Redes
+                            Tareas
                           </a>
-                        </li>)
-                        : ("")}
+                        </li>
+                      ) : (
+                        " "
+                        
+                      )}
+
 
                     </ul>
                   </div>
+
+
+                  
                   <div className="card-body">
                     <div className="tab-content">
                       <div className={selectedTab["li_0"]["tab"]} id="timeline">
@@ -745,236 +749,7 @@ export const Perfil = () => {
                           </div>
                         </div>
                       </div>
-
                       <div className={selectedTab["li_2"]["tab"]} id="timeline">
-                        <div className="tab-pane" id="settings">
-                          <div className="form-horizontal">
-                            <div className="form-group row">
-                              <div className="form-group row">
-                                <label
-                                  for="inputExperience"
-                                  className="col-sm-2 col-form-label"
-                                >
-                                  Estrategia
-                                </label>
-                                <div className="col-sm-10">
-                                  <textarea
-                                    className="form-control"
-                                    id="inputEstrategia"
-                                    placeholder="Estrategia"
-                                  ></textarea>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className={selectedTab["li_3"]["tab"]} id="timeline">
-                        <div className="tab-pane" id="settings">
-                          <div className="form-horizontal">
-                            <div className="form-group row">
-                              <div className="form-group row">
-                                <label
-                                  for="inputExperience"
-                                  className="col-sm-2 col-form-label"
-                                >
-                                  Experiencias
-                                </label>
-                                <div className="col-sm-10">
-                                  <textarea
-                                    className="form-control"
-                                    id="inputExperience"
-                                    placeholder="Experiencia"
-                                  ></textarea>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-
-                      </div>
-                      {/* perfil profecional */}
-
-
-
-                      <div className={selectedTab["li_5"]["tab"]} id="timeline">
-                        <div className="tab-pane" id="settings">
-                          <div className="form-horizontal">
-                            <div className="form-group row">
-                              <label
-                                for="inputName"
-                                className="col-sm-2 col-form-label"
-                              >
-                                Numero FPV
-                              </label>
-                              <div className="col-sm-10">
-                                <div>
-                                  <p className="text-muted mb-0">
-                                    {store.userData.fpv_number}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="form-group row">
-                              <label
-                                for="inputName"
-                                className="col-sm-2 col-form-label"
-                              >
-                                Area de especialidad
-                              </label>
-                              <div className="col-sm-10">
-                                <div>
-                                  {!show ? (
-                                    <select
-                                      value={store.userData.specialty_area || ""}
-                                      className="custom-select form-control-border"
-                                      onChange={handleChange}
-                                      name="specialty_area"
-                                      id="exampleSelectBorder">
-                                      <option>seleccionar</option>
-                                      <option>Neuro Psicología</option>
-                                      <option>Psicólogia Biológica</option>
-                                      <option>Psicología Comparativa o Etiología</option>
-                                      <option>Psicología Educativa</option>
-                                      <option>Psicología Evolutiva</option>
-                                      <option>Psicología del Deporte</option>
-                                      <option>Psicología Jurídica</option>
-                                      <option>Psicología de la Personalidad</option>
-                                      <option>Psicología de la Salud</option>
-                                      <option>Psicología de Parejas</option>
-                                      <option>Psicología Familiar</option>
-                                      <option>Psicología Empresarial y Organizacional</option>
-                                      <option>Psicología Militar</option>
-                                      <option>Psicología Escolar</option>
-                                      <option>Psicología Gerontológica</option>
-                                      <option>Psicología Experimental</option>
-                                      <option>Psicología Del Desarrollo</option>
-                                      <option>Psicología de Ingeniería</option>
-                                      <option>Psicología del Marketing</option>
-                                      <option>Sexología</option>
-                                      <option>Psicología comunitaria</option>
-
-                                    </select>
-                                  ) : (
-                                    <p className="text-muted mb-0">
-                                      {store.userData.specialty_area}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-                            {store.userData.is_psicologo ? (
-                              <div className="form-group row">
-                                <label
-                                  for="inputName"
-                                  className="col-sm-2 col-form-label"
-                                >
-                                  Monto de consulta
-                                </label>
-                                <div className="col-sm-10">
-                                  <div>
-                                    {!show ? (
-                                      <input
-                                        onChange={handleChange}
-                                        type="email"
-                                        className="form-control"
-                                        name="monto_consulta"
-                                        placeholder="Monto"
-                                        value={store.userData.monto_consulta || ""}
-                                      />
-                                    ) : (
-                                      <p className="text-muted mb-0">
-                                        {store.userData.monto_consulta}
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              ""
-                            )}
-
-                            <div className="form-group row">
-                              <div className="offset-sm-2 col-sm-10">
-                                <button
-                                  type="button"
-                                  onClick={Editar}
-                                  className="btn btn-danger"
-                                >
-                                  {!show ? "Guardar" : "Editar"}
-                                </button>
-                                {/* <button
-                                    type="submit"
-                                    onClick={() => { guardar() }}
-                                    className="btn btn-danger"
-                                  >
-                                    hola
-                                  </button> */}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      <div className={selectedTab["li_6"]["tab"]} id="timeline">
-                        <div className="tab-pane" id="settings">
-                          <div className="form-horizontal">
-                            <div className="form-group row">
-                              <label
-                                for="inputName"
-                                className="col-sm-2 col-form-label"
-                              >
-                                Motivo Consulta
-                              </label>
-                              <div className="col-sm-10">
-                                <div>
-                                  {!show ? (
-                                    <input
-                                      onChange={handleChange}
-                                      type="text"
-                                      className="form-control"
-                                      name="motivo_consulta"
-                                      placeholder="Motivo Consulta"
-                                      value={store.userData.motivo_consulta}
-                                    />
-                                  ) : (
-                                    <p className="text-muted mb-0">
-                                      {store.userData.motivo_consulta}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="form-group row">
-                              <div className="offset-sm-2 col-sm-10">
-                                <button
-                                  type="button"
-                                  onClick={Editar}
-                                  className="btn btn-danger"
-                                >
-                                  {!show ? "Guardar" : "Editar"}
-                                </button>
-                                {/* <button
-                                          type="submit"
-                                          onClick={() => { guardar() }}
-                                          className="btn btn-danger"
-                                        >
-                                          hola
-                                        </button> */}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-
-                      {/* redes */}
-                      <div className={selectedTab["li_4"]["tab"]} id="timeline">
                         <div className="tab-pane" id="settings">
                           <div className="form-horizontal">
                             <div className="form-group row">
@@ -1134,6 +909,193 @@ export const Perfil = () => {
                         </div>
 
                       </div>
+
+                      <div className={selectedTab["li_3"]["tab"]} id="timeline">
+                        <div className="tab-pane" id="settings">
+                          <div className="form-horizontal">
+                            <div className="form-group row">
+                              <label
+                                for="inputName"
+                                className="col-sm-2 col-form-label"
+                              >
+                                Numero FPV
+                              </label>
+                              <div className="col-sm-10">
+                                <div>
+                                  <p className="text-muted mb-0">
+                                    {store.userData.fpv_number}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="form-group row">
+                              <label
+                                for="inputName"
+                                className="col-sm-2 col-form-label"
+                              >
+                                Area de especialidad
+                              </label>
+                              <div className="col-sm-10">
+                                <div>
+                                  {!show ? (
+                                    <select
+                                      value={store.userData.specialty_area || ""}
+                                      className="custom-select form-control-border"
+                                      onChange={handleChange}
+                                      name="specialty_area"
+                                      id="exampleSelectBorder">
+                                      <option>seleccionar</option>
+                                      <option>Neuro Psicología</option>
+                                      <option>Psicólogia Biológica</option>
+                                      <option>Psicología Comparativa o Etiología</option>
+                                      <option>Psicología Educativa</option>
+                                      <option>Psicología Evolutiva</option>
+                                      <option>Psicología del Deporte</option>
+                                      <option>Psicología Jurídica</option>
+                                      <option>Psicología de la Personalidad</option>
+                                      <option>Psicología de la Salud</option>
+                                      <option>Psicología de Parejas</option>
+                                      <option>Psicología Familiar</option>
+                                      <option>Psicología Empresarial y Organizacional</option>
+                                      <option>Psicología Militar</option>
+                                      <option>Psicología Escolar</option>
+                                      <option>Psicología Gerontológica</option>
+                                      <option>Psicología Experimental</option>
+                                      <option>Psicología Del Desarrollo</option>
+                                      <option>Psicología de Ingeniería</option>
+                                      <option>Psicología del Marketing</option>
+                                      <option>Sexología</option>
+                                      <option>Psicología comunitaria</option>
+
+                                    </select>
+                                  ) : (
+                                    <p className="text-muted mb-0">
+                                      {store.userData.specialty_area}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {store.userData.is_psicologo ? (
+                              <div className="form-group row">
+                                <label
+                                  for="inputName"
+                                  className="col-sm-2 col-form-label"
+                                >
+                                  Monto de consulta
+                                </label>
+                                <div className="col-sm-10">
+                                  <div>
+                                    {!show ? (
+                                      <input
+                                        onChange={handleChange}
+                                        type="email"
+                                        className="form-control"
+                                        name="monto_consulta"
+                                        placeholder="Monto"
+                                        value={store.userData.monto_consulta || ""}
+                                      />
+                                    ) : (
+                                      <p className="text-muted mb-0">
+                                        {store.userData.monto_consulta}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              ""
+                            )}
+
+                            <div className="form-group row">
+                              <div className="offset-sm-2 col-sm-10">
+                                <button
+                                  type="button"
+                                  onClick={Editar}
+                                  className="btn btn-danger"
+                                >
+                                  {!show ? "Guardar" : "Editar"}
+                                </button>
+                                {/* <button
+                                    type="submit"
+                                    onClick={() => { guardar() }}
+                                    className="btn btn-danger"
+                                  >
+                                    hola
+                                  </button> */}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div className={selectedTab["li_4"]["tab"]} id="timeline">
+                        <div className="tab-pane" id="settings">
+                          <div className="form-horizontal">
+                            <div className="form-group row">
+                              <label
+                                for="inputName"
+                                className="col-sm-2 col-form-label"
+                              >
+                                Motivo Consulta
+                              </label>
+                              <div className="col-sm-10">
+                                <div>
+                                  {!show ? (
+                                    <input
+                                      onChange={handleChange}
+                                      type="text"
+                                      className="form-control"
+                                      name="motivo_consulta"
+                                      placeholder="Motivo Consulta"
+                                      value={store.userData.motivo_consulta}
+                                    />
+                                  ) : (
+                                    <p className="text-muted mb-0">
+                                      {store.userData.motivo_consulta}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="form-group row">
+                              <div className="offset-sm-2 col-sm-10">
+                                <button
+                                  type="button"
+                                  onClick={Editar}
+                                  className="btn btn-danger"
+                                >
+                                  {!show ? "Guardar" : "Editar"}
+                                </button>
+                                {/* <button
+                                          type="submit"
+                                          onClick={() => { guardar() }}
+                                          className="btn btn-danger"
+                                        >
+                                          hola
+                                        </button> */}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className={selectedTab["li_5"]["tab"]} id="timeline">
+                        <div className="tab-pane" id="settings">
+                          <div className="form-horizontal">
+                            <div className="form-group row">
+                              <TodoListPaciente/>
+                              
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                
                     </div>
                   </div>
                 </div>
