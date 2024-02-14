@@ -454,10 +454,10 @@ def handle_unbook_session(session_id):
             return jsonify({"message": "error"}), 500
 
 @api.route('/select-psicologo/<int:psychologist_id>', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def select_psicologo(psychologist_id):
     # Obtén el usuario/cliente actual (seguramente a través de la autenticación)
-    user_id = 1 #get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
+    user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
     user = User.query.get(user_id)
 
     # Verifica que el usuario sea un cliente y actualiza selected_psicologo_id
@@ -590,7 +590,7 @@ def edit_task(task_id):
     return jsonify(task.to_dict()), 200
 
 @api.route('/tasks/<int:task_id>/complete', methods=['PUT'])
-# @jwt_required()
+@jwt_required()
 def complete_task(task_id):
     # Buscar la tarea
     task = ClientTask.query.get(task_id)

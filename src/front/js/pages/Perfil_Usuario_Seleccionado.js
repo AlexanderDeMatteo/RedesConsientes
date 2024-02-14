@@ -18,12 +18,17 @@ export const PerfilUsuarioSeleccionado = () => {
     const API_URL = process.env.BACKEND_URL;
     const { id } = useParams();
     const { actions, store } = useContext(Context);
+    const [isSelected, setIsSelected] = useState(false)
     console.log("aaaaaaaaaaa", store.userDataSelecionado)
     const [selectedTab, setSelectedTab] = React.useState({
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
     });
 
 
+    const enlace = (id) => {
+        actions.Psicology_selected(id)
+        setIsSelected(true)
+    }
 
     useEffect(() => {
         // actions.privateData()
@@ -82,10 +87,16 @@ export const PerfilUsuarioSeleccionado = () => {
                                         </p>
 
 
-
-                                        <a href="#" className="btn btn-primary btn-block">
-                                            <b>Seleccionar psicologo   </b>
+                                      {!store.userData.is_psicologo ? (
+                                        <a
+                                            href="#"
+                                            className={`btn ${isSelected ? 'btn btn-success btn-block'  : 'btn btn-primary btn-block'}`}
+                                            onClick={() => enlace(id)}
+                                        >
+                                            {isSelected ? 'Psicologo seleccionado' : 'Seleccionar psicologo'}
                                         </a>
+                                      ) : ("") }    
+
                                     </div>
 
 

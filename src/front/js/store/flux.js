@@ -509,6 +509,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			Psicology_selected: async (id) => {
+				let response = await fetch(`${API_URL}/api/select-psicologo/${id}`, {
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					
+				});
+				if (response.ok) {
+					alert("psicologo seleccionado con exito")
+				}
+			},
+
 			put_patient_task: async (taskId, task) => {
 				let response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
 					method: 'PUT',
