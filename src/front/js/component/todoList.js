@@ -94,7 +94,7 @@ export const TodoList = () => {
                     {console.log(item.completed)}
                   <label className="form-check-label  w-100"style={{paddingLeft:20}} for="task">
                       
-                  <input class="form-check-input mt-1" type="checkbox" value={checked} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
+                  <input class="form-check-input mt-1" type="checkbox" checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
                     {`${index + 1}- ${item.description} `}
                     <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)} style={{cursor: "pointer"}}></i>
                     </label>

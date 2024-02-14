@@ -18,26 +18,18 @@ console.log(id)
     });
   };
 
-  const handleCheck = (event) => {
-    setChecked(event.target.checked);
+  const handleTaskCompletion = async (taskId) => {
+    // Actualizar el estado local de la tarea
+    setTaskList(taskList.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task)));
+    
+    // Enviar la solicitud a la API para actualizar el estado en el servidor
+    // ...
   };
-
-  const saveTask = async (event) => {
-    if (event.key === "Enter") {
-      try {
-        const response = await actions.post_patient_task(id, task);
-        await actions.get_patient_task(id);
-        setIsLoading(false);
-        setTaskList(store.patientTask);
-        if (response.ok) {
-        } else {
-          console.log("Error al guardar la tarea:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error al comunicarse con la API:", error);
-      }
-    }
-  };
+  
+  const hola = (taskId, completed) =>{
+    actions.complete_patient_task(taskId, completed)
+    console.log("hola")
+  }
 
   const addTask = (newTask) => {
     setTaskList([...taskList, newTask]);
@@ -57,10 +49,6 @@ console.log(id)
   }, []);
 
  
-  console.log(id)
-  // console.log(actions.handle_patient_own_data(id))
-  console.log(store.patientTask.completed)
-  console.log(store.patientTask)
   
   useEffect(() => {
     // Actualizar taskList cuando la lista de tareas en el store cambie
@@ -86,8 +74,8 @@ console.log(id)
                     {console.log(item.completed)}
                   <label className="form-check-label  w-100"style={{paddingLeft:20}} for="task">
                       
-                  <input class="form-check-input mt-1" type="checkbox" value={checked} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
-                    {`${index + 1}- ${item.description} `}
+                  <input class="form-check-input mt-1" type="checkbox" onClick={hola(item.id, item.completed)} onChange={() => handleTaskCompletion(item.id)} checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
+                    {`${index + 1}- ${item.description} ${item.id} `}
                     <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)} style={{cursor: "pointer"}}></i>
                     </label>
                   </li>

@@ -523,19 +523,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			// complete_patient_task: async (taskId) => {
-			// 	let response = await fetch(`${API_URL}/api/tasks/${taskId}/complete`, {
-			// 		method: 'PUT',
-			// 		headers: {
-			// 			"Content-Type": "application/json",
-			// 			Authorization: `Bearer ${getAuthToken("token")}`
-			// 		},
-			// 		body: JSON.stringify({"description" : task} )
-			// 	});
-			// 	if (response.ok) {
-			// 		alert("tarea completada con exito")
-			// 	}
-			// },
+			complete_patient_task: async (taskId, completed) => {
+				let response = await fetch(`${API_URL}/api/tasks/${taskId}/complete`, {
+					method: 'PUT',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					body: JSON.stringify({"completed" : completed} )
+				});
+				if (response.ok) {
+					
+
+				}
+			},
 
 			delete_patient_task: async (taskId) => {
 				let response = await fetch(`${API_URL}/api/tasks/${taskId}`, {

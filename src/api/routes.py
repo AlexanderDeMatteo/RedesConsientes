@@ -590,12 +590,15 @@ def edit_task(task_id):
     return jsonify(task.to_dict()), 200
 
 @api.route('/tasks/<int:task_id>/complete', methods=['PUT'])
-@jwt_required()
+# @jwt_required()
 def complete_task(task_id):
     # Buscar la tarea
     task = ClientTask.query.get(task_id)
     if not task:
         return jsonify({'error': 'Tarea no encontrada'}), 404
+
+    # Obtener el estado actual
+    current_completed_status = task.completed
 
     # Obtener los datos de la solicitud
     data = request.get_json()
@@ -604,8 +607,9 @@ def complete_task(task_id):
     if not data or 'completed' not in data:
         return jsonify({'error': 'Faltan datos requeridos'}), 400
 
-    # Actualizar el estado de la tarea
-    task.completed = data['completed']
+    # Actualizar el estado solo si es necesario
+    if data['completed'] != current_completed_status:
+        task.completed = data['completed']
 
     # Guardar los cambios en la base de datos
     try:
@@ -614,8 +618,13 @@ def complete_task(task_id):
         db.session.rollback()
         return jsonify({'error': 'Error al actualizar la tarea'}), 500
 
-    # Devolver respuesta
-    return jsonify({'message': 'Tarea completada'}), 200
+    # Mensaje de respuesta personalizado
+    if task.completed:
+        message = 'Tarea completada'
+    else:
+        message = 'Tarea marcada como incompleta'
+
+    return jsonify({'message': message}), 200
 
 @api.route('/tasks/<int:task_id>', methods=['DELETE'])
 @jwt_required()
