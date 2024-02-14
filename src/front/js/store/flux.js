@@ -313,7 +313,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			handle_patient_data_seleccinado: async (usuario) => {
-				const store = getStore()
 				let response = await fetch(`${API_URL}/api/user-patient-data/${usuario}`, {
 					method: 'GET',
 					headers: {
@@ -324,6 +323,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (response.ok) {
 					let body = await response.json()
 					setStore({ userDataSelecionado: body })
+				}
+			},
+
+			handle_patient_own_task: async () => {
+				let response = await fetch(`${API_URL}/api/patients/own/tasks`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				if (response.ok) {
+					let body = await response.json()
+					setStore({ patientTask: body })
 				}
 			},
 

@@ -703,3 +703,21 @@ def handle_patient_data_seleccinado(id):
             profile_info = profile_info.serialize()
             full_info = {**user_info, **profile_info}
             return jsonify(full_info), 200
+
+@api.route('/patients/own/tasks', methods=['GET'])
+@jwt_required()
+def get_own_tasks():
+    current_user_id = get_jwt_identity()
+
+    # Obtener las tareas del usuario actual
+    tasks = ClientTask.query.filter_by(client_id=current_user_id).all()
+
+    # Manejar el caso de no encontrar tareas
+    if not tasks:
+        return jsonify({'message': 'No se encontraron tareas'}), 404
+
+    # Devolver las tareas
+    return jsonify([task.to_dict() for task in tasks]), 200
+
+
+

@@ -49,20 +49,19 @@ console.log(id)
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Maneja la carga de datos y actualiza el estado de carga
-      await actions.handle_user_data();
-      setId(store.userData.id);
-      await actions.handle_patient_data_seleccinado(id);
-      const tasks = await actions.get_patient_task(id);
+    // Maneja la carga de datos y actualiza el estado de carga
+    actions.handle_patient_own_task().then(() => {
       setIsLoading(false);
-      setTaskList(tasks);
-    };
-    fetchData();
+      setTaskList(store.patientTask);
+    });
   }, []);
-  
+
+ 
+  console.log(id)
+  // console.log(actions.handle_patient_own_data(id))
   console.log(store.patientTask.completed)
   console.log(store.patientTask)
+  
   useEffect(() => {
     // Actualizar taskList cuando la lista de tareas en el store cambie
     if (!isLoading) {

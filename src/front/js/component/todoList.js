@@ -55,6 +55,7 @@ export const TodoList = () => {
       setTaskList(store.patientTask);
     });
   }, []);
+  
   console.log(store.patientTask.completed)
   console.log(store.patientTask)
   useEffect(() => {
