@@ -116,7 +116,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			getPsicologiScheduleDay: async (ids, fecha) => {
+			getPsicologiScheduleDay: async (ids, fecha, psycologyId) => {
 				const store = getStore()
 			
 				let response = await fetch(`${API_URL}/api/sessions/${ids}`, {
@@ -263,6 +263,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			handle_payment_data: async () => {
 				let response = await fetch(`${API_URL}/api/payment-accounts`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					// body: JSON.stringify([])
+				});
+
+				if (response.ok) {
+					let body = await response.json()
+					console.log(body)
+					setStore({ userPaymentData: body })
+
+				}
+			},
+
+			psicology_payment_data: async (id) => {
+				let response = await fetch(`${API_URL}/api/psicology-payment-accounts/${id}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -518,9 +536,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					
 				});
-				if (response.ok) {
-					alert("psicologo seleccionado con exito")
-				}
+				
 			},
 
 			put_patient_task: async (taskId, task) => {

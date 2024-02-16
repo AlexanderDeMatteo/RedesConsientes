@@ -12,10 +12,7 @@ export const Calendar_custom = () => {
     const { actions, store } = useContext(Context)
     const [selectedDate, setSelectedDate] = useState(new Date().toString().split(" "));
     const [items, setItems] = useState([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
-    const [dayNumber, setDayNumber] = useState(selectedDate[2])
-    const [month, setMonth] = useState(selectedDate[1])
-    const [year, setYear] = useState(selectedDate[3])
-    const [day, setDay] = useState(selectedDate[0])
+    const [isLoading, setIsLoading] = useState(false);
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
     // const [todayDay, setToDay] = useState(new Date().toString().split(" "));
     const {id} = useParams(0)
@@ -34,19 +31,26 @@ export const Calendar_custom = () => {
 
     
     useEffect(() => {
-    actions.getPsicologiScheduleDay(0, fecha)
-        // console.log(masculinos)
-        
-    }, [])
+        const fetchData = async () => {
+          setIsLoading(true); // Iniciar la carga
+          try {
+            const data = await actions.getPsicologiScheduleDay(id, fecha);
+            // Usa la data aquí
+            console.log(id)
+          } catch (error) {
+            console.error(error); // Handle any errors
+          } finally {
+            setIsLoading(false); // Finalizar la carga
+          }
+        };
+    
+        fetchData();
+    }, [selectedDate]);
 
     function onChangeCalendar(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setSelectedDate(event.toString().split(" "))
         let today_date = event.toString().split(" ")
-        setDayNumber(today_date[2])
-        setDay(today_date[0])
-        setMonth(today_date[1])
-        setYear(today_date[3])
         setFecha(`${today_date[0]}, ${today_date[2]} ${today_date[1]} ${today_date[3]}`)
         
     }
@@ -90,78 +94,69 @@ export const Calendar_custom = () => {
 
     return (
         <>
-
-            <div className="content-wrapper">
-                <section className="content-header">
-                    <div className="container-fluid">
-                        <div className="row mb-2">
-                            <div className="col-sm-6">
-                                <h1>Calendario</h1>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-md-3">
-                            <div className="sticky-top mb-3">
-                                {/* <div className="card"> */}
-                                <div className="card card-primary">
-                                    <div className="card-header column">
-                                        <h3 className="card-title">{calendar_date2}</h3>
-                                        <Modal calendar_date2={calendar_date2} calendar_date={calendar_date} fecha={fecha}/>
-                                    </div>
-
-
-                                    <form className="form-horizontal">
-                                        <div className="card-body" >
-                                            <div clase="time-card" id="external-events">
-                                                {transition((style, item) =>
-                                                    item ? <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`} ><div className="card-header">
-                                                        <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
-                                                        {!store.userData.is_psicologo ? <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a> : <button type="button" id="delete-date" name={item.id} className="close button_delete_date" aria-hidden="true">&times;</button>}
-                                                        
-                                                    </div> </animated.div> : '')}
-
-
-
-
-
-
-
-
-                                            </div>
-                                          
-                                        </div>
-                                        
-
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div className="col-md-9 fondo_tran">
-                            <div className="card card-primary fondo_tran">
-                                <div className="card-body p-0 fondo_tran">
-
-                                    <Calendar 
-                                                onChange={onChangeCalendar} 
-                                                className="custom_calendar_css" 
-                                                locale="es" 
-                                                // value={dateValue}
-                                                minDate={startDate}
-                                            />
-                                </div>
-
-
-                            </div>
-
-                        </div>
-                    </div>
+  <div className="content-wrapper">
+    <section className="content-header">
+      <div className="container-fluid">
+        <div className="row mb-2">
+          <div className="col-sm-6">
+            <h1>Calendario</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-3">
+          <div className="sticky-top mb-3">
+            <div className="card card-primary">
+              <div className="card-header column">
+                <h3 className="card-title">{calendar_date2}</h3>
+                <Modal calendar_date2={calendar_date2} calendar_date={calendar_date} fecha={fecha}/>
+              </div>
+              <form className="form-horizontal">
+                <div className="card-body">
+                  <div className="time-card" id="external-events">
+                    {transition((style, item) =>
+                      item ? (
+                        <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`}>
+                          <div className="card-header">
+                            <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
+                            {!store.userData.is_psicologo ? <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a> : <button type="button" id="delete-date" name={item.id} className="close button_delete_date" aria-hidden="true">&times;</button>}
+                          </div>
+                        </animated.div>
+                      ) : (
+                        ''
+                      )
+                    )}
+                  </div>
                 </div>
-
-
+              </form>
             </div>
-        </>
+          </div>
+        </div>
+        <div className="col-md-9 fondo_tran">
+          <div className="card card-primary fondo_tran">
+            <div className="card-body p-0 fondo_tran">
+              <Calendar
+                onChange={onChangeCalendar}
+                className="custom_calendar_css"
+                locale="es"
+                minDate={startDate}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {isLoading && (
+    <div className="loading-overlay">
+      <div className="loading-spinner"></div>
+    </div>
+  )}
+
+</>
+
     )
 }

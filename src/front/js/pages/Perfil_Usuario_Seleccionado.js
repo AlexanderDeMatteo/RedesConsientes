@@ -9,25 +9,41 @@ import Imager2 from "../component/perfil_componentes/consulta3.jpeg";
 import Imager3 from "../component/perfil_componentes/consulta3.jpeg";
 import Imager4 from "../component/perfil_componentes/consulta4.jpg";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
+import { useNavigate } from "react-router-dom";
 // import { Imagenes } from "../component/perfil_components/imagenes";
 import { AboutMe } from "../component/perfil_componentes/AboutMe";
 // import { uploadFile } from "../component/drag_and_drop";
 import { useParams } from "react-router-dom";
 
+import { MetodosDePagoPaciente } from "./Metodos_De_Pago_Paciente";
+
+
 export const PerfilUsuarioSeleccionado = () => {
     const API_URL = process.env.BACKEND_URL;
     const { id } = useParams();
+    const navigate = useNavigate();
     const { actions, store } = useContext(Context);
     const [isSelected, setIsSelected] = useState(false)
     console.log("aaaaaaaaaaa", store.userDataSelecionado)
     const [selectedTab, setSelectedTab] = React.useState({
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
+        li_1: { nav: "nav-link active", tab: "active tab-pane" },
     });
 
 
     const enlace = (id) => {
         actions.Psicology_selected(id)
-        setIsSelected(true)
+        if(isSelected == false){
+            setIsSelected(true)
+            alert("psicologo seleccionado con exito")
+        }else{
+            setIsSelected(false)
+            alert("psicologo desseleccionado con exito")
+        }
+    }
+
+    const handleClick = () =>{
+        navigate(`/calendar/${id}`)
     }
 
     useEffect(() => {
@@ -110,9 +126,9 @@ export const PerfilUsuarioSeleccionado = () => {
 
                             <div className="col-md-9">
                                 <div className="card">
-                                    <div className="card-header p-2">
+                                    <div className="card-header p-2 ">
                                         <ul className="nav nav-pills">
-                                            <li className="nav-item">
+                                            <li className="nav-item mr-2">
                                                 <a
                                                     className={selectedTab["li_0"].nav}
                                                     name="li_0"
@@ -122,8 +138,19 @@ export const PerfilUsuarioSeleccionado = () => {
                                                 </a>
                                             </li>
 
+                                            <li className="nav-item">
+                                                <a
+                                                    className={selectedTab["li_1"].nav}
+                                                    name="li_1"
+                                                    data-toggle="tab"
+                                                    onClick={handleClick}
+                                                >
+                                                    Calendario
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
+                                    
                                     <div className="card-body">
                                         <div className="tab-content">
                                             <div className={selectedTab["li_0"]["tab"]} id="timeline">
@@ -190,6 +217,7 @@ export const PerfilUsuarioSeleccionado = () => {
                                         </div>
                                     </div>
                                 </div>
+                            <MetodosDePagoPaciente psicologoID={id}/>
                             </div>
                         </div>
                     </div>

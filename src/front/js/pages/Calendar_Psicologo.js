@@ -28,10 +28,17 @@ export const Calendar_Psicologo = () => {
 
     });
 
+    console.log(id)
     
     useEffect(() => {
-        actions.getPsicologiScheduleDay(id, fecha)
-    }, [selectedDate])
+        const fetchData = async () => {
+            const data = await actions.getPsicologiScheduleDay(id, fecha);
+            // Usa la data aquí
+            console.log(id)
+        };
+      
+        fetchData();
+      }, [selectedDate]);
 
     function onChangeCalendar(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);

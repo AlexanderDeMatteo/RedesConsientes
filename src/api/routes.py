@@ -679,6 +679,22 @@ def handle_payment_account():
             db.session.rollback()
             print(error)
             return jsonify({"message": "Error al actualizar los datos"}), 500
+        
+@api.route('/psicology-payment-accounts/<int:id>', methods=['GET'])
+@jwt_required()
+def psicology_payment_account(id):
+    psychology_user = id
+
+    user = User.query.filter_by(id=psychology_user).one_or_none()
+    if user is None:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+
+    user_payment_info = PaymentAccount.query.filter_by(user_id=psychology_user).one_or_none()
+    if user_payment_info is None:
+        return jsonify({"message": "El usuario no tiene información de pago"}), 200
+
+    return jsonify(user_payment_info.serialize()), 200
+
 
 @api.route("/user-patient-data/<int:id>", methods=['GET'])
 @jwt_required()
