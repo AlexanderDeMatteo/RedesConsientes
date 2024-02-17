@@ -36,7 +36,7 @@ export const Calendar_custom = () => {
           try {
             const data = await actions.getPsicologiScheduleDay(id, fecha);
             // Usa la data aquí
-            console.log(id)
+            console.log(store.scheduleSession)
           } catch (error) {
             console.error(error); // Handle any errors
           } finally {
@@ -113,9 +113,11 @@ export const Calendar_custom = () => {
                 <h3 className="card-title">{calendar_date2}</h3>
                 <Modal calendar_date2={calendar_date2} calendar_date={calendar_date} fecha={fecha}/>
               </div>
-              <form className="form-horizontal">
+              {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div></div>) : (<form className="form-horizontal">
                 <div className="card-body">
-                  <div className="time-card" id="external-events">
+                  {store.scheduleSession == false ? (<p>No hay horarios disponibles</p>):(<div className="time-card" id="external-events">
                     {transition((style, item) =>
                       item ? (
                         <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`}>
@@ -128,9 +130,9 @@ export const Calendar_custom = () => {
                         ''
                       )
                     )}
-                  </div>
+                  </div>)}
                 </div>
-              </form>
+              </form> )}
             </div>
           </div>
         </div>
@@ -149,13 +151,6 @@ export const Calendar_custom = () => {
       </div>
     </div>
   </div>
-
-  {isLoading && (
-    <div className="loading-overlay">
-      <div className="loading-spinner"></div>
-    </div>
-  )}
-
 </>
 
     )

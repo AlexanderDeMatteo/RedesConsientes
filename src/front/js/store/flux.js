@@ -116,7 +116,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			getPsicologiScheduleDay: async (ids, fecha, psycologyId) => {
+			getPsicologiScheduleDay: async (ids, fecha) => {
 				const store = getStore()
 			
 				let response = await fetch(`${API_URL}/api/sessions/${ids}`, {

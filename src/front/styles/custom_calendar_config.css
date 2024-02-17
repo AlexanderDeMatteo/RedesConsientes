@@ -7,3 +7,22 @@
     /* mar-bottom: 10px !important; */
     margin-top: -6px !important;
   }
+  
+  .time-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .time-card p {
+    display: none;
+  }
+  
+  .time-card.empty p {
+    display: block;
+  }
+
+  .card-header{
+    display: flex;
+    flex-direction: column;
+  }
