@@ -31,6 +31,7 @@ export const CalendarToday_custom = () => {
             setIsLoading(true)
             try{
                 const data = await actions.getPsicologiScheduleReservedDay(id, fecha)
+                // const clientData = await actions.
 
             } catch (error) {
                 console.error(error); // Handle any errors
@@ -101,7 +102,7 @@ export const CalendarToday_custom = () => {
 
                                                         </div>
                                                     </div>
-                                                    <span className="info-box-number">Hora: {item.start_time} - {item.end_time}</span>
+                                                    <span className="info-box-number">Hora:{item.client_name} {item.start_time} - {item.end_time}</span>
                                                     
                                                     <a href={`/session/${id}/${item.room_number}`} className="progress-description">
                                                     Ir a Session
