@@ -23,7 +23,12 @@ export const SignIn = () => {
             password: password,
         };
         if (await actions.loginUser(data)) {
-            navigate("/Perfil");
+            if(data.admin == true){
+                console.log(data)
+                navigate("/panel");
+            }else{
+                navigate("/Perfil");
+            }
         } else {
             alert("Credenciales Invalidas");
         }

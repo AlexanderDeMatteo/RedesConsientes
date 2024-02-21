@@ -13,6 +13,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), unique=False, nullable=False)
     is_psicologo = db.Column(db.Boolean(), unique=False, nullable=True)
+    admin = db.Column(db.Boolean(), unique=False, nullable=True)
     is_active = db.Column(db.Boolean(), unique=False,
                           nullable=False, default=False)
     is_online = db.Column(db.Boolean(), nullable=False, default=False)
@@ -42,6 +43,7 @@ class User(db.Model):
             "last_name": self.last_name,
             "is_psicologo": self.is_psicologo,
             "session_ids": self.session_ids,
+            "admin": self.admin,
         }
 
     @ classmethod
@@ -330,10 +332,10 @@ class Session(db.Model):
             return False
 
 
-class PsychoConsultation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    monto = db.Column(db.String(25), unique=False, nullable=True)
+# class PsychoConsultation(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     monto = db.Column(db.String(25), unique=False, nullable=True)
 
 
 class MiPsicologo(db.Model):

@@ -47,6 +47,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.status == 200) {
 					let data = await response.json();
+					console.log(data)
 					setAuthToken(data.token)
 					// setTimeout(function () {
 					// 	localStorage.remove("token");
@@ -389,6 +390,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					console.log(body)
 					setStore({
 						...store,
 						userPsicologos: body
@@ -494,6 +496,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			active_user: async (id) => {
+				let response = await fetch(`${API_URL}/api/activate/${id}`, {
+					method: 'PUT',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+					body: JSON.stringify([])
+				});
+				console.log(id)
+				if (response.ok) {
+					if (response.status == 200) {
+						alert("usuario activado con exito")
+					} else return false;
+				}
+			},
+
 			get_patient_task: async (id) => {
 				let response = await fetch(`${API_URL}/api/psychologists/patients/${id}/tasks`, {
 					method: 'GET',
@@ -579,6 +598,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log(taskId)
 				if (response.ok) {
 					alert("tarea eliminada con exito")
+				}
+			},
+
+			delete_patient: async (id) => {
+				let response = await fetch(`${API_URL}/api/delete/${id}`, {
+					method: 'DELETE',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				console.log(taskId)
+				if (response.ok) {
+					alert("usuario eliminado con exito")
 				}
 			},
 		

@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount
+from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount, MiPsicologo
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -61,22 +61,53 @@ def handle_login():
     user = User.query.filter_by(email=email).one_or_none()
     if user is None:
         return jsonify({"message": "Usuario no encontrado"}), 404
-
+    
     salt = user.salt
     if check_password_hash(user.password, salt + password):
         access_token = create_access_token(identity=user.id)
         return jsonify({"message": "Usuario logeado con éxito", "token": access_token}), 200
     return jsonify({"message": "Credenciales Inválidas"}), 401
 
-# @api.route("/private",methods=["POST"])
-# @jwt_required()
-# def handle_private():
-#     current_id_user = get_jwt_identity()
-#     current_user = User.query.get(current_id_user)
-#     print(current_id_user)
-#     return jsonify(current_user.serialize()),200
-#     print(current_id_user)
 
+
+@api.route('/activate/<int:user_id>', methods=['PUT'])
+def activate_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        user.is_active = True
+        db.session.commit()
+        return "Usuario activado con éxito", 200
+    else:
+        return "Usuario no encontrado", 404
+    
+@api.route('/delete/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = User.query.get(user_id)
+
+    if user:
+        # Elimina la cuenta de pago asociada al usuario
+        sessions_to_delete = Session.query.filter_by(psychologist_id=user_id).all()
+        for session in sessions_to_delete:
+            db.session.delete(session)
+        payment_account = PaymentAccount.query.filter_by(user_id=user_id).first()
+        if payment_account:
+            db.session.delete(payment_account)
+        user_profile_info = UserProfileInfo.query.filter_by(user_id=user_id).first()
+        if user_profile_info:
+            db.session.delete(user_profile_info)
+        mi_psicologo = MiPsicologo.query.filter_by(user_id=user_id).first()
+        if mi_psicologo:
+            db.session.delete(mi_psicologo)
+        session = Session.query.filter_by(psychologist_id=user_id).first()
+        if mi_psicologo:
+            db.session.delete(session)
+        
+
+        db.session.delete(user)
+        db.session.commit()
+        return "Usuario eliminado con éxito", 200
+    else:
+        return "Usuario no encontrado", 404
 
 
 @api.route("/user-data", methods=['GET', 'PUT'])
