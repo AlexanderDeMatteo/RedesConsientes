@@ -13,7 +13,7 @@ export const BuscadorDePsicologos = () => {
         especialidades: "",
         estado: "",
         ciudad: "",
-        ci: "",
+        cedula: "",
         sexo: "",
         edadMin: "",
         edadMax: ""
@@ -118,7 +118,7 @@ export const BuscadorDePsicologos = () => {
                                                 className="form-control"
                                                 placeholder="Cedula de Identidad"
                                                 name="ci"
-                                                value={filtros.ci}
+                                                value={filtros.cedula}
                                                 onChange={(e) => { handleChange(e) }} />
                                             Numero FPV
                                             <input

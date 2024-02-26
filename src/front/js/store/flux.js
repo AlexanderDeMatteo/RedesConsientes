@@ -390,10 +390,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
+					let dataFiltada = body.filter((data) => data.is_active == true)
 					setStore({
 						...store,
-						userPsicologos: body
+						userPsicologos: dataFiltada
 					})
 					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}

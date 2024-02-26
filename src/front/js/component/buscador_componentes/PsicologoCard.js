@@ -23,7 +23,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
       || psico.fpv_number == filtros?.numeroFpv
       || psico.state == filtros?.estado
       || psico.city == filtros?.ciudad
-      || psico.dni == filtros?.ci
+      || psico.cedula == filtros?.cedula
       || psico.gender == filtros?.sexo
       // || (psico.dob >= filtros?.edadMin && psico.dob <= filtros?.edadMax)
       || psico.specialty_area == filtros?.especialidades

@@ -55,13 +55,7 @@ export const Card = ({
                                     <div className="col-6" id="precioynumerocard">
                                         {`Contacto: ${phoneNumber}`}
                                     </div>
-                                    {/* <div className="col-6">
-                                        {`Horario: 08:00-16:00`}
-                                    </div> */}
-                                    {/* <div className="col-6">
-                                        Nro° FPV: <br />
-                                        {`${numberFpv}`}
-                                    </div> */}
+                                    
                                 </div>
                             </div>
                             <div className="card--btn">
