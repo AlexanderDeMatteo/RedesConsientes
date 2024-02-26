@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, UserProfileInfo, Session, ClientTask, PaymentAccount
+from .models import db, User, UserProfileInfo, Session, ClientTask, PaymentAccount, Phrase
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -20,7 +20,7 @@ def setup_admin(app):
     # admin.add_view(ModelView(TodoList, db.session))
     # admin.add_view(ModelView(TodoListContainer, db.session))
     admin.add_view(ModelView(ClientTask, db.session))
-    # admin.add_view(ModelView(PsychologistTask, db.session))
+    admin.add_view(ModelView(Phrase, db.session))
     admin.add_view(ModelView(PaymentAccount, db.session))
 
     # You can duplicate that line to add mew models

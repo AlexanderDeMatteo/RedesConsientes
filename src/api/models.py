@@ -401,3 +401,16 @@ class PaymentAccount(db.Model):
         except Exception as error:
             db.session.rollback()
             return False
+
+class Phrase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    phrase = db.Column(db.String(400), nullable=True)
+    author = db.Column(db.String(100), nullable=True)
+    
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "phrase": self.phrase,
+            "author": self.author,
+        }

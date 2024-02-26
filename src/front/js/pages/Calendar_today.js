@@ -15,6 +15,7 @@ export const CalendarToday_custom = () => {
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
     // const {id} = useParams()
     const {id} = useParams()
+    const{a,setA} = useState()
     
     const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },
@@ -32,7 +33,8 @@ export const CalendarToday_custom = () => {
             try{
                 const data = await actions.getPsicologiScheduleReservedDay(id, fecha)
                 // const clientData = await actions.
-
+                const phrase = await actions.get_phrase()
+                setA(phrase)
             } catch (error) {
                 console.error(error); // Handle any errors
               } finally {
@@ -44,7 +46,8 @@ export const CalendarToday_custom = () => {
 
     }, [])
 
-
+    const phrase = store.phrase
+    console.log(a)
 
     return (
         <>
@@ -123,7 +126,13 @@ export const CalendarToday_custom = () => {
                                     </div>
 
                                     <div class="card-body">
-                                        La frase del Dia....
+                                        {a.map((item, index) => 
+                                        <>
+                                            <p>{item.phrase}</p>
+                                            <p>{item.author}</p>
+                                        </>
+                                        )}
+                                        
                                     </div>
 
                                 </div>

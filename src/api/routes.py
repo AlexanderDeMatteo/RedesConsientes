@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount, MiPsicologo
+from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount, MiPsicologo, Phrase
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -14,6 +14,7 @@ from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from datetime import date
+from sqlalchemy import func
 
 api = Blueprint('api', __name__)
 # Allow CORS requests to this API
@@ -775,5 +776,17 @@ def get_own_tasks():
     # Devolver las tareas
     return jsonify([task.to_dict() for task in tasks]), 200
 
+@api.route("/random-phrase", methods=['GET'])
+@jwt_required()
+def handle_random_phrase():
+    if request.method == 'GET':
+        # Get a random phrase using `Phrase.query.order_by(func.random()).first()`
+        phrase = Phrase.query.order_by(func.random()).first()  # Assign result to `phrase`
 
+        # Check if a phrase was found before returning
+        if phrase:
+            return jsonify({"phrase": phrase.serialize()}), 200
+
+        # Return an error message if no phrase was found
+        return jsonify({"message": "No se encontraron frases en la base de datos"}), 404
 

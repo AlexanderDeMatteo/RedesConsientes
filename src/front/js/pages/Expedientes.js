@@ -23,7 +23,7 @@ export const Expedientes = () => {
     <>
       <div className="content-wrapper">
         <div>Expedientes</div>
-        {patients.length === 0 && <div>Cargando...</div>}
+        {patients.length === 0 && <div>no hay Expedientes disponibles</div>}
         {patients.length > 0 && (
           <>
           <div className="row">

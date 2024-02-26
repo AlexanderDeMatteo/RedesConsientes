@@ -14,6 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userPatientSelecionado: {},
 			userPsicologos: JSON.parse(sessionStorage.getItem("psicos")) || [],
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
+			phrase:{},
 			userFpvData: {},
 			patientTask: {},
 			userScheduleData:{},
@@ -416,7 +417,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// },
 
 			get_client_dates: async (id) => {
-				let response = await fetch(`${API_URL}/sessions/today/client/${id}`, {
+				let response = await fetch(`${API_URL}/api/sessions/today/client/${id}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -431,8 +432,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			get_phrase: async () => {
+				let response = await fetch(`${API_URL}/api/random-phrase`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				
+				});
+				if (response.ok) {
+					let body = await response.json()
+					setStore({ phrase: body })
+
+				}
+			},
+
 			get_today_psicologo_dates: async (id) => {
-				let response = await fetch(`${API_URL}/sessions/today/${id}`, {
+				let response = await fetch(`${API_URL}/api/sessions/today/${id}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
