@@ -35,11 +35,11 @@ export const Expedientes = () => {
   return (
     <>
       <div className="content-wrapper">
+        <div>Expedientes</div>
       {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary m-5" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div></div>) : (
         <div>
-          <div>Expedientes</div>
             <div className="row">
                   {patients.map((patient, index) => (
                   <div className="col-md-3">
