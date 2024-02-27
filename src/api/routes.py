@@ -214,6 +214,25 @@ def handle_user_psicologo():
                         info.update(user)
                         full_info.append(info)
             return jsonify(full_info), 200
+        
+@api.route("/psicologo-data-to-aprove", methods=['GET'])
+@jwt_required()
+def handle_user_psicologo_to_aprove():
+    if request.method == 'GET':
+        users = User.query.filter_by(is_psicologo=True).all()
+        users_info = UserProfileInfo.query.filter(UserProfileInfo.fpv_number != "null")
+        if users is None:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+        else:
+            users = list(map(lambda user: user.serialize(),users))
+            users_info = list(map(lambda user: user.serialize(), users_info))
+            full_info = []
+            for user in users:
+                for info in users_info:
+                    if info["user_id"] == user["id"]:
+                        info.update(user)
+                        full_info.append(info)
+            return jsonify(full_info), 200
 
 @api.route("/user-psicologo-data/<int:id>", methods=['GET'])
 @jwt_required()

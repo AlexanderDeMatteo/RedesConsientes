@@ -14,7 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userPatientSelecionado: {},
 			userPsicologos: JSON.parse(sessionStorage.getItem("psicos")) || [],
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
-			phrase:{},
+			phrase:[],
 			userFpvData: {},
 			patientTask: {},
 			userScheduleData:{},
@@ -399,6 +399,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}
 			},
+
+			handle_user_psicologo_to_aprove: async () => {
+				const store = getStore()
+				let response = await fetch(`${API_URL}/api/psicologo-data-to-aprove`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				if (response.ok) {
+					let body = await response.json()
+					setStore({
+						...store,
+						userPsicologos: body
+					})
+					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
+				}
+			},
 			// handle_user_paciente: async () => {
 			// 	let response = await fetch(`${API_URL}/api/user-paciente-data`, {
 			// 		method: 'GET',
@@ -443,7 +462,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					setStore({ phrase: body })
+					console.log(body)
+					setStore({ phrase: [body.phrase] })
 
 				}
 			},

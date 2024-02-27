@@ -98,23 +98,12 @@ export const Perfil = () => {
   function handleChange(event) {
     console.log(event.target.value)
     console.log(event.target.name)
-    // event.persist();
+   
     actions.handle_edit(event.target.value, event.target.name);
-    // actions.handle_edit(prevFormData => {
-    //return {
-    //  ...prevFormData,
-    // [event.target.name]: event.target.value
-    //  }
-    // })
+    
   }
 
-  // function onDeleter(event, value) {
-  // console.log(event.getEventModifierState)
-  // console.log(value)
-  // // lista.push({ title: value.title, year: value.year })
-  // // setLista([])
-
-  // }
+  
 
   const onDeleter = (e, value) => {
     e.preventDefault();
@@ -127,23 +116,7 @@ export const Perfil = () => {
     });
   };
 
-  // const handle_user_data = async () => {
-  // let response = await fetch(`${API_URL}/api/user-data`, {
-  // method: 'GET',
-  // headers: {
-  // "Content-Type": "application/json",
-  // Authorization: `Bearer ${localStorage.getItem("token")}`
-  // },
-  // // body: JSON.stringify([])
-  // });
-
-  // if (response.ok) {
-  // let body = await response.json()
-  // console.log(body, "assssssssssssssssssssssssssssssssssssssss")
-  // setProfile(body)
-
-  // }
-  // }
+  
 
   const guardar = async () => {
 

@@ -10,7 +10,7 @@ export const Panel = () => {
     
     const psicologos = store.userPsicologos
     
-
+    console.log(psicologos)
     const activar = (id) =>{
         actions.active_user(id)
         console.log(id)
@@ -26,7 +26,7 @@ export const Panel = () => {
           setIsLoading(true)
           
           try{
-              const data = await actions.handle_user_psicologo();
+              const data = await actions.handle_user_psicologo_to_aprove();
               
           } catch (error) {
               console.error(error); // Handle any errors

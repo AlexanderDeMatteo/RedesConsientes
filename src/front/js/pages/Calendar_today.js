@@ -15,26 +15,26 @@ export const CalendarToday_custom = () => {
     const [fecha, setFecha] = useState(`${selectedDate[0]}, ${selectedDate[2]} ${selectedDate[1]} ${selectedDate[3]}`)
     // const {id} = useParams()
     const {id} = useParams()
-    const{a,setA} = useState()
     
     const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },
         enter: { x: 0, y: 0, opacity: 1 },
 
     });
-//     ids=store.userData.id
-//    console.log()
+//    
 
+    console.log(phrase)
+    console.log(store.phrase)
 
+    const phrase = store.phrase
 
     useEffect(() => {
         const fetchData = async() =>{
             setIsLoading(true)
             try{
-                const data = await actions.getPsicologiScheduleReservedDay(id, fecha)
-                // const clientData = await actions.
-                const phrase = await actions.get_phrase()
-                setA(phrase)
+                const date = await actions.getPsicologiScheduleReservedDay(id, fecha)
+                const data = await actions.get_phrase()
+
             } catch (error) {
                 console.error(error); // Handle any errors
               } finally {
@@ -45,10 +45,8 @@ export const CalendarToday_custom = () => {
         fetchData()
 
     }, [])
-
-    const phrase = store.phrase
-    console.log(a)
-
+    
+   
     return (
         <>
 
@@ -126,12 +124,18 @@ export const CalendarToday_custom = () => {
                                     </div>
 
                                     <div class="card-body">
-                                        {a.map((item, index) => 
-                                        <>
-                                            <p>{item.phrase}</p>
-                                            <p>{item.author}</p>
-                                        </>
-                                        )}
+                                         {phrase ? (
+                                            phrase.map((item, index) => 
+                                            <>
+                                                <p>{item.phrase}</p>
+                                                <p>- {item.author}.</p>
+                                            </>
+                                            )
+                                             ):(
+                                                 <p>no hay frase el dia de hoy</p> 
+                                                
+                                            )
+                                        } 
                                         
                                     </div>
 

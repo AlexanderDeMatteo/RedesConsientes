@@ -6,7 +6,7 @@ export const Expedientes = () => {
   const { actions, store } = useContext(Context);
 
   const [patients, setPatients] = useState([]);
-
+  console.log(patients)
   useEffect(() => {
     actions.handle_patient_data((data) => setPatients(data));
   }, []);

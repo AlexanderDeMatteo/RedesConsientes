@@ -27,6 +27,7 @@ import Calendar from "react-calendar";
 import { Calendar_Psicologo } from "./pages/Calendar_Psicologo";
 import { Expedientes } from "./pages/Expedientes";
 import { PerfilPacienteSeleccionado } from "./pages/Perfil_Paciente_Seleccionado";
+import { Panel } from "./pages/panel";
 
 
 //create your first component
@@ -198,6 +199,16 @@ const Layout = () => {
                 </div>
               </div>}
               path="/Expedientes/:id"
+              />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+            <div className="contenedor">
+                <div id="paginaCentral">
+                <Panel />
+                </div>
+              </div>}
+              path="/panel"
               />
             </Route>
             <Route element={<h1>Not found!</h1>} path={"*"}/>
