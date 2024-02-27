@@ -8,7 +8,7 @@ export const Panel = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { actions, store } = useContext(Context);
     
-    const psicologos = store.userPsicologos
+    const psicologos = store.userPsicologostoaprove
     
     console.log(psicologos)
     const activar = (id) =>{

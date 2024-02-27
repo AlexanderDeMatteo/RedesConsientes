@@ -12,7 +12,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userData: {},
 			userDataSelecionado: {},
 			userPatientSelecionado: {},
-			userPsicologos: JSON.parse(sessionStorage.getItem("psicos")) || [],
+			userPsicologostoaprove: JSON.parse(sessionStorage.getItem("psicos")) || [],
+			userPsicologos: [],
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
 			phrase:[],
 			userFpvData: {},
@@ -411,11 +412,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					let dataFiltada = body.filter((data) => data.is_active == false)
 					setStore({
 						...store,
-						userPsicologos: body
+						userPsicologostoaprove: dataFiltada
 					})
-					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
+					
 				}
 			},
 			// handle_user_paciente: async () => {
