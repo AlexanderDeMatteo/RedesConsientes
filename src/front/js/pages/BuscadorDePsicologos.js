@@ -81,24 +81,7 @@ export const BuscadorDePsicologos = () => {
                                                     )
                                                 })}
                                             </select>
-                                            {/* {especialidades.map((especialidad, index) => {       // mapea el array especialidades
-                                                return (
-                                                    <div key={index} className="form-check">
-                                                        <input
-                                                            className="form-check-input"
-                                                            type="checkbox"
-                                                            value={especialidad}
-                                                            id="flexCheckDefault"
-                                                            name="especialidades"
-                                                            onClick={(e) => {
-                                                                handleCheck(e)
-                                                            }} />
-                                                        <label className="form-check-label" htmlFor="flexCheckDefault">
-                                                            {especialidad}
-                                                        </label>
-                                                    </div>
-                                                )
-                                            })} */}
+                                           
                                         </div>
                                     </div>
                                     <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCredenciales" aria-expanded="false" aria-controls="collapseExample">

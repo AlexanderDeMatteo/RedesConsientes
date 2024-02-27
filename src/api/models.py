@@ -44,6 +44,7 @@ class User(db.Model):
             "is_psicologo": self.is_psicologo,
             "session_ids": self.session_ids,
             "admin": self.admin,
+            "is_active":self.is_active
         }
 
     @ classmethod

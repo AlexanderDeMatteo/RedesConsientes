@@ -36,8 +36,6 @@ export const Panel = () => {
     
       }
       fetchData()
-    
-        actions.handle_user_data();
       }, []);
 
 

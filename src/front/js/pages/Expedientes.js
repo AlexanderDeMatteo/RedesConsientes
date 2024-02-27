@@ -6,30 +6,31 @@ export const Expedientes = () => {
   const { actions, store } = useContext(Context);
   const [isLoading, setIsLoading] = useState(false);
   const [patients, setPatients] = useState([]);
+
   console.log(patients)
 
   
   useEffect(() => {
+        
     const fetchData = async() =>{
+      setIsLoading(true)
+      
       try{
-        const data = await actions.handle_patient_data((data) => setPatients(data));
-      }catch(error){
-        console.log(error)
-      }finally{
-        setIsLoading(false)
+          const data = await actions.handle_patient_data();
+          
+      } catch (error) {
+          console.error(error); // Handle any errors
+        } finally {
+          setIsLoading(false); // Finalizar la carga
       }
-      fetchData()
-    }
+
+  }
+  fetchData()
   }, []);
 
-  const handleChange = (e) => {
-    setFiltros({ ...filtros, [e.target.name]: e.target.value.toLowerCase() });
-  };
-  console.log(patients)
-  console.log(store.userPatients)
-  // useEffect(() => {
-  //   setPatients(store.userPatients);
-  // }, [store.userPatients]);
+  useEffect(() => {
+    setPatients(store.userPatients);
+  }, [store.userPatients]);
 
   return (
     <>

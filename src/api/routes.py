@@ -196,7 +196,7 @@ def protected():
     return jsonify(foo="bar")
 
 
-@api.route("/user-psicologo-data", methods=['GET'])
+@api.route("/psicologo-data", methods=['GET'])
 @jwt_required()
 def handle_user_psicologo():
     if request.method == 'GET':

@@ -383,7 +383,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			handle_user_psicologo: async () => {
 				const store = getStore()
-				let response = await fetch(`${API_URL}/api/user-psicologo-data`, {
+				let response = await fetch(`${API_URL}/api/psicologo-data`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -392,12 +392,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					console.log(body)
 					let dataFiltada = body.filter((data) => data.is_active == true)
+					console.log(dataFiltada)
 					setStore({
 						...store,
 						userPsicologos: dataFiltada
 					})
-					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
+					console.log(userPsicologos)
 				}
 			},
 
@@ -417,7 +419,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						...store,
 						userPsicologostoaprove: dataFiltada
 					})
-					
+					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}
 			},
 			// handle_user_paciente: async () => {
