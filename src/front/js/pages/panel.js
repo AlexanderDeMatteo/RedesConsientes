@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
 import "../../styles/panel.css"
-
+import { useNavigate } from "react-router-dom";
 
 export const Panel = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +10,7 @@ export const Panel = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const psicologos = store.userPsicologostoaprove
+    const navigate = useNavigate();
     
     console.log(psicologos)
     const activar = (id) =>{
@@ -19,6 +20,10 @@ export const Panel = () => {
 
     const deleteUser = (id) =>{
         actions.delete_patient(id)
+    }
+
+    const info = (id) =>{
+        navigate(`/perfil/${id}`);
     }
 
     const handleChangePage = (_, newPage) => {
@@ -76,7 +81,7 @@ export const Panel = () => {
                             <td>{psicologo.cedula}</td>
                             <td>{psicologo.fpv_number}</td>
                             <td>{psicologo.is_active == true ? "si" : "no"}</td>
-                            <td>{psicologo.is_active ==true ? (" ") : (<i class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i></td>
+                            <td>{psicologo.is_active ==true ? (" ") : (<i class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i> <i class="fa-solid fa-circle-info" onClick={() => info(psicologo.id)}></i></td>
                         </tr>
                     )
                 })}

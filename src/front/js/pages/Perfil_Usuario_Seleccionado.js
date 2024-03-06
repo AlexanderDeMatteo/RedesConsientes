@@ -51,7 +51,7 @@ export const PerfilUsuarioSeleccionado = () => {
         actions.handle_user_data_seleccinado(id);
     }, []);
 
-
+    console.log(id)
 
     // let pepe = store.userDataSelecionado 
     // console.log(pepe)

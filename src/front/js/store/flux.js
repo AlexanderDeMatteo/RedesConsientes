@@ -363,7 +363,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			handle_user_data_seleccinado: async (id) => {
 				const store = getStore()
-				let response = await fetch(`${API_URL}/api/user-psicologo-data`, {
+				let response = await fetch(`${API_URL}/api/user-psicologo-data/${id}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -371,10 +371,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				});
 				if (response.ok) {
+					console.log("ok")
 					let body = await response.json()
-					let dataFiltada = body.filter((data) => data.id == usuario)
-					let nuevaData = (Object.assign({}, ...dataFiltada));
-					setStore({ userDataSelecionado: nuevaData })
+					// let dataFiltada = body.filter((data) => data.id == usuario)
+					// let nuevaData = (Object.assign({}, ...dataFiltada));
+					setStore({ userDataSelecionado: body })
 
 
 				}
