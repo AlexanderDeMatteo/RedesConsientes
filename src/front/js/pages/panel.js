@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
-
+import "../../styles/panel.css"
 
 
 export const Panel = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { actions, store } = useContext(Context);
-    
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const psicologos = store.userPsicologostoaprove
     
     console.log(psicologos)
@@ -19,6 +20,15 @@ export const Panel = () => {
     const deleteUser = (id) =>{
         actions.delete_patient(id)
     }
+
+    const handleChangePage = (_, newPage) => {
+        setPage(newPage);
+      };
+    
+      const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+      };
 
     useEffect(() => {
         
@@ -38,7 +48,6 @@ export const Panel = () => {
       fetchData()
       }, []);
 
-
     return(
 
         <>
@@ -50,7 +59,30 @@ export const Panel = () => {
                 <div>
                     <h1>solicitudes</h1>
                 </div>
-                <div className="row">
+                <div className="App">
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <th>cedula</th>
+                    <th>Numero de federado</th>
+                    <th>Aprobado</th>
+                    <th>acciones</th>
+
+                </tr>
+                {psicologos.map((psicologo, key) => {
+                    return (
+                        <tr key={key}>
+                            <td>{psicologo.name} {psicologo.last_name}</td>
+                            <td>{psicologo.cedula}</td>
+                            <td>{psicologo.fpv_number}</td>
+                            <td>{psicologo.is_active == true ? "si" : "no"}</td>
+                            <td>{psicologo.is_active ==true ? (" ") : (<i class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i></td>
+                        </tr>
+                    )
+                })}
+            </table>
+        </div>
+                {/* <div className="row">
                 {psicologos.map((psicologo, index) => (
                 <div className="col-md-3">
                 <div className="card card-primary card-outline">
@@ -93,7 +125,7 @@ export const Panel = () => {
 
                 </div>
                 ))}
-          </div>
+          </div> */}
 
             </div>)}
             

@@ -361,7 +361,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			handle_user_data_seleccinado: async (usuario) => {
+			handle_user_data_seleccinado: async (id) => {
 				const store = getStore()
 				let response = await fetch(`${API_URL}/api/user-psicologo-data`, {
 					method: 'GET',
@@ -392,14 +392,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
 					let dataFiltada = body.filter((data) => data.is_active == true)
-					console.log(dataFiltada)
 					setStore({
 						...store,
 						userPsicologos: dataFiltada
 					})
-					console.log(userPsicologos)
+					console.log(dataFiltada)
+				
 				}
 			},
 
@@ -414,10 +413,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					let dataFiltada = body.filter((data) => data.is_active == false)
+					// let dataFiltada = body.filter((data) => data.is_active == false)
 					setStore({
 						...store,
-						userPsicologostoaprove: dataFiltada
+						userPsicologostoaprove: body
 					})
 					sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}

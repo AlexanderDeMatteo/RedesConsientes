@@ -41,8 +41,8 @@ export const Card = ({
                             </div>
                             <div className="card--title">
                                 <h3>{name}</h3>
-                                <p>{specialty_area ? specialty_area : "Psicologo Deportivo"}<br />
-                                    {`${city}, ${state}`}
+                                <p>{specialty_area ? specialty_area : "Psicologo"}<br />
+                                    {`${city ? city : ""}, ${state ? state: ""}`}
                                 </p>
                             </div>
                             <div className="card--desc">
@@ -50,10 +50,10 @@ export const Card = ({
                                     <div className="col-6" id="precioynumerocard">
                                         Consulta:
                                         <br />
-                                        {`${precio_consulta}`}
+                                        {`${precio_consulta ? precio_consulta: ""}`}
                                     </div>
                                     <div className="col-6" id="precioynumerocard">
-                                        {`Contacto: ${phoneNumber}`}
+                                        {`Contacto: ${phoneNumber ? phoneNumber: "" }`}
                                     </div>
                                     
                                 </div>

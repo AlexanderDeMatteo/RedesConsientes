@@ -195,7 +195,7 @@ export const Perfil = () => {
                                 </div></div>) : (
       <div>
         <>
-        {store.userData.admin == true ? (<Panel/>) : (
+        
 
           <div className="content-wrapper">
             <section className="content-header">
@@ -603,8 +603,8 @@ export const Perfil = () => {
                                         name="gender"
                                         id="exampleSelectBorder">
                                         <option>seleccionar</option>
-                                        <option>M</option>
-                                        <option>F</option>
+                                        <option>Masculino</option>
+                                        <option>Femenino</option>
                                         <option>Otro</option>
                                       </select>
                                     ) : (
@@ -663,7 +663,7 @@ export const Perfil = () => {
                                         type="email"
                                         className="form-control"
                                         name="state"
-                                        placeholder="Nombre"
+                                        placeholder="Estado"
                                         value={store.userData.state || ""}
                                       />
                                     ) : (
@@ -1029,7 +1029,7 @@ export const Perfil = () => {
               </div>
             </section>
           </div >
-        )}
+        
         </>
       </div >)}
     </>

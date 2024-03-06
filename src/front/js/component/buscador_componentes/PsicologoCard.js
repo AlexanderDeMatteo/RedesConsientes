@@ -31,7 +31,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
     return filtrados
   }
 
-  console.log(filtrado())
+  console.log(store.userPsicologos)
 
   return (
     <div style={{ margin: "inherit" }}>
@@ -55,6 +55,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
                     phoneNumber={vistaPsicologo.phone_number}
                     colSpacing="col-4"
                     specialty_area={vistaPsicologo.specialty_area}
+                    cedula={vistaPsicologo.cedula}
                   />
                 );
               }).slice(firstIndex, lastIndex)
