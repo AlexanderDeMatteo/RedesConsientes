@@ -141,7 +141,7 @@ export const Panel = () => {
                             <td>{psicologo.cedula}</td>
                             <td>{psicologo.fpv_number}</td>
                             <td>{psicologo.is_active == true ? "si" : "no"}</td>
-                            <td>{psicologo.is_active ==true ? (" ") : (<i class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i> <i class="fa-solid fa-circle-info" onClick={() => info(psicologo.id)}></i></td>
+                            <td>{psicologo.is_active ==true ? (" ") : (<i id="panelIcon" class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i id="panelIcon" class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i> <i id="panelIcon" class="fa-solid fa-circle-info" onClick={() => info(psicologo.id)}></i></td>
                         </tr>
                     )
                 })}

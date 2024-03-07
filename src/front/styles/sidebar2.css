@@ -255,3 +255,7 @@ ol, ul {
 .sidebar .ulContent li a:hover{
     background-color: #fff;
 }
+
+#sideBarIcon {
+    margin: 0;
+}
