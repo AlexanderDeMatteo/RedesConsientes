@@ -6,6 +6,11 @@
     align-items: center;
     text-align: center;
 }
+
+#titulo{
+    justify-content: center;
+    display: flex;
+}
  
 table {
     border: 3px solid rgb(42 143 245 / 68%);
@@ -16,6 +21,11 @@ table {
     border-radius: 10px;
     padding-top: 50%;
 
+}
+
+#check-box input{
+    margin-left: 10px;
+    margin-right: 3px;
 }
  
 th {

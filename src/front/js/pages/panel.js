@@ -5,14 +5,16 @@ import "../../styles/panel.css"
 import { useNavigate } from "react-router-dom";
 
 export const Panel = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState("");
     const { actions, store } = useContext(Context);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
     const psicologos = store.userPsicologostoaprove
+    const [search, setSearch] = useState("")
+    const [nameCheck, setNameCheck] = useState()
     const navigate = useNavigate();
-    
-    console.log(psicologos)
+  
+    console.log(nameCheck)
+
     const activar = (id) =>{
         actions.active_user(id)
         console.log(id)
@@ -22,18 +24,31 @@ export const Panel = () => {
         actions.delete_patient(id)
     }
 
+    const handleOnCheckbox = e =>{
+        setNameCheck(e.target.value)
+    }
+
     const info = (id) =>{
         navigate(`/perfil/${id}`);
     }
-
-    const handleChangePage = (_, newPage) => {
-        setPage(newPage);
-      };
     
-      const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-      };
+    const filtredPsicologos = () => {
+        if(search.length === 0){
+            return psicologos.slice(currentPage,currentPage+10)
+        }
+        const filtred = psicologos.filter(psicologo => psicologo.name.includes(search))
+        return filtred.slice(currentPage,currentPage +10)
+    }
+   
+    const nextPage = () =>{
+        setCurrentPage(currentPage + 10)
+    }
+    
+    const prevPage = () =>{
+        setCurrentPage(currentPage - 10)
+    }
+
+
 
     useEffect(() => {
         
@@ -43,11 +58,11 @@ export const Panel = () => {
           try{
               const data = await actions.handle_user_psicologo_to_aprove();
               
-          } catch (error) {
+        } catch (error) {
               console.error(error); // Handle any errors
             } finally {
               setIsLoading(false); // Finalizar la carga
-          }
+        }
     
       }
       fetchData()
@@ -56,13 +71,58 @@ export const Panel = () => {
     return(
 
         <>
-            <h1>Panel de control</h1>
+            <h1 id="titulo">Panel de control</h1>
             {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary m-5" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div></div>) : (
             <div>
-                <div>
                     <h1>solicitudes</h1>
+                <div>
+                    <input
+                        type="text"
+                        className="mb-2 form control"
+                        placeholder="Buscador"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                    />
+                    <div id="check-box">
+                        <input
+                            type="checkbox"
+                            className="mb-2 form control"
+                            name="name"
+                            value="name"
+                            id="name"
+                            onChange={(event) => setNameCheck(event.target.value)}
+                        />
+                        <label for="name">Nombre</label>
+                        <input
+                            type="checkbox"
+                            className="mb-2 form control"
+                            name="cedula"
+                            value="cedula"
+                            id="cedula"
+                            onChange={handleOnCheckbox}
+                        />
+                        <label for="cedula">Cedula</label>
+                        <input
+                            type="checkbox"
+                            className="mb-2 form control"
+                            name="fpv_number"
+                            value="fpv_number"
+                            id="fpv_number"
+                            onChange={handleOnCheckbox}
+                        />
+                        <label for="fpv_number">Numero de fpv</label>
+                        <input
+                            type="checkbox"
+                            className="mb-2 form control"
+                            name="aprobado"
+                            value="aprobado"
+                            id="aprobado"
+                            onChange={handleOnCheckbox}
+                        />
+                        <label for="aprobado">Aprobado</label>
+                    </div>
                 </div>
                 <div className="App">
             <table>
@@ -74,7 +134,7 @@ export const Panel = () => {
                     <th>acciones</th>
 
                 </tr>
-                {psicologos.map((psicologo, key) => {
+                {filtredPsicologos().map((psicologo, key) => {
                     return (
                         <tr key={key}>
                             <td>{psicologo.name} {psicologo.last_name}</td>
@@ -86,6 +146,12 @@ export const Panel = () => {
                     )
                 })}
             </table>
+                <button className="btn btn-primary"
+                        onClick={prevPage}>Anterior</button>
+                &nbsp;
+                <button className="btn btn-primary"
+                        onClick={nextPage}>Siguente</button>
+
         </div>
                 {/* <div className="row">
                 {psicologos.map((psicologo, index) => (
