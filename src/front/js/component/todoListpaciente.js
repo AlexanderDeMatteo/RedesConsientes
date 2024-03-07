@@ -76,7 +76,7 @@ console.log(id)
                       
                   <input class="form-check-input mt-1" type="checkbox" onClick={hola(item.id, item.completed)} onChange={() => handleTaskCompletion(item.id)} checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
                     {`${index + 1}- ${item.description} ${item.id} `}
-                    <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)} style={{cursor: "pointer"}}></i>
+                    {store.userData.is_psicologo ? <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)} style={{cursor: "pointer"}}></i> : " " }
                     </label>
                   </li>
                 </div>  

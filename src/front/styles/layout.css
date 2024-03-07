@@ -1,5 +1,6 @@
 .box {
     display: flex;
+    padding: 0;
   }
   
   /* Aplica 100% de width para usar la pagina completa */

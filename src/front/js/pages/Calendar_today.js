@@ -33,7 +33,7 @@ export const CalendarToday_custom = () => {
             setIsLoading(true)
             try{
                 const date = await actions.getPsicologiScheduleReservedDay(id, fecha)
-                const data = await actions.get_phrase()
+                const frase = await actions.get_phrase()
 
             } catch (error) {
                 console.error(error); // Handle any errors
