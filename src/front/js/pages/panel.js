@@ -31,10 +31,6 @@ export const Panel = () => {
         actions.handle_user_psicologo_to_aprove()
     }
 
-    const handleSelected = e =>{
-        setAproved(e.target.value)
-    }
-
     const checkcedula = (value) =>{
         if(cedula == value){
             return setCedula(false)
@@ -55,6 +51,15 @@ export const Panel = () => {
     }
     
     const filtredPsicologos = () => {
+        if(aproved === "true"){
+            const cedulaFiltred = psicologos.filter(psicologo => psicologo?.is_active)
+            return cedulaFiltred.slice(currentPage,currentPage +10)
+        }
+        if(aproved === "false"){
+            const cedulaFiltred = psicologos.filter(psicologo => !psicologo?.is_active)
+            return cedulaFiltred.slice(currentPage,currentPage +10)
+        }
+
         if(search.length === 0){
             console.log(aproved == "true")
             return psicologos.slice(currentPage,currentPage+10)
@@ -66,9 +71,6 @@ export const Panel = () => {
         if(fpvNumber == "fpv_number"){
             const fpvFiltred = psicologos.filter(psicologo => psicologo?.fpv_number?.includes(search))
             return fpvFiltred.slice(currentPage,currentPage +10)
-        }
-        if(aproved === "true"){
-            console.log("hola")
         }
         
         const filtred = psicologos.filter(psicologo => psicologo.name.includes(search))
@@ -133,7 +135,7 @@ export const Panel = () => {
                             id="name"
                             
                         />
-                        <label for="name" className="mr-2">Nombre</label>
+                        <label htmlFor="name" className="mr-2">Nombre</label>
                         <input
                             type="checkbox"
                             className="mb-2 form control"
@@ -142,7 +144,7 @@ export const Panel = () => {
                             id="cedula"
                             onClick={() => checkcedula("cedula")}
                         />
-                        <label for="cedula" className="mr-2">Cedula</label>
+                        <label htmlFor="cedula" className="mr-2">Cedula</label>
                         <input
                             type="checkbox"
                             className="mb-2 form control"
@@ -151,18 +153,18 @@ export const Panel = () => {
                             id="fpv_number"
                             onClick={() => checkFpv_number("fpv_number")}
                         />
-                        <label for="fpv_number" className="mr-2">Numero de fpv</label>
-                        <label for="validationCustom04" className="form-label">Aprobado</label>
+                        <label htmlFor="fpv_number" className="mr-2">Numero de fpv</label>
+                        <label htmlFor="validationCustom04" className="form-label">Aprobado</label>
                         <select className="form-select col-md-2"
-                                id="validationCustom04" 
-                                required
-                                value={aproved}
-                                onChange={(event) => setAproved(event.target.value)}
-                                >
-                        <option selected disabled value="">selecciona</option>
-                        <option value={"todo"}>todo</option>
-                        <option value={true}>aprobado</option>
-                        <option value={false}>pendiente</option>
+                            id="validationCustom04"
+                            required
+                            value={aproved}  // Set the selected value here
+                            onChange={(event) => setAproved(event.target.value)}
+                        >
+                            <option selected value="">Selecciona</option>  {/* No need for disabled here */}
+                            <option value={"todo"}>Todo</option>
+                            <option value={true}>Aprobado</option>
+                            <option value={false}>Pendiente</option>
                         </select>
                        
                        
