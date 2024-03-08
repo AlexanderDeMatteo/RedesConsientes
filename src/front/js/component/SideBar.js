@@ -117,7 +117,7 @@ export const Sidebarx = () => {
                                 </a>
                             </li>
                             <li>
-                                <a>
+                                <a href="/contactos">
                                     <i id="sideBarIcon"className="fa-regular fa-address-book"></i>
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Contactos Personales</span>
                                 </a>

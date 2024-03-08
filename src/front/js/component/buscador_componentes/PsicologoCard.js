@@ -21,12 +21,12 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
       (psico.monto_consulta < filtros?.precio && psico.monto_consulta !== null)
       || psico.name.toLowerCase() == filtros?.nombre.toLowerCase()
       || psico.fpv_number == filtros?.numeroFpv
-      || psico.state == filtros?.estado
-      || psico.city == filtros?.ciudad
+      || psico.state?.toLowerCase() == filtros?.estado?.toLowerCase()
+      || psico.city?.toLowerCase() == filtros?.ciudad?.toLowerCase()
       || psico.cedula == filtros?.cedula
-      || psico.gender == filtros?.sexo
+      || psico.gender?.toLowerCase() == filtros?.sexo?.toLowerCase()
       // || (psico.dob >= filtros?.edadMin && psico.dob <= filtros?.edadMax)
-      || psico.specialty_area == filtros?.especialidades
+      || psico.specialty_area?.toLowerCase() == filtros?.especialidades?.toLowerCase()
     )
     return filtrados
   }

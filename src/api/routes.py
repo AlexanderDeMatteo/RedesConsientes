@@ -552,6 +552,31 @@ def obtener_usuarios_relacionados():
 
     return jsonify(resultados)
 
+@api.route('/psicologo_relacionado', methods=['GET'])
+@jwt_required()
+def obtener_psicologo_relacionado():
+    id_usuario = get_jwt_identity()  # Obtiene el ID del usuario actual
+
+    usuario = User.query.get(id_usuario)
+
+    # Obtiene los detalles del psicólogo relacionado
+    psicologo_relacionado = User.query.get(usuario.selected_psicologo_id)  # Suponiendo que la clave foránea es user.id
+
+    # Verifica si se encontró un psicólogo relacionado
+    if psicologo_relacionado is None:
+        return jsonify({'message': 'No hay psicólogo relacionado'}), 404  # Código de error 404: Not Found
+
+    # Prepara los datos de la respuesta
+    datos_psicologo = {
+        'id': psicologo_relacionado.id,
+        'name': psicologo_relacionado.name,
+        'last_name': psicologo_relacionado.last_name,
+        # Otras propiedades del psicólogo (opcional)
+    }
+
+    return jsonify(datos_psicologo)
+
+
 @api.route('/patients/<int:patient_id>/tasks', methods=['POST'])
 @jwt_required()
 def create_task(patient_id):

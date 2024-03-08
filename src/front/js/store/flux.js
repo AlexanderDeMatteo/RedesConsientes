@@ -23,7 +23,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			scheduleSession:{},
 			clientScheduleData:{},
 			userPaymentData:{},
-			userPatients:{}
+			userPatients:{},
+			userRelationShip:[]
 		},
 
 		actions: {
@@ -657,6 +658,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (response.status == 200) {
 					getActions().handle_user_psicologo_to_aprove()
 					alert("usuario eliminado con exito")
+				}
+			},
+
+			get_psicologo_asigned: async (id) => {
+				let response = await fetch(`${API_URL}/api/psicologo_relacionado`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				
+				});
+				console.log(id)
+				if (response.ok) {
+					try{
+						let body = await response.json()
+						console.log(body)
+						setStore({ userRelationShip: [body] })
+					}catch(error){
+						console.log(error)
+					}
 				}
 			},
 		
