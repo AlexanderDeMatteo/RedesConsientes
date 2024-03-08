@@ -9,11 +9,12 @@ export const Panel = () => {
     const { actions, store } = useContext(Context);
     const [currentPage, setCurrentPage] = useState(0);
     const psicologos = store.userPsicologostoaprove
+    const [lista,setLista] = useState(psicologos)
     const [search, setSearch] = useState("")
     const [nameCheck, setNameCheck] = useState()
     const navigate = useNavigate();
   
-    console.log(nameCheck)
+    
 
     const activar = (id) =>{
         actions.active_user(id)
@@ -21,7 +22,9 @@ export const Panel = () => {
     }
 
     const deleteUser = (id) =>{
-        actions.delete_patient(id)
+        actions.delete_psicologo(id)
+        alert("usuario eliminado")
+        actions.handle_user_psicologo_to_aprove()
     }
 
     const handleOnCheckbox = e =>{
@@ -66,7 +69,7 @@ export const Panel = () => {
     
       }
       fetchData()
-      }, []);
+      }, [lista]);
 
     return(
 

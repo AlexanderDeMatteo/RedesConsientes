@@ -131,6 +131,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					console.log(body)
+					console.log("hola")
 					let date = `${fecha} 00:00:00 GMT`
 					let schedule = body.filter(persona => persona.calendar_date == date)
 					setStore({
@@ -550,6 +552,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (response.ok) {
 					if (response.status == 200) {
 						alert("usuario activado con exito")
+						getActions().handle_user_psicologo_to_aprove()
 					} else return false;
 				}
 			},
@@ -642,7 +645,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			delete_patient: async (id) => {
+			delete_psicologo: async (id) => {
 				let response = await fetch(`${API_URL}/api/delete/${id}`, {
 					method: 'DELETE',
 					headers: {
@@ -651,7 +654,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				});
 				console.log(taskId)
-				if (response.ok) {
+				if (response.status == 200) {
+					getActions().handle_user_psicologo_to_aprove()
 					alert("usuario eliminado con exito")
 				}
 			},
