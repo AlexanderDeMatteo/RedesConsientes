@@ -223,6 +223,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					
 					let dataFiltada = body.filter((data) => data.id == usuario)
 					let nuevaData = (Object.assign({}, ...dataFiltada));
 					setStore({ userScheduleData: nuevaData })

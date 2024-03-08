@@ -92,7 +92,7 @@ export const Calendar_Psicologo = () => {
     return (
         <>
 
-            <div className="content-wrapper">
+            <div className="content">
                 <section className="content-header">
                     <div className="container-fluid">
                         <div className="row mb-2">

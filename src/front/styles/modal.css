@@ -24,3 +24,7 @@ background-color: #007bff;
   padding-top: 30px;
   overflow: none;
 }
+
+form {
+  display: flex;
+}

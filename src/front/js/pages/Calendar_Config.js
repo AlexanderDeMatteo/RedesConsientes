@@ -102,7 +102,7 @@ export const CalendarCogif_custom = () => {
                              
                                 <div className="form-group">
                                     <label htmlFor="exampleInputEmail1">Horarios</label>
-                                    {/* <input type="email" className="form-control" id="exampleInputEmail1" placeholder="Enter email" /> */}
+                                    <input type="email" className="form-control" id="exampleInputEmail1" placeholder="Enter email" />
                                 </div>
                                 <div className="row">
                                     <div className="col-12 col-md-12 col-lg-8 order-2 order-md-1">

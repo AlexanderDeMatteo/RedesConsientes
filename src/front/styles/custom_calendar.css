@@ -147,6 +147,11 @@
     display: none !important;
   }
 
+  .time-card{
+    display: flex;
+    flex-direction: column;
+  }
+  
   .time-card .card:hover {
     display: block;
   }

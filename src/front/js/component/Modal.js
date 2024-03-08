@@ -42,11 +42,11 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
 
     }, [fecha])
 
-    function range(start, stop=undefined, step=1) {
-        const startArray = stop  === undefined ? 0 : start;
-        const stopArray = stop  === undefined ? start : stop;
-        return Array.from({ length: (stopArray - startArray) / step + 1}, (_, i) => startArray + (i * step));
-    }
+    // function range(start, stop=undefined, step=1) {
+    //     const startArray = stop  === undefined ? 0 : start;
+    //     const stopArray = stop  === undefined ? start : stop;
+    //     return Array.from({ length: (stopArray - startArray) / step + 1}, (_, i) => startArray + (i * step));
+    // }
 
     async function onCreatetimework(event) {
         event.preventDefault();
@@ -232,7 +232,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                 </div>
                                 <div className="row">
                                     <div className="col-12 col-md-12 col-lg-8 order-2 order-md-1">
-                                        <div className="row">
+                                        <div className="d-flex">
 
                                             {transition((style, item) =>
                                                 item ? <animated.div style={style} className="col-12 col-sm-4" ><div className="info-box bg-light">
