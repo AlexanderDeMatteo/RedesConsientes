@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
 import "../../styles/panel.css"
 import { useNavigate } from "react-router-dom";
+import { checkPropTypes } from "prop-types";
 
 export const Panel = () => {
     const [isLoading, setIsLoading] = useState("");
@@ -11,10 +12,13 @@ export const Panel = () => {
     const psicologos = store.userPsicologostoaprove
     const [lista,setLista] = useState(psicologos)
     const [search, setSearch] = useState("")
-    const [nameCheck, setNameCheck] = useState()
+    const [nameCheck, setNameCheck] = useState("")
+    const [cedula, setCedula] = useState("")
+    const [fpvNumber,setFpvNumber] = useState("")
+    const [aproved,setAproved] = useState("todo")
     const navigate = useNavigate();
-  
-    
+
+    console.log(aproved)
 
     const activar = (id) =>{
         actions.active_user(id)
@@ -27,9 +31,24 @@ export const Panel = () => {
         actions.handle_user_psicologo_to_aprove()
     }
 
-    const handleOnCheckbox = e =>{
-        setNameCheck(e.target.value)
+    const handleSelected = e =>{
+        setAproved(e.target.value)
     }
+
+    const checkcedula = (value) =>{
+        if(cedula == value){
+            return setCedula(false)
+        }
+        setCedula(value)
+    }
+
+    const checkFpv_number = (value) =>{
+        if(fpvNumber == value){
+            return setFpvNumber(false)
+        }
+        setFpvNumber(value)
+    }
+
 
     const info = (id) =>{
         navigate(`/perfil/${id}`);
@@ -39,8 +58,17 @@ export const Panel = () => {
         if(search.length === 0){
             return psicologos.slice(currentPage,currentPage+10)
         }
+        if(cedula == "cedula"){
+            const cedulaFiltred = psicologos.filter(psicologo => psicologo?.cedula?.includes(search))
+            return cedulaFiltred.slice(currentPage,currentPage +10)
+        }
+        if(fpvNumber == "fpv_number"){
+            const fpvFiltred = psicologos.filter(psicologo => psicologo?.fpv_number?.includes(search))
+            return fpvFiltred.slice(currentPage,currentPage +10)
+        }
+        
         const filtred = psicologos.filter(psicologo => psicologo.name.includes(search))
-        return filtred.slice(currentPage,currentPage +10)
+          return filtred.slice(currentPage,currentPage +10)
     }
    
     const nextPage = () =>{
@@ -51,6 +79,10 @@ export const Panel = () => {
         setCurrentPage(currentPage - 10)
     }
 
+
+    // useEffect(() => {
+    //     filtredPsicologos()
+    // }, [psicologos, search, cedula, fpvNumber, aproved]);
 
 
     useEffect(() => {
@@ -88,43 +120,48 @@ export const Panel = () => {
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
                     />
-                    <div id="check-box">
+                    <div id="check-box" className="d-flex align-items-center">
                         <input
                             type="checkbox"
                             className="mb-2 form control"
                             name="name"
                             value="name"
                             id="name"
-                            onChange={(event) => setNameCheck(event.target.value)}
+                            
                         />
-                        <label for="name">Nombre</label>
+                        <label for="name" className="mr-2">Nombre</label>
                         <input
                             type="checkbox"
                             className="mb-2 form control"
                             name="cedula"
                             value="cedula"
                             id="cedula"
-                            onChange={handleOnCheckbox}
+                            onClick={() => checkcedula("cedula")}
                         />
-                        <label for="cedula">Cedula</label>
+                        <label for="cedula" className="mr-2">Cedula</label>
                         <input
                             type="checkbox"
                             className="mb-2 form control"
                             name="fpv_number"
                             value="fpv_number"
                             id="fpv_number"
-                            onChange={handleOnCheckbox}
+                            onClick={() => checkFpv_number("fpv_number")}
                         />
-                        <label for="fpv_number">Numero de fpv</label>
-                        <input
-                            type="checkbox"
-                            className="mb-2 form control"
-                            name="aprobado"
-                            value="aprobado"
-                            id="aprobado"
-                            onChange={handleOnCheckbox}
-                        />
-                        <label for="aprobado">Aprobado</label>
+                        <label for="fpv_number" className="mr-2">Numero de fpv</label>
+                        <label for="validationCustom04" className="form-label">Aprobado</label>
+                        <select class="form-select col-md-2"
+                                id="validationCustom04" 
+                                required
+                                value={aproved}
+                                onChange={(event) => setAproved(event.target.value)}
+                                >
+                        <option selected disabled value="">selecciona</option>
+                        <option>todo</option>
+                        <option>aprobado</option>
+                        <option>pendiente</option>
+                        </select>
+                       
+                       
                     </div>
                 </div>
                 <div className="App">
@@ -143,7 +180,7 @@ export const Panel = () => {
                             <td>{psicologo.name} {psicologo.last_name}</td>
                             <td>{psicologo.cedula}</td>
                             <td>{psicologo.fpv_number}</td>
-                            <td>{psicologo.is_active == true ? "si" : "no"}</td>
+                            <td>{psicologo.is_active == true ? "si" : "pendiente"}</td>
                             <td>{psicologo.is_active ==true ? (" ") : (<i id="panelIcon" class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i id="panelIcon" class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i> <i id="panelIcon" class="fa-solid fa-circle-info" onClick={() => info(psicologo.id)}></i></td>
                         </tr>
                     )
@@ -156,51 +193,7 @@ export const Panel = () => {
                         onClick={nextPage}>Siguente</button>
 
         </div>
-                {/* <div className="row">
-                {psicologos.map((psicologo, index) => (
-                <div className="col-md-3">
-                <div className="card card-primary card-outline">
-                    <div>
-                    <div className="text-center">
-                        <img
-                        src={
-                            psicologo_img
-                        }
-                        alt="User profile picture"
-                        id="avatar_perfil"
-                        className="profile-user-img img-fluid img-circle"
-                        />
-                    </div>
-                    <ul>
-                        <li>
-                            Nombre: {psicologo.name} 
-                        </li>
-                        <li>
-                            Apellido: {psicologo.last_name} 
-                        </li>
-                        <li>
-                            Numero de FPV: {psicologo.fpv_number} 
-                        </li>
-                        <li>
-                            Cedula: {psicologo.cedula}
-                        </li>
-                    </ul>
-                    <div className="row">
-                        <a className="btn btn-success btn-block" onClick={() => activar(psicologo.id)}>
-                            <b>Aprobado</b>
-                        </a>
-                        <a className="btn btn-danger btn-block" onClick={() => deleteUser(psicologo.id)}>
-                            <b>Rechazado</b>
-                        </a>
-
-                    </div>
-                    </div>
-                </div>
-
-                </div>
-                ))}
-          </div> */}
-
+            
             </div>)}
             
         </>
