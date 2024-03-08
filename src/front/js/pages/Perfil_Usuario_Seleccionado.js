@@ -48,7 +48,7 @@ export const PerfilUsuarioSeleccionado = () => {
 
     useEffect(() => {
         // actions.privateData()
-        actions.handle_user_data_seleccinado(id);
+        // actions.handle_user_data_seleccinado(id);
     }, []);
 
     console.log(id)

@@ -113,8 +113,8 @@ export const Calendar_custom = () => {
                 <h3 className="card-title">{calendar_date2}</h3>
                 <Modal calendar_date2={calendar_date2} calendar_date={calendar_date} fecha={fecha}/>
               </div>
-              {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+              {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
                   </div></div>) : (<form className="form-horizontal">
                 <div className="card-body">
                   {store.scheduleSession == false ? (<p>No hay horarios disponibles</p>):(<div className="time-card" id="external-events">

@@ -75,7 +75,7 @@ export const TodoList = () => {
         onChange={handleChange}
         onKeyDown={saveTask}
         type="text"
-        class="form-control" 
+        className="form-control" 
         aria-label="Sizing example input" 
         aria-describedby="inputGroup-sizing-sm"
         required minlength="4" maxlength="110"
@@ -88,13 +88,13 @@ export const TodoList = () => {
             <>
               <ul className="lista">
                 {taskList.map((item, index) => (
-                  <div class="input-group-text">
+                  <div className="input-group-text">
                   <li key={index} className="p-0">
 
                     {console.log(item.completed)}
                   <label className="form-check-label  w-100"style={{paddingLeft:20}} for="task">
                       
-                  <input class="form-check-input mt-1" type="checkbox" checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
+                  <input className="form-check-input mt-1" type="checkbox" checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
                     {`${index + 1}- ${item.description} `}
                     <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)} style={{cursor: "pointer"}}></i>
                     </label>
@@ -116,9 +116,9 @@ export const TodoList = () => {
 };
 
 
-<div class="input-group mb-3">
-  <div class="input-group-text">
-    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/>
+<div className="input-group mb-3">
+  <div className="input-group-text">
+    <input className="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"/>
   </div>
-  <input type="text" class="form-control" aria-label="Text input with checkbox"/>
+  <input type="text" className="form-control" aria-label="Text input with checkbox"/>
 </div>

@@ -56,6 +56,7 @@ export const Panel = () => {
     
     const filtredPsicologos = () => {
         if(search.length === 0){
+            console.log(aproved == "true")
             return psicologos.slice(currentPage,currentPage+10)
         }
         if(cedula == "cedula"){
@@ -65,6 +66,9 @@ export const Panel = () => {
         if(fpvNumber == "fpv_number"){
             const fpvFiltred = psicologos.filter(psicologo => psicologo?.fpv_number?.includes(search))
             return fpvFiltred.slice(currentPage,currentPage +10)
+        }
+        if(aproved === "true"){
+            console.log("hola")
         }
         
         const filtred = psicologos.filter(psicologo => psicologo.name.includes(search))
@@ -107,8 +111,8 @@ export const Panel = () => {
 
         <>
             <h1 id="titulo">Panel de control</h1>
-            {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary m-5" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+            {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
+                                    <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
             <div>
                     <h1>solicitudes</h1>
@@ -149,16 +153,16 @@ export const Panel = () => {
                         />
                         <label for="fpv_number" className="mr-2">Numero de fpv</label>
                         <label for="validationCustom04" className="form-label">Aprobado</label>
-                        <select class="form-select col-md-2"
+                        <select className="form-select col-md-2"
                                 id="validationCustom04" 
                                 required
                                 value={aproved}
                                 onChange={(event) => setAproved(event.target.value)}
                                 >
                         <option selected disabled value="">selecciona</option>
-                        <option>todo</option>
-                        <option>aprobado</option>
-                        <option>pendiente</option>
+                        <option value={"todo"}>todo</option>
+                        <option value={true}>aprobado</option>
+                        <option value={false}>pendiente</option>
                         </select>
                        
                        
@@ -181,7 +185,7 @@ export const Panel = () => {
                             <td>{psicologo.cedula}</td>
                             <td>{psicologo.fpv_number}</td>
                             <td>{psicologo.is_active == true ? "si" : "pendiente"}</td>
-                            <td>{psicologo.is_active ==true ? (" ") : (<i id="panelIcon" class="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i id="panelIcon" class="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i> <i id="panelIcon" class="fa-solid fa-circle-info" onClick={() => info(psicologo.id)}></i></td>
+                            <td>{psicologo.is_active ==true ? (" ") : (<i id="panelIcon" className="fa-solid fa-check" onClick={() => activar(psicologo.id)}></i>)} <i id="panelIcon" className="fa-solid fa-trash" onClick={() => deleteUser(psicologo.id)}></i> <i id="panelIcon" className="fa-solid fa-circle-info" onClick={() => info(psicologo.id)}></i></td>
                         </tr>
                     )
                 })}

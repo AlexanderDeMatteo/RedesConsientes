@@ -9,26 +9,26 @@ export const AboutMe = (data) => {
 
 
   return (
-    <div class="card card-primary ">
-      <div class="card-header">
-        <p class="card-title">Sobre mi</p>
+    <div className="card card-primary ">
+      <div className="card-header">
+        <p className="card-title">Sobre mi</p>
       </div>
 
-      <div class="card-body">
+      <div className="card-body">
         {data.user_data.education ? <>
-          <strong><i class="fas fa-book mr-1"></i> Educacion</strong>
-          <p class="text-muted">
+          <strong><i className="fas fa-book mr-1"></i> Educacion</strong>
+          <p className="text-muted">
             {data.user_data.education}
           </p>
         </> : ""}
         <hr />
-        <strong><i class="fas fa-map-marker-alt mr-1"></i> Locacion</strong>
-        <p class="text-muted">{data.user_data.state}, {data.user_data.city}</p>
+        <strong><i className="fas fa-map-marker-alt mr-1"></i> Locacion</strong>
+        <p className="text-muted">{data.user_data.state}, {data.user_data.city}</p>
         {data.user_data.twitter ?
           <>
             <hr />
-            <strong><i className="fab fa-twitter fa-lg"></i> Twitter</strong>
-            <p class="text-muted">{data.user_data.twitter}</p>
+            <strong><i classNameName="fab fa-twitter fa-lg"></i> Twitter</strong>
+            <p className="text-muted">{data.user_data.twitter}</p>
 
           </> : <>
           </>
@@ -36,8 +36,8 @@ export const AboutMe = (data) => {
         {data.user_data.instagram ?
           <>
             <hr />
-            <strong><i className="fab fa-instagram fa-lg"></i> Instagram</strong>
-            <p class="text-muted">{data.user_data.instagram}</p>
+            <strong><i classNameName="fab fa-instagram fa-lg"></i> Instagram</strong>
+            <p className="text-muted">{data.user_data.instagram}</p>
 
           </> : <>
           </>
@@ -45,8 +45,8 @@ export const AboutMe = (data) => {
         {data.user_data.facebook ?
           <>
             <hr />
-            <strong><i className="fab fa-facebook fa-lg"></i> Facebook</strong>
-            <p class="text-muted">{data.user_data.facebook}</p>
+            <strong><i classNameName="fab fa-facebook fa-lg"></i> Facebook</strong>
+            <p className="text-muted">{data.user_data.facebook}</p>
 
           </> : <>
           </>

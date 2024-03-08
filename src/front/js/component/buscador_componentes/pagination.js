@@ -29,7 +29,7 @@ export const Pagination = ({ currentPage, setCurrentPage, psicologytotal, psicol
 
     return (
         <>
-            <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+            <nav className="pagination is-centered" role="navigation" aria-label="pagination">
                 <button className={`pagination-previous ${currentPage === 1 ? "is-disabled" : ""}`} onClick={onPreviosPage}>Anterior</button>
                 <button className={`pagination-next ${currentPage >= pageNumbers.length ? "is-disabled" : ""}`} onClick={onNextPage}>Siguiente</button>
                 {/* <button className={`button is-info ${currentPage === 1 ? "is-disabled" : ""}`} onClick={onPreviosPage}>Anterior</button> */}

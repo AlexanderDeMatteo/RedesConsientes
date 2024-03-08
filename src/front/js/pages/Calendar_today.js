@@ -60,8 +60,8 @@ export const CalendarToday_custom = () => {
                         </div>
                     </div>
                 </section>
-                {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary m-5" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
+                                    <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
                 <div className="row">
 
@@ -116,14 +116,14 @@ export const CalendarToday_custom = () => {
 
                             </div>)}
                             
-                            <div class="col-md-5 custom_card">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Frase del Dia</h3>
+                            <div className="col-md-5 custom_card">
+                                <div className="card card-primary">
+                                    <div className="card-header">
+                                        <h3 className="card-title">Frase del Dia</h3>
 
                                     </div>
 
-                                    <div class="card-body">
+                                    <div className="card-body">
                                          {phrase ? (
                                             phrase.map((item, index) => 
                                             <>

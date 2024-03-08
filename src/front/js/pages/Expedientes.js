@@ -36,8 +36,8 @@ export const Expedientes = () => {
     <>
       <div className="content-wrapper">
         <div>Expedientes</div>
-      {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary m-5" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+      {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
+                                    <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
         <div>
             <div className="row">

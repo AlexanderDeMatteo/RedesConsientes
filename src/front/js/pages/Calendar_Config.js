@@ -133,7 +133,7 @@ export const CalendarCogif_custom = () => {
                                                 <div className="row">
                                                     <div className="col-3">
                                                         De: <input onChange={handleChange} name='horaincio' type="text" value={DatesCreate.horaincio} className="form-control" placeholder="Hora de Inicio" />
-                                                        <select name='TIMEinicio' onChange={selectTime} class="custom-select form-control">
+                                                        <select name='TIMEinicio' onChange={selectTime} className="custom-select form-control">
                                                             <option value="1" selected>AM</option>
                                                             <option value="2">PM</option>
 
@@ -141,7 +141,7 @@ export const CalendarCogif_custom = () => {
                                                     </div>
                                                     <div className="col-4">
                                                         Hasta:<input onChange={handleChange} name='horafina' type="text" value={DatesCreate.horafina} className="form-control" placeholder="Hora de Fin" />
-                                                        <select name='TIMEfinal' onChange={selectTime2} class="custom-select form-control">
+                                                        <select name='TIMEfinal' onChange={selectTime2} className="custom-select form-control">
                                                             <option value="1" selected>AM</option>
                                                             <option value="2" >PM</option>
 

@@ -197,20 +197,20 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     return (
         <>
             {!store.userData.is_psicologo ? " " : 
-            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#modalagenda">
+            <button type="button" className="btn btn-primary " data-toggle="modal" data-target="#modalagenda">
                 Añadir horario
             </button>}
 
-            <div class="modal fade" id="modalagenda" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Añadir horario para {calendar_date2}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div className="modal fade" id="modalagenda" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Añadir horario para {calendar_date2}</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div className="modal-body">
                         
             <div className="content-wrapper">
                 <section className="content-header">
@@ -261,7 +261,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                 <div className="row">
                                                     {/* <div className="col-3">
                                                         De: <input onChange={handleChange} name='horaincio' type="text" value={DatesCreate.horaincio} className="form-control" placeholder="Hora de Inicio" />
-                                                        <select name='TIMEinicio' onChange={selectTime} class="custom-select form-control">
+                                                        <select name='TIMEinicio' onChange={selectTime} className="custom-select form-control">
                                                             <option value="1" selected>AM</option>
                                                             <option value="2">PM</option>
 
@@ -269,7 +269,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                     </div>
                                                     <div className="col-4">
                                                         Hasta:<input onChange={handleChange} name='horafina' type="text" value={DatesCreate.horafina} className="form-control" placeholder="Hora de Fin" />
-                                                        <select name='TIMEfinal' onChange={selectTime2} class="custom-select form-control">
+                                                        <select name='TIMEfinal' onChange={selectTime2} className="custom-select form-control">
                                                             <option value="1" selected>AM</option>
                                                             <option value="2" >PM</option>
 
@@ -326,8 +326,8 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
             </div>
 
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
 
                         </div>
                     </div>

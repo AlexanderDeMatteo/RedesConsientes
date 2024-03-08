@@ -41,7 +41,7 @@ export const Perfil = () => {
     const fetchData = async() =>{
       setIsLoading(true)
       try{
-          const data = await actions.handle_user_data();
+          // const data = await actions.handle_user_data();
 
       } catch (error) {
           console.error(error); // Handle any errors
@@ -52,7 +52,6 @@ export const Perfil = () => {
   }
   fetchData()
 
-    actions.handle_user_data();
   }, []);
 
   function changeSelect(e) {
@@ -132,42 +131,12 @@ export const Perfil = () => {
     if (response.ok) {
 
       alert("datos actualizados");
-      actions.handle_user_data();
+      // actions.handle_user_data();
     }
   };
 
 
-  const guardarExperience = async () => {
 
-    const response = await fetch(`${API_URL}/api/psych-experiences/<int:id>`, {
-      method: "PUT",
-      body: JSON.stringify(store.userData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    if (response.ok) {
-      alert("datos actualizados");
-      actions.handle_user_data();
-    }
-  };
-
-  const guardarStrategi = async () => {
-
-    const response = await fetch(`${API_URL}/api/psych-strategies/<int:id>`, {
-      method: "PUT",
-      body: JSON.stringify(store.userData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    if (response.ok) {
-      alert("datos actualizados");
-      actions.handle_user_data();
-    }
-  };
 
   function handleSelect(event, value) {
     // lista.push({ title: value.title, year: value.year })
@@ -190,8 +159,8 @@ export const Perfil = () => {
   return (
 
     <>
-       {isLoading == true ? (<div className="d-flex justify-content-center"><div class="spinner-border text-primary m-5" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+       {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
+                                    <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
       <div>
         <>
@@ -450,7 +419,7 @@ export const Perfil = () => {
                             <div className="form-horizontal">
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Name
@@ -476,7 +445,7 @@ export const Perfil = () => {
                               </div>
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Apellido
@@ -503,7 +472,7 @@ export const Perfil = () => {
                               {store.userData.is_psicologo ? (
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Cedula
@@ -533,7 +502,7 @@ export const Perfil = () => {
 
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Fecha de nacimiento
@@ -562,7 +531,7 @@ export const Perfil = () => {
 
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Correo
@@ -588,7 +557,7 @@ export const Perfil = () => {
                               </div>
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Sexo
@@ -620,7 +589,7 @@ export const Perfil = () => {
 
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Numero Telefonico
@@ -650,7 +619,7 @@ export const Perfil = () => {
 
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Estado
@@ -676,7 +645,7 @@ export const Perfil = () => {
                               </div>
                               <div className="form-group row">
                                 <label
-                                  for="inputName"
+                                  htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
                                 >
                                   Ciudad
@@ -721,7 +690,7 @@ export const Perfil = () => {
                               <div className="form-horizontal">
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Educacion
@@ -747,7 +716,7 @@ export const Perfil = () => {
                                 </div>
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Instagram
@@ -774,7 +743,7 @@ export const Perfil = () => {
 
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Facebook
@@ -800,7 +769,7 @@ export const Perfil = () => {
                                 </div>
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Twitter
@@ -846,7 +815,7 @@ export const Perfil = () => {
                               <div className="form-horizontal">
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Numero FPV
@@ -862,7 +831,7 @@ export const Perfil = () => {
 
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Area de especialidad
@@ -912,7 +881,7 @@ export const Perfil = () => {
                                 {store.userData.is_psicologo ? (
                                   <div className="form-group row">
                                     <label
-                                      for="inputName"
+                                      htmlFor="inputName"
                                       className="col-sm-2 col-form-label"
                                     >
                                       Monto de consulta
@@ -968,7 +937,7 @@ export const Perfil = () => {
                               <div className="form-horizontal">
                                 <div className="form-group row">
                                   <label
-                                    for="inputName"
+                                    htmlFor="inputName"
                                     className="col-sm-2 col-form-label"
                                   >
                                     Motivo Consulta
