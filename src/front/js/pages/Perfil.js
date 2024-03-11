@@ -847,6 +847,7 @@ export const Perfil = () => {
                                           id="exampleSelectBorder">
                                           <option>seleccionar</option>
                                           <option>Neuro Psicología</option>
+                                          <option>Psicología Clinica</option>
                                           <option>Psicólogia Biológica</option>
                                           <option>Psicología Comparativa o Etiología</option>
                                           <option>Psicología Educativa</option>

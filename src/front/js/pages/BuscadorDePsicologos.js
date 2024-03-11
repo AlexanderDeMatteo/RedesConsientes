@@ -33,7 +33,7 @@ export const BuscadorDePsicologos = () => {
         "Psicología Militar", "Psicología Escolar",
         "Psicología Gerontológica", "Psicología Experimental",
         "Psicología Del Desarrollo", "Psicología de Ingeniería",
-        "Psicología del Marketing", "Sexología",
+        "Psicología del Marketing", "Sexología", "Psicología Clinica",
         "Psicología comunitaria"]
 
     const [showFiltros, setShowFiltros] = useState(false)
