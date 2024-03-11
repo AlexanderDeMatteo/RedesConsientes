@@ -21,6 +21,8 @@ export const SignUp = () => {
 
 	const [showPassword, setShowPassword] = useState(false);
 
+	const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
 	const navigate = useNavigate();
 
 	const handleSubmit = async () => {
@@ -67,7 +69,7 @@ export const SignUp = () => {
 											Sign up
 										</p>
 
-										<form className="mx-1 mx-md-4">
+										<form className="mx-1 mx-md-4 d-flex flex-column">
 											<div className="d-flex flex-row align-items-center mb-4">
 												<i className="fas fa-user fa-lg me-3 fa-fw"></i>
 												<div className="form-outline flex-fill mb-0">
@@ -80,7 +82,7 @@ export const SignUp = () => {
 													<input
 														type="text"
 														id="form3Example1c"
-														className="form-control"
+														className="form-control col-11"
 														onChange={(e) => setName(e.target.value)}
 													/>
 												</div>
@@ -98,7 +100,7 @@ export const SignUp = () => {
 													<input
 														type="email"
 														id="form3Example3c"
-														className="form-control"
+														className="form-control col-11"
 														onChange={(e) => setEmail(e.target.value)}
 														onBlur={(e) => {
 															let regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -131,7 +133,7 @@ export const SignUp = () => {
 														<input
 															type={showPassword ? "text" : "password"}
 															id="form3Example4c"
-															className="form-control"
+															className="form-control col-11"
 															onBlur={(e) => {
 																let regex =
 																	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -143,6 +145,7 @@ export const SignUp = () => {
 															}}
 															onChange={(e) => setPassword(e.target.value)} />
 														<i className="fa fa-eye password-icon iconpass2"
+															id="ojitos"
 															onClick={(e) => {
 																e.preventDefault();
 																setShowPassword(!showPassword);
@@ -184,10 +187,11 @@ export const SignUp = () => {
 													>
 														Repeat your password
 													</label>
+													<div className="d-flex">
 													<input
-														type="password"
+														type={showRepeatPassword ? "text" : "password"}
 														id="form3Example4cd"
-														className="form-control"
+														className="form-control col-11"
 														onBlur={(e) => {
 															if (repeat !== password) {
 																setErrors({ ...errors, repeat: true });
@@ -196,13 +200,14 @@ export const SignUp = () => {
 															}
 														}}
 														onChange={(e) => setRepeat(e.target.value)} />
+
 													<i className="fa fa-eye password-icon iconpass2" id="ojitos"
 														onClick={(e) => {
 															e.preventDefault();
-															setShowPassword(!showPassword);
+															setShowRepeatPassword(!showRepeatPassword);
 														}}
-													/>
-
+														/>
+													</div>
 													{errors.repeat && (
 														<div className="text-warning">
 															contraseña diferente perro de awa
@@ -210,6 +215,8 @@ export const SignUp = () => {
 													)}
 												</div>
 											</div>
+
+											
 
 											{
 												check_fpv ? <div className="d-flex flex-row align-items-center mb-4">
@@ -224,7 +231,7 @@ export const SignUp = () => {
 														<input
 															type="code"
 															id="form5Example5cd"
-															className="form-control"
+															className="form-control col-11"
 															onChange={(e) => setNumero_fpv(e.target.value)}
 														/>
 
@@ -234,7 +241,7 @@ export const SignUp = () => {
 
 
 
-											<div className="form-check d-flex justify-content-center mb-5">
+											<div className="mb-3" style={{alignSelf: "center"}}>
 												<input
 													className="form-check-input me-2"
 													type="checkbox"
@@ -253,7 +260,7 @@ export const SignUp = () => {
 											</div>
 
 
-											<div className="form-check d-flex justify-content-center mb-5">
+											<div className="mb-3" style={{alignSelf: "center"}}>
 												<input
 													className="form-check-input me-2"
 													type="checkbox"

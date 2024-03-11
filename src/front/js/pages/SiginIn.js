@@ -47,7 +47,7 @@ export const SignIn = () => {
                                             Sign In
                                         </p>
 
-                                        <form className="mx-1 mx-md-4">
+                                        <form className="mx-1 mx-md-4 d-flex flex-column">
 
                                             <div className="d-flex flex-row align-items-center mb-4">
                                                 <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
@@ -61,7 +61,7 @@ export const SignIn = () => {
                                                     <input
                                                         type="email"
                                                         id="form3Example3c"
-                                                        className="form-control"
+                                                        className="form-control col-10"
                                                         onChange={(e) => setEmail(e.target.value)}
                                                         onBlur={(e) => {
                                                             let regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -94,7 +94,7 @@ export const SignIn = () => {
                                                         <input
                                                             type={showPassword ? "text" : "password"}
                                                             id="form3Example4c"
-                                                            className="form-control"
+                                                            className="form-control col-10"
                                                             onBlur={(e) => {
                                                                 let regex =
                                                                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
