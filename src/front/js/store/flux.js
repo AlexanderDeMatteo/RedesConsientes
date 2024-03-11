@@ -132,10 +132,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
-					console.log("hola")
 					let date = `${fecha} 00:00:00 GMT`
 					let schedule = body.filter(persona => persona.calendar_date == date)
+					console.log(schedule)
 					setStore({
 						...store,
 						scheduleSession: schedule
@@ -223,7 +222,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					
 					let dataFiltada = body.filter((data) => data.id == usuario)
 					let nuevaData = (Object.assign({}, ...dataFiltada));
 					setStore({ userScheduleData: nuevaData })

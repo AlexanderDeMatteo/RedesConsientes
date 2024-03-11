@@ -40,7 +40,6 @@ def handle_register():
         access_token = create_access_token(identity=newUser.id)
         updated_info["user_id"] = newUser.id
         fpv = updated_info["fpv_number"]
-        print(updated_info)
         create_profile_info = UserProfileInfo(
             user_id=newUser.id,
             fpv_number=fpv,
@@ -51,7 +50,6 @@ def handle_register():
             return jsonify({"token": access_token, "results": create_profile_info.serialize()}), 201
         except Exception as error:
             db.session.rollback()
-            print(error)
             return jsonify(error.args), 500
 
 
@@ -129,7 +127,6 @@ def handle_user_data():
             return jsonify(full_info), 200 
     if request.method == 'PUT':
         data = request.json
-        print(data)
         #data_decode = json.loads(data)
         user.update(data)
         email = data["email"]
@@ -152,7 +149,6 @@ def handle_user_data():
                 return jsonify(create_profile_info.serialize()), 201
             except Exception as error:
                 db.session.rollback()
-                print(error)
                 return jsonify(error), 500
         else:
             updated = user_profile_info.update(data)
@@ -181,7 +177,6 @@ def handle_user_picture():
     data = request.json
     if data is not None:
         updated = user.update_profile_picture(data)
-        print(updated)
         if updated is False:
             return jsonify({"message": "error"}), 404
         else:
@@ -241,7 +236,6 @@ def handle_user_data_seleccinado(id):
     user = User.query.filter_by(id=selected_user).one_or_none()
     user_profile_info = UserProfileInfo.query.filter_by(
         user_id=selected_user).one_or_none()
-    print(user)
     if request.method == 'GET':
         if user is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
@@ -251,127 +245,19 @@ def handle_user_data_seleccinado(id):
             user_info = user.serialize()
             profile_info = user_profile_info.serialize()
             full_info = {**user_info, **profile_info}
-            print(user_profile_info.serialize())
-            print(full_info, "linea 82")
             
             return jsonify(full_info), 200
     
-
-
-# @api.route("/specialty-area", methods=['GET'])
-# def handle_specialty_area():
-#     specialty_areas = ["Psicología Cognitiva", "Psicología Clínica", "Neuro Psicología", "Psicólogia Biológica", "Psicología Comparativa o Etiología", "Psicología Educativa", "Psicología Evolutiva", "Psicología del Deporte", "Psicología Jurídica", "Psicología de la Personalidad", "Psicología de la Salud",
-#                        "Psicología de Parejas", "Psicología Familiar", "Psicología Empresarial y Organizacional", "Psicología Militar", "Psicología Escolar", "Psicología Gerontológica", "Psicología Experimental", "Psicología Del Desarrollo", "Psicología de Ingeniería", "Psicología del Marketing", "Sexología", "Psicología comunitaria"]
-#     return jsonify({"ok": True, "result": specialty_areas}), 200
-
-
-# # Preguntar en reunion, como se hará para actualizar la información academica del psicologo
-# # Get and create academic information for a psycologist
-# @api.route('/academic', methods=['GET', 'POST'])
-# @jwt_required()
-# def get_and_create_academic_data():
-#     user_id = get_jwt_identity()
-#     if request.method == "GET":
-#         academic_data = PsychAcademicInfo.query.filter_by(
-#             user_id=user_id).all()
-#         return jsonify([academic.serialize() for academic in academic_data])
-#     elif request.method == "POST":
-#         academic_info = request.json
-#         academic_info["user_id"] = user_id
-#         new_academic = PsychAcademicInfo.create(academic_info)
-#         if new_academic:
-#             return jsonify({'message': 'Academic data successfully added', 'academic_data': new_academic.serialize()}), 201
-#         return jsonify({'message': 'Error adding academic data'}), 500
-
-
-# # Obtener y actualizar datos académicos por ID
-# @api.route('/academic/<int:academic_id>', methods=['GET', 'PUT', 'DELETE'])
-# @jwt_required()
-# def get_and_update_academic_data_by_id(academic_id):
-#     user_id = get_jwt_identity()
-#     academic = PsychAcademicInfo.query.filter_by(
-#         id=academic_id, user_id=user_id).first()
-#     print(academic)
-#     if academic:
-#         if request.method == "GET":
-#             return jsonify(academic.serialize())
-#         elif request.method == "PUT":
-#             academic_info = request.json
-#             if academic.update(academic_info):
-#                 return jsonify({'message': 'Academic data successfully updated'})
-#             return jsonify({'message': 'Error updating academic data'}), 500
-#         elif request.method == "DELETE":
-#             if academic.delete():
-#                 return jsonify({'message': 'Academic data successfully removed'})
-#             return jsonify({'message': 'Error deleting academic data'}), 500
-#     return jsonify({'message': 'Academic data not found'}), 404
-
-
-# # Endpoint to delete, update and get a experience by id
-# @api.route('/psych-experiences/<int:id>', methods=['DELETE', 'PUT', 'GET'])
-# def handle_one_experience(id):
-#     psych_xp = PsychExperiences.query.filter_by(id=id).one_or_none()
-#     if request.method == 'DELETE':
-#         if psych_xp is None:
-#             return jsonify({"message": "Experience not found"}), 404
-#         deleted = psych_xp.delete()
-#         if deleted == False:
-#             return jsonify({"message": "Something happen try again!"}), 500
-#         return jsonify({"message": "Experience deleted"}), 204
-#     elif request.method == 'GET':
-#         if psych_xp is None:
-#             return jsonify({"message": "Experience not found"}), 404
-#         return jsonify(psych_xp.serialize()), 200
-#     elif request.method == 'PUT':
-#         if psych_xp is not None:
-#             updated = psych_xp.update(request.json)
-#             if updated:
-#                 return jsonify({"message": "Experience updated"}), 200
-#             else:
-#                 return jsonify({"message": "Something went wrong!"}), 500
-#         return jsonify({"message": "Experience does not exist!"}), 404
-
-# # Endpoint to delete, update and get a strategie by id
-
-
-# @api.route('/psych-strategies/<int:id>', methods=['DELETE', 'PUT', 'GET'])
-# def handle_one_strategie(id):
-#     psych_strategie = PsychTherapeuticStrategies.query.filter_by(
-#         id=id).one_or_none()
-#     if request.method == 'DELETE':
-#         if psych_strategie is None:
-#             return jsonify({"message": "Strategie not found"}), 404
-#         deleted = psych_strategie.delete()
-#         if deleted == False:
-#             return jsonify({"message": "Something happen try again!"}), 500
-#         return jsonify({"message": "Strategie deleted"}), 204
-#     elif request.method == 'GET':
-#         if psych_strategie is None:
-#             return jsonify({"message": "Strategie not found"}), 404
-#         return jsonify(psych_strategie.serialize()), 200
-#     elif request.method == 'PUT':
-#         if psych_strategie is not None:
-#             updated = psych_strategie.update(request.json)
-#             if updated:
-#                 return jsonify({"message": "Strategie updated"}), 200
-#             else:
-#                 return jsonify({"message": "Something went wrong!"}), 500
-#         return jsonify({"message": "Strategie does not exist!"}), 404
-# # Get Session by ID of the professor, but returns all sessions of the current day. If there's no sessions, will return the same statement
-
 @api.route("/sessions/today/client/<int:client_id>", methods=['GET'])
 def handle_sessions_client_today(client_id):
     today = date.today()
-    print(today)
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
-    print(current_date)
     sessions = Session.query.filter_by(
         client_id=client_id).where(current_date == Session.calendar_date).all()
     response = []
     for session in sessions:
         response.append(session.serialize())
-        print(response)
     if sessions is None:
         return jsonify({"message": "Not sessions available for this client"}), 401
     else:
@@ -380,16 +266,13 @@ def handle_sessions_client_today(client_id):
 @api.route("/sessions/today/<int:psychologist_id>", methods=['GET'])
 def handle_sessions_today(psychologist_id):
     today = date.today()
-    print(today)
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
-    print(today)
     sessions = Session.query.filter_by(
         psychologist_id=psychologist_id).where(current_date == Session.calendar_date).all()
     response = []
     for session in sessions:
         response.append(session.serialize())
-        print(response)
     if sessions is None:
         return jsonify({"message": "Not sessions available for this Psychologist"}), 401
     else:
@@ -404,7 +287,6 @@ def handle_get_sessions(psychologist_id):
     response = []
     for session in sessions:
         response.append(session.serialize())
-        print(response)
     if sessions is None:
         return jsonify({"message": "Not sessions available for this Psychologist"}), 401
     else:
@@ -423,7 +305,6 @@ def handle_session_create():
             schedule_data = request.json
             schedule_data["psychologist_id"] = psychologist.id
             schedule = Session.create_schedule(schedule_data)
-            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
             room_number = os.urandom(20).hex()
             session_data = request.json
             session_data["psychologist_id"] = psychologist.id
@@ -436,7 +317,7 @@ def handle_session_create():
 
 
 # Handle the DELETE, UPDATE of a session by getting the ID of the professor and the Session
-@api.route("/session-handle/<int:session_id>", methods=['DELETE', 'PUT'])
+@api.route("/schedule-handle/<int:session_id>", methods=['DELETE', 'PUT'])
 @jwt_required()
 def handle_one_session(session_id):
     current_psychologist = get_jwt_identity()
@@ -476,8 +357,6 @@ def handle_reserved_session(session_id):
         data["client_id"] = user.id
         # actualiza la session y le coloca el id del usuario. tambien cambia el estado de reservacion a true
         reserved = session.reserve_session(data)
-        print(data)
-        print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
         if reserved is True:
             return jsonify({"message": "session is reserved"}), 200
         else:
@@ -493,12 +372,9 @@ def handle_unbook_session(session_id):
     user = User.query.filter_by(id=current_user).one_or_none()
     session = Session.query.filter_by(id=session_id).one_or_none()
     data = request.json
-    print(data)
     if session is not None:
         data["client_id"] = None
-        print(data)
         unbooked = session.reserve_session(data)
-        print(unbooked)
         if unbooked is True:
             return jsonify({"message": "Session unbooked"}), 204
         else:
@@ -753,7 +629,6 @@ def handle_payment_account():
             return jsonify({"message": "Datos actualizados correctamente"}), 200
         except Exception as error:
             db.session.rollback()
-            print(error)
             return jsonify({"message": "Error al actualizar los datos"}), 500
         
 @api.route('/psicology-payment-accounts/<int:id>', methods=['GET'])

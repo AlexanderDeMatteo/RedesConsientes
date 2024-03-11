@@ -18,11 +18,12 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const [showcreate, setShowCreate] = useState(false);
     const [DatesCreate, setDatesCreate] = useState({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' });
     const {id} = useParams(0)
-    const [time, setTime] = useState(["00:00", "00:00"])
     const [timeInicio, setTimeInicio] = useState("12:00")
     const [amPmInicio, setAmPmInicio] = useState("PM")
     const [timeFinal, setTimeFinal] = useState("12:00")
     const [amPmFinal, setAmPmFinal] = useState("PM")
+    const [isLoading, setIsLoading] = useState("");
+    const [horainicioFinal,setHoraInicioFinal] = useState("")
 
 
     // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
@@ -41,6 +42,28 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         actions.getPsicologiScheduleDay(id, fecha)
 
     }, [fecha])
+
+    useEffect(()=>{
+        console.log(timeInicio)
+    },[timeInicio])
+    
+    useEffect(() => {
+        
+        const fetchData = async() =>{
+          setIsLoading(true)
+          
+          try{
+              const data = await actions.getPsicologiScheduleDay(id, fecha)
+            
+        } catch (error) {
+              console.error(error); // Handle any errors
+            } finally {
+              setIsLoading(false); // Finalizar la carga
+        }
+    
+      }
+      fetchData()
+      }, [fecha]);
 
     // function range(start, stop=undefined, step=1) {
     //     const startArray = stop  === undefined ? 0 : start;
@@ -80,19 +103,26 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                     }
                     
                 } );
+
+                console.log(elemento1 - 1200)
                 
                 if(filterStartTime == true) {
-                    alert("horario permitido")
+                    alert("horario permitido2")
                     await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
                     setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
                     setShowCreate(!showcreate)
                     await actions.getPsicologiScheduleDay(id, fecha)
-                  
+                    
                 } 
                 if(filterStartTime.length == 0) {
-                    alert("horario permitido")
+                    alert("horario permitido1")
+                    let filtroInicio1 = elemento1 - 1200
+                    if(filtroInicio1 === 0){
+                        filtroInicio1 ="12:00"
+                    }
+                    let firtsHalfInicio = filtroInicio1.toString().slice(0, 2)
+                    console.log(firtsHalfInicio)
                     await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
-                    setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
                     setShowCreate(!showcreate)
                     await actions.getPsicologiScheduleDay(id, fecha)
                    
@@ -114,7 +144,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     }
 
     function handleChange(event) {
-        console.log(event)
         const { name, value, type, checked } = event.target
         setDatesCreate(prevFormData => {
             return {
@@ -124,73 +153,48 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         })
     }
 
-    function selectTime(event) {
-        console.log(event.target)
-        const { value } = event.target
+    const timefilter = (time) =>{
+            // console.log(time.replace(":","" ))
+            // let filter1 = time.replace(":","" )
+            // console.log(filter2)
+            // const filter2 = filter1.replace("AM","" )
+            // console.log(filter3)
+            // const filter3 = filter2.replace("PM","" )
+            // console.log(filter4)
+            // const filter4 = parseInt(filter3)
+            // console.log(filter5)
+            // const filter5 = filter4 - 1200
+        
+
+    } 
+   
 
 
-        setDatesCreate(prevFormData => {
-            return {
-                ...prevFormData,
-                ['TIMEinicio']: value === "1" ? 'am' : 'pm'
-                
-            }
-        })
-    }
-    function selectTime2(event) {
-        console.log(event.target)
-        const { value } = event.target
 
-
-        setDatesCreate(prevFormData => {
-            return {
-                ...prevFormData,
-                ['TIMEfinal']: value === "1" ? 'am' : 'pm'
-            }
-        })
-    }
-
-    function onCreateSession(event) {
-        event.preventDefault();
-        // console.log(event.target.name)d
-        actions.createSession(event.target.name, calendar_date2)
-        console.log(store.psicologySession)
-        actions.getPsicologiScheduleDay(id, fecha)
-    }
-
-    function onChangeTime(event) {
-        // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
-        setTime(event)
-        setAmPm(event)
-        console.log(amPm)
-        console.log(time)
-    }
     function onChangeTimeInicio(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setTimeInicio(event)
         let elemento1 = timeInicio.replace(":","" )
-        console.log(elemento1)
         if(elemento1 >= 1200){
             setAmPmInicio("PM")
         }
         else{
             setAmPmInicio("AM")
         }
-        console.log(amPmInicio)
+  
     }
     function onChangeTimeFinal(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setTimeFinal(event)
         let elemento2 = timeFinal.replace(":","" )
-        console.log(elemento2)
+   
         if(elemento2 >= 1200){
             setAmPmFinal("PM")
         }
         else{
             setAmPmFinal("AM")
         }
-        console.log(amPmFinal)
-        console.log(timeFinal)
+
     }
 
 
@@ -232,8 +236,12 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                 </div>
                                 <div className="row">
                                     <div className="col-12 col-md-12 col-lg-8 order-2 order-md-1">
-                                        <div className="d-flex">
 
+                                    {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div></div>) : (
+                                        <div className="d-flex">
+        
                                             {transition((style, item) =>
                                                 item ? <animated.div style={style} className="col-12 col-sm-4" ><div className="info-box bg-light">
                                                     <div className="info-box-content">
@@ -244,10 +252,8 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                 </div>
                                                 </animated.div> : '')}
 
+                                        </div>)}
 
-
-
-                                        </div>
                                         <button type="submit" className="btn btn-primary" onClick={showcreatedates}>Agregar nuevo horario</button>
                                         <br /><br />
 
@@ -288,6 +294,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                         <div>
                                                             <p>Hora de inicio</p>
                                                             <TimePicker 
+                                                            format="h:m a"
                                                             onChange={onChangeTimeInicio}
                                                             clockIcon={null}
                                                             value={timeInicio}
@@ -296,6 +303,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                         <div>
                                                             <p>Hora de cierre</p>
                                                             <TimePicker
+                                                            format="h:m a"
                                                             onChange={onChangeTimeFinal}
                                                             clockIcon={null}
                                                             value={timeFinal}
