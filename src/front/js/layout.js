@@ -29,6 +29,7 @@ import { Expedientes } from "./pages/Expedientes";
 import { PerfilPacienteSeleccionado } from "./pages/Perfil_Paciente_Seleccionado";
 import { Panel } from "./pages/panel";
 import { Contactos } from "./pages/contactos";
+import { Buscador2 } from "./pages/BuscadorDePsicologos2";
 
 
 //create your first component
@@ -161,6 +162,19 @@ const Layout = () => {
                 </div>
               </div>}
               path="/sessions"
+            />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+              <div className="box">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                  <Buscador2 />
+                </div>
+              </div>}
+              path="/buscador2"
             />
             </Route>
             <Route element={<PrivateRoutes/>}>

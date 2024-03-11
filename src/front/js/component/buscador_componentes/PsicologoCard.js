@@ -18,7 +18,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
 
   const filtrado = () => {             // Funcion en donde se filtran los psicologos mediante los datos recibidos
     let filtrados = store.userPsicologos.filter(psico =>
-      (psico.monto_consulta < filtros?.precio && psico.monto_consulta !== null)
+      (parseInt(psico.monto_consulta?.replace("$", "")) < parseInt(filtros?.precio.replace("$", "").toLowerCase()))
       || psico.name.toLowerCase() == filtros?.nombre.toLowerCase()
       || psico.fpv_number == filtros?.numeroFpv
       || psico.state?.toLowerCase() == filtros?.estado?.toLowerCase()
@@ -28,6 +28,9 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
       // || (psico.dob >= filtros?.edadMin && psico.dob <= filtros?.edadMax)
       || psico.specialty_area?.toLowerCase() == filtros?.especialidades?.toLowerCase()
     )
+    if(filtrados.length == 0){
+      console.log("hola")
+    }
     return filtrados
   }
 
@@ -47,7 +50,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
                     id={vistaPsicologo.id}
                     area_de_especialidad={vistaPsicologo.area_de_especialidad}
                     name={vistaPsicologo.name}
-                    precio_consulta={vistaPsicologo.monto_consulta}
+                    precio_consulta={parseInt(vistaPsicologo.monto_consulta.replace("$", ""), 10)}
                     profile_picture={vistaPsicologo.profile_picture}
                     state={vistaPsicologo.state}
                     city={vistaPsicologo.city}

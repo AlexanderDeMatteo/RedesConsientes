@@ -3,7 +3,7 @@ import "../../styles/buscador_de_psicologos.css"
 import { Context } from "../store/appContext.js";
 import { PsicologoCards } from "../component/buscador_componentes/PsicologoCard.js";
 
-export const BuscadorDePsicologos = () => {
+export const Buscador2 = () => {
     const { actions, store } = useContext(Context);
 
     const [filtros, setFiltros] = useState({       // estado donde se guardan los parametros del filtro
@@ -49,27 +49,19 @@ export const BuscadorDePsicologos = () => {
                 <div className="boxPrincipal">
                     <div className="d-flex py-1 justify-content-start" >
                         <p>Encuentra tu psicologo ideal</p>
-                        <button
-                            type="button"
-                            className="ms-1 btn btn-primary"
-                            onClick={(e) => {
-                                if (showFiltros == true) return setShowFiltros(false)
-                                setShowFiltros(true)
-                            }}>
-                            <i className="fa-solid fa-sliders"></i> Filtros
-                        </button>
                     </div>
 
                     <div className="boxBuscador">
                         <PsicologoCards filtros={filtros} />
-                        {showFiltros &&
-                            <div className="filtros">
-                                <form className="d-flex flex-column">
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEspecialidad" aria-expanded="false" aria-controls="collapseExample">
+                        
+                            <div className="">
+                                <form>
+                                    
+                                    <label className="" type="label">
                                         Busqueda por Especialidad
-                                    </button>
-                                    <div className="collapse" id="collapseEspecialidad">
-                                        <div className="card card-body">
+                                    </label>
+                                    <div className="" id="">
+                                        
                                             <select className="form-select"
                                                 onChange={(e) => handleChange(e)}
                                                 name="especialidades"
@@ -82,11 +74,10 @@ export const BuscadorDePsicologos = () => {
                                                 })}
                                             </select>
                                            
-                                        </div>
                                     </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCredenciales" aria-expanded="false" aria-controls="collapseExample">
+                                    <label className="dropdowns btn btn-secondary mb-1" type="label" data-bs-toggle="collapse" data-bs-target="#collapseCredenciales" aria-expanded="false" aria-controls="collapseExample">
                                         Busqueda por Credenciales
-                                    </button>
+                                    </label>
                                     <div className="collapse" id="collapseCredenciales">
                                         <div className="card card-body">
                                             Nombre y Apellido
@@ -112,9 +103,9 @@ export const BuscadorDePsicologos = () => {
                                                 onChange={(e) => { handleChange(e) }} />
                                         </div>
                                     </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDatos" aria-expanded="false" aria-controls="collapseExample">
+                                    <label className="dropdowns btn btn-secondary mb-1" type="label" data-bs-toggle="collapse" data-bs-target="#collapseDatos" aria-expanded="false" aria-controls="collapseExample">
                                         Busqueda por Datos Personales
-                                    </button>
+                                    </label>
                                     <div className="collapse" id="collapseDatos">
                                         <div className="card card-body">
                                             Nombre y Apellido
@@ -151,9 +142,9 @@ export const BuscadorDePsicologos = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrecio" aria-expanded="false" aria-controls="collapseExample">
+                                    <label className="dropdowns btn btn-secondary mb-1" type="label" data-bs-toggle="collapse" data-bs-target="#collapsePrecio" aria-expanded="false" aria-controls="collapseExample">
                                         Busqueda por Precio de Consulta
-                                    </button>
+                                    </label>
                                     <div className="collapse" id="collapsePrecio">
                                         <div className="card card-body">
                                             Precio
@@ -165,9 +156,9 @@ export const BuscadorDePsicologos = () => {
                                                 onChange={(e) => { handleChange(e) }} />
                                         </div>
                                     </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLocal" aria-expanded="false" aria-controls="collapseExample">
+                                    <label className="dropdowns btn btn-secondary mb-1" type="label" data-bs-toggle="collapse" data-bs-target="#collapseLocal" aria-expanded="false" aria-controls="collapseExample">
                                         Busqueda por Localizacion
-                                    </button>
+                                    </label>
                                     <div className="collapse" id="collapseLocal">
                                         <div className="card card-body">
                                             Estado
@@ -188,7 +179,7 @@ export const BuscadorDePsicologos = () => {
                                     </div>
                                 </form>
                             </div>
-                        }
+                        
                     </div>
                 </div>
             </div>
