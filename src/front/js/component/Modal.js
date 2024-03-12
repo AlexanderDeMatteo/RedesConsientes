@@ -18,12 +18,13 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const [showcreate, setShowCreate] = useState(false);
     const [DatesCreate, setDatesCreate] = useState({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' });
     const {id} = useParams(0)
-    const [timeInicio, setTimeInicio] = useState("12:00")
-    const [amPmInicio, setAmPmInicio] = useState("PM")
-    const [timeFinal, setTimeFinal] = useState("12:00")
-    const [amPmFinal, setAmPmFinal] = useState("PM")
+    const [timeInicio, setTimeInicio] = useState("12:00");
+    const [amPmInicio, setAmPmInicio] = useState("PM");
+    const [timeFinal, setTimeFinal] = useState("12:00");
+    const [amPmFinal, setAmPmFinal] = useState("PM");
     const [isLoading, setIsLoading] = useState("");
-    const [horainicioFinal,setHoraInicioFinal] = useState("")
+    const [horainicioFinal,setHoraInicioFinal] = useState("");
+    const [value, onChange] = useState('10:00');
 
 
     // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
@@ -70,11 +71,23 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     //     const stopArray = stop  === undefined ? start : stop;
     //     return Array.from({ length: (stopArray - startArray) / step + 1}, (_, i) => startArray + (i * step));
     // }
+    const filtroTiempo = (item) =>{
+        const halfInicio = item.toString().slice(0,1)
+        const halfFinal = item.toString().slice(0,1)
+        const timeFinal = halfInicio+":"+halfFinal
+        return timeFinal
+    }
 
     async function onCreatetimework(event) {
         event.preventDefault();
         let elemento1 = parseInt(timeInicio.replace(":","" ))
         let elemento2 = parseInt(timeFinal.replace(":","" ))
+        let condicion = 1200
+        let filtroInicio = elemento1 - condicion
+        let filtroFinal= elemento2 - condicion
+        let estadoInicio = elemento1 >= condicion ? "PM" : "AM" 
+        let estadoFinal = elemento1 >= condicion ? "PM" : "AM"
+        
         let duracionMin= 45
         let durationTime = elemento2 - elemento1
         let schedule = store.scheduleSession
@@ -108,7 +121,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                 
                 if(filterStartTime == true) {
                     alert("horario permitido2")
-                    await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
+                    await actions.createSchedule(timeInicio + amPmInicio, timeFinal + estadoFinal, calendar_date, durationTime )
                     setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
                     setShowCreate(!showcreate)
                     await actions.getPsicologiScheduleDay(id, fecha)
@@ -116,13 +129,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                 } 
                 if(filterStartTime.length == 0) {
                     alert("horario permitido1")
-                    let filtroInicio1 = elemento1 - 1200
-                    if(filtroInicio1 === 0){
-                        filtroInicio1 ="12:00"
-                    }
-                    let firtsHalfInicio = filtroInicio1.toString().slice(0, 2)
-                    console.log(firtsHalfInicio)
-                    await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
+                    await actions.createSchedule(timeInicio + estadoInicio, timeFinal + amPmFinal, calendar_date, durationTime )
                     setShowCreate(!showcreate)
                     await actions.getPsicologiScheduleDay(id, fecha)
                    
@@ -133,6 +140,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
             }
         
     }
+
     function deleteDate(event) {
         event.preventDefault();
         actions.deleteSchedule(event.target.name)
@@ -174,11 +182,17 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     function onChangeTimeInicio(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setTimeInicio(event)
-        let elemento1 = timeInicio.replace(":","" )
-        if(elemento1 >= 1200){
+        let elemento1 = parseInt(timeInicio.replace(":","" ))
+
+        console.log(typeof(elemento1))
+        console.log(amPmInicio)
+        console.log(elemento1)
+        if(elemento1 >= 1199){
+            console.log(elemento1 >= 1199)
             setAmPmInicio("PM")
         }
         else{
+            console.log(elemento1 <= 1199)
             setAmPmInicio("AM")
         }
   
@@ -187,7 +201,10 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setTimeFinal(event)
         let elemento2 = timeFinal.replace(":","" )
-   
+
+        console.log(typeof(elemento2))
+        console.log(amPmFinal)
+        console.log(elemento2)
         if(elemento2 >= 1200){
             setAmPmFinal("PM")
         }
@@ -291,10 +308,20 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                     />
                                                     </div> */}
                                                     <div className="row">
+
+                                                        <div>
+                                                            <TimePicker
+                                                             onChange={onChange} 
+                                                             value={value}
+                                                             amPmAriaLabel="Select AM/PM"
+                                                              />
+                                                        </div>
                                                         <div>
                                                             <p>Hora de inicio</p>
-                                                            <TimePicker 
-                                                            format="h:m a"
+                                                            <TimePicker
+                                                            // amPmAriaLabel="Select AM/PM"
+                                                            format="hh:mm a"
+                                                            disableClock={true}
                                                             onChange={onChangeTimeInicio}
                                                             clockIcon={null}
                                                             value={timeInicio}
@@ -303,7 +330,8 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                         <div>
                                                             <p>Hora de cierre</p>
                                                             <TimePicker
-                                                            format="h:m a"
+                                                            disableClock={true}
+                                                            format="hh:mm a"
                                                             onChange={onChangeTimeFinal}
                                                             clockIcon={null}
                                                             value={timeFinal}
