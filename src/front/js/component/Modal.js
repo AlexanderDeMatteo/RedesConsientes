@@ -72,98 +72,98 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     //     return Array.from({ length: (stopArray - startArray) / step + 1}, (_, i) => startArray + (i * step));
     // }
     const filtroTiempoMenor = (item) =>{
+        if(item == 0){
+            const str = "1200"
+            const halfInicio = str.slice(0,2)
+            const halfFinal = str.slice(2)
+            const timeFinal = halfInicio+":"+halfFinal
+            console.log(timeFinal)
+            return timeFinal
+        }
         const str = item.toString()
-        console.log(str)
         const halfInicio = str.slice(0,1)
-        console.log(halfInicio)
         const halfFinal = str.slice(1)
-        console.log(halfFinal)
         const timeFinal = halfInicio+":"+halfFinal
-        console.log(item)
         return timeFinal
     }
 
     const filtroTiempoMayor = (item) =>{
+        if(item == 0){
+            const str = "1200"
+            const halfInicio = str.slice(0,1)
+            const halfFinal = str.slice(1)
+            const timeFinal = halfInicio+":"+halfFinal
+            return timeFinal
+         }
         const halfInicio = item.toString().slice(0,2)
         const halfFinal = item.toString().slice(2)
         const timeFinal = halfInicio+":"+halfFinal
-        console.log(item)
         return timeFinal
     }
 
     async function onCreatetimework(event) {
         event.preventDefault();
-        let elemento1 = parseInt(timeInicio.replace(":","" ))
-        console.log(elemento1)
-        let elemento2 = parseInt(timeFinal.replace(":","" ))
-        console.log(elemento2)
-        let condicion2 = -1
-        let condicion = 1200
-        let filtroHoraInicio = elemento1 - condicion
-        console.log(segundoFiltroHoraInicio)
-        let filtroHoraFinal= elemento2 - condicion
-        console.log(filtroHoraFinal)
-        let estadoInicio = elemento1 >= condicion ? "PM" : "AM" 
-        let estadoFinal = elemento2 >= condicion ? "PM" : "AM"
-        let segundoFiltroHoraInicio = filtroHoraInicio.length > 999 ? filtroTiempoMayor(filtroHoraInicio) : filtroTiempoMenor(filtroHoraInicio)
-        console.log(segundoFiltroHoraInicio)
-        let segundoFiltroHoraFinal = filtroHoraInicio.length > 999 ? filtroTiempoMayor(filtroHoraFinal) : filtroTiempoMenor(filtroHoraFinal)
-        let tercerFiltroHoraInicio = filtroHoraInicio.length > 999 ? filtroTiempoMayor(elemento1) : filtroTiempoMenor(elemento1)
-        let tercerFiltroHoraFinal = filtroHoraInicio.length > 999 ? filtroTiempoMayor(elemento2) : filtroTiempoMenor(elemento2)
-        let filtroHoraInicioFinal = estadoInicio == "PM" ? segundoFiltroHoraInicio : tercerFiltroHoraInicio
-        let filtroHoraFinalFinal = estadoInicio == "PM" ? segundoFiltroHoraFinal : tercerFiltroHoraFinal
-        let duracionMin= 45
-        let durationTime = elemento2 - elemento1
-        let schedule = store.scheduleSession
-            if(elemento2 >= elemento1 && elemento2 >= (elemento1 + duracionMin)){
-                let filterStartTime = schedule.filter(schedule => {
-                    const scheduleStartTime = Number(schedule.start_time.replace(":", "").replace("PM", ""));
-                    const scheduleEndTime = Number(schedule.end_time.replace(":", "").replace("PM", ""))
-                    const statusInicio = elemento1 < scheduleStartTime || elemento1 > scheduleEndTime
-                    const statusFinal = elemento2 > scheduleEndTime || elemento2 < scheduleStartTime
-                        if(statusInicio == false && statusFinal == false){
-                            alert("el horario no esta disponible, verifica ambas horas")
-                            return true
-                        }
-                        else if(statusInicio == false){
-                            alert("el horario no esta disponible, verificar la hora de inicio")
-                            
-                        return true
-                        }
-                        else if(statusFinal == false){
-                            alert("el horario no esta disponible, verificar la hora final")
-                            statusInicio == false
-                        return true
-                        }else{
-                            
-                        return false
-                    }
-                    
-                } );
-
-                console.log(elemento1 - 1200)
-                
-                if(filterStartTime == true) {
-                    alert("horario permitido2")
-                    await actions.createSchedule(filtroHoraInicioFinal + estadoInicio, filtroHoraFinalFinal + estadoFinal, calendar_date, durationTime )
-                    setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
-                    setShowCreate(!showcreate)
-                    await actions.getPsicologiScheduleDay(id, fecha)
-                    
-                } 
-                if(filterStartTime.length == 0) {
-                    alert("horario permitido1")
-                    await actions.createSchedule(filtroHoraInicioFinal + estadoInicio, filtroHoraFinalFinal + estadoFinal, calendar_date, durationTime )
-                    setShowCreate(!showcreate)
-                    await actions.getPsicologiScheduleDay(id, fecha)
-                   
-                }
-        }
-        else{
-            alert("error")
+      
+        const elemento1 = parseInt(timeInicio.replace(":", ""));
+        const elemento2 = parseInt(timeFinal.replace(":", ""));
+        let condicion2 = -1;
+        let condicion = 1200;
+        let filtroHoraInicio = elemento1 - condicion;
+        let filtroHoraFinal = elemento2 - condicion;
+        let estadoInicio = elemento1 >= condicion ? "PM" : "AM";
+        let estadoFinal = elemento2 >= condicion ? "PM" : "AM";
+        let segundoFiltroHoraInicio =
+          filtroHoraInicio > 900 ? filtroTiempoMayor(filtroHoraInicio) : filtroTiempoMenor(filtroHoraInicio);
+        let segundoFiltroHoraFinal =
+          filtroHoraFinal > 900 ? filtroTiempoMayor(filtroHoraFinal) : filtroTiempoMenor(filtroHoraFinal);
+        let tercerFiltroHoraInicio =
+          elemento1 > 900 ? filtroTiempoMayor(elemento1) : filtroTiempoMenor(elemento1);
+        let tercerFiltroHoraFinal =
+          elemento2 > 900 ? filtroTiempoMayor(elemento2) : filtroTiempoMenor(elemento2);
+        let filtroHoraInicioFinal =
+          estadoInicio == "PM" ? segundoFiltroHoraInicio : tercerFiltroHoraInicio;
+        let filtroHoraFinalFinal =
+          estadoInicio == "PM" ? segundoFiltroHoraFinal : tercerFiltroHoraFinal;
+        let duracionMin = 45;
+        let durationTime = elemento2 - elemento1;
+        let schedule = store.scheduleSession;
+      
+        if (elemento2 >= elemento1 && elemento2 >= elemento1 + duracionMin) {
+          let filterStartTime = schedule.filter((schedule) => {
+            const scheduleStartTime = Number(
+              schedule.start_time.replace(":", "").replace("PM", "")
+            );
+            const scheduleEndTime = Number(
+              schedule.end_time.replace(":", "").replace("PM", "")
+            );
+            const statusInicio = elemento1 < scheduleStartTime || elemento1 > scheduleEndTime;
+            const statusFinal = elemento2 > scheduleEndTime || elemento2 < scheduleStartTime;
+      
+            if (statusInicio === true && statusFinal === true) {
+              return true;
             }
-        
-    }
+          });
+      
+          if (filterStartTime.length > 0) {
+            alert("El horario no está disponible, verifica ambas horas");
+            return true;
+          } else {
+            alert("horario permitido");
+            await actions.createSchedule(
+              filtroHoraInicioFinal + estadoInicio,
+              filtroHoraFinalFinal + estadoFinal,
+              calendar_date,
+              durationTime
+            );
+            setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": "am", "TIMEfinal": "am" });
+            setShowCreate(!showcreate);
+            await actions.getPsicologiScheduleDay(id, fecha);
+          }
+        } else {
+          alert("error");
+        }
+      }
+      
 
     function deleteDate(event) {
         event.preventDefault();
