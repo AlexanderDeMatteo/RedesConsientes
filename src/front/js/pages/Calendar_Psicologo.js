@@ -117,9 +117,9 @@ export const Calendar_Psicologo = () => {
                                         <div className="card-body">
                                             <div id="external-events">
                                                 {transition((style, item) =>
-                                                    item ? <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`} ><div className="card-header">
+                                                    item ? <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`} ><div id="calendarBotonDiv" className="card-header">
                                                         <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
-                                                        <div className="card-tools button-agend">
+                                                        <div id="botonCalendar" className="card-tools button-agend">
                                                             <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a>
                                                         </div>
                                                        

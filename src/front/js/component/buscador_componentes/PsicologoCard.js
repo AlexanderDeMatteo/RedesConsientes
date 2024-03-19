@@ -50,7 +50,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
                     id={vistaPsicologo.id}
                     area_de_especialidad={vistaPsicologo.area_de_especialidad}
                     name={vistaPsicologo.name}
-                    precio_consulta={parseInt(vistaPsicologo.monto_consulta.replace("$", ""), 10)}
+                    precio_consulta={parseInt(vistaPsicologo.monto_consulta?.replace("$", ""), 10)}
                     profile_picture={vistaPsicologo.profile_picture}
                     state={vistaPsicologo.state}
                     city={vistaPsicologo.city}

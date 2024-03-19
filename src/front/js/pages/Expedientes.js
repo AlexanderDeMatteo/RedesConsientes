@@ -40,6 +40,7 @@ export const Expedientes = () => {
                                     <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
         <div>
+          {patients.length == 0 ? "no hay expedientes disponibles" :
             <div className="row">
                   {patients.map((patient, index) => (
                   <div className="col-md-3">
@@ -67,7 +68,7 @@ export const Expedientes = () => {
 
                   </div>
                   ))}
-            </div>
+            </div>}
         </div>
         )}
       </div>

@@ -30,6 +30,7 @@
     background-color: #007bff !important;
     border-radius: 5px;
     color: white !important;
+    margin-top: 4px;
   }
   .fondo_tran {
     background-color: transparent !important;
@@ -155,3 +156,4 @@
   .time-card .card:hover {
     display: block;
   }
+

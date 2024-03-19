@@ -211,14 +211,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         console.log(typeof(elemento1))
         console.log(amPmInicio)
         console.log(elemento1)
-        if(elemento1 >= 1199){
-            console.log(elemento1 >= 1199)
-            setAmPmInicio("PM")
-        }
-        else{
-            console.log(elemento1 <= 1199)
-            setAmPmInicio("AM")
-        }
   
     }
     function onChangeTimeFinal(event) {
@@ -229,13 +221,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         console.log(typeof(elemento2))
         console.log(amPmFinal)
         console.log(elemento2)
-        if(elemento2 >= 1200){
-            setAmPmFinal("PM")
-        }
-        else{
-            setAmPmFinal("AM")
-        }
-
     }
 
 
