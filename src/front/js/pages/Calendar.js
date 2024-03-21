@@ -90,6 +90,28 @@ export const Calendar_custom = () => {
         'Sat': 'Sabado',
         'Sun': 'Domingo',
     }
+    function to12HourFormat(time24h) {
+      if (typeof time24h === 'undefined') {
+          time24h = ""; // Establece un valor por defecto como una cadena vacía
+        }
+      // Divide la cadena de tiempo en horas y minutos
+      const [hours, minutes] = time24h.split(":");
+    
+      // Convierte las horas a un número entero
+      const hourInt = parseInt(hours);
+    
+      // Determina el indicador AM/PM
+      const amPm = hourInt >= 12 ? "PM" : "AM";
+    
+      // Ajusta las horas para el formato de 12 horas
+      let hour12 = hourInt % 12;
+    
+      // Maneja el caso especial de las 12 en punto
+      hour12 = hour12 === 0 ? 12 : hour12;
+    
+      // Formatea la hora con padding de ceros y agrega los minutos y AM/PM
+      return `${hour12.toString().padStart(2, "0")}:${minutes} ${amPm}`;
+    }
     
 
     return (
@@ -122,7 +144,7 @@ export const Calendar_custom = () => {
                       item ? (
                         <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`}>
                           <div className="card-header">
-                            <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
+                            <h3 className="card-title letter_small">{to12HourFormat(item.start_time) + ' - ' + to12HourFormat(item.end_time)}</h3>
                             {!store.userData.is_psicologo ? <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a> : <button type="button" id="delete-date" name={item.id} className="close button_delete_date" aria-hidden="true">&times;</button>}
                           </div>
                         </animated.div>

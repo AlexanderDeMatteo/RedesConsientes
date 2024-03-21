@@ -19,9 +19,9 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const [DatesCreate, setDatesCreate] = useState({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' });
     const {id} = useParams(0)
     const [timeInicio, setTimeInicio] = useState("12:00");
-    const [amPmInicio, setAmPmInicio] = useState("PM");
+    const [amPmInicio, setAmPmInicio] = useState("");
     const [timeFinal, setTimeFinal] = useState("12:00");
-    const [amPmFinal, setAmPmFinal] = useState("PM");
+    const [amPmFinal, setAmPmFinal] = useState("");
     const [isLoading, setIsLoading] = useState("");
     const [horainicioFinal,setHoraInicioFinal] = useState("");
     const [value, onChange] = useState('10:00');
@@ -73,7 +73,17 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     // }
     const filtroTiempoMenor = (item) =>{
         if(item == 0){
+            console.log(item)
             const str = "1200"
+            const halfInicio = str.slice(0,2)
+            const halfFinal = str.slice(2)
+            const timeFinal = halfInicio+":"+halfFinal
+            console.log(timeFinal)
+            return timeFinal
+        }
+        if(item == -1200){
+            console.log(item)
+            const str = "0000"
             const halfInicio = str.slice(0,2)
             const halfFinal = str.slice(2)
             const timeFinal = halfInicio+":"+halfFinal
@@ -94,75 +104,112 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
             const halfFinal = str.slice(1)
             const timeFinal = halfInicio+":"+halfFinal
             return timeFinal
-         }
+        }
+        if(item == -1200){
+            console.log(item)
+            const str = "0000"
+            const halfInicio = str.slice(0,2)
+            const halfFinal = str.slice(2)
+            const timeFinal = halfInicio+":"+halfFinal
+            return timeFinal
+        }
         const halfInicio = item.toString().slice(0,2)
         const halfFinal = item.toString().slice(2)
         const timeFinal = halfInicio+":"+halfFinal
         return timeFinal
     }
 
-    async function onCreatetimework(event) {
-        event.preventDefault();
-      
-        const elemento1 = parseInt(timeInicio.replace(":", ""));
-        const elemento2 = parseInt(timeFinal.replace(":", ""));
-        let condicion2 = -1;
-        let condicion = 1200;
-        let filtroHoraInicio = elemento1 - condicion;
-        let filtroHoraFinal = elemento2 - condicion;
-        let estadoInicio = elemento1 >= condicion ? "PM" : "AM";
-        let estadoFinal = elemento2 >= condicion ? "PM" : "AM";
-        let segundoFiltroHoraInicio =
-          filtroHoraInicio > 900 ? filtroTiempoMayor(filtroHoraInicio) : filtroTiempoMenor(filtroHoraInicio);
-        let segundoFiltroHoraFinal =
-          filtroHoraFinal > 900 ? filtroTiempoMayor(filtroHoraFinal) : filtroTiempoMenor(filtroHoraFinal);
-        let tercerFiltroHoraInicio =
-          elemento1 > 900 ? filtroTiempoMayor(elemento1) : filtroTiempoMenor(elemento1);
-        let tercerFiltroHoraFinal =
-          elemento2 > 900 ? filtroTiempoMayor(elemento2) : filtroTiempoMenor(elemento2);
-        let filtroHoraInicioFinal =
-          estadoInicio == "PM" ? segundoFiltroHoraInicio : tercerFiltroHoraInicio;
-        let filtroHoraFinalFinal =
-          estadoInicio == "PM" ? segundoFiltroHoraFinal : tercerFiltroHoraFinal;
-        let duracionMin = 45;
-        let durationTime = elemento2 - elemento1;
-        let schedule = store.scheduleSession;
-      
-        if (elemento2 >= elemento1 && elemento2 >= elemento1 + duracionMin) {
-          let filterStartTime = schedule.filter((schedule) => {
-            const scheduleStartTime = Number(
-              schedule.start_time.replace(":", "").replace("PM", "")
-            );
-            const scheduleEndTime = Number(
-              schedule.end_time.replace(":", "").replace("PM", "")
-            );
-            const statusInicio = elemento1 < scheduleStartTime || elemento1 > scheduleEndTime;
-            const statusFinal = elemento2 > scheduleEndTime || elemento2 < scheduleStartTime;
-      
-            if (statusInicio === true && statusFinal === true) {
-              return true;
-            }
-          });
-      
-          if (filterStartTime.length > 0) {
-            alert("El horario no está disponible, verifica ambas horas");
-            return true;
-          } else {
-            alert("horario permitido");
-            await actions.createSchedule(
-              filtroHoraInicioFinal + estadoInicio,
-              filtroHoraFinalFinal + estadoFinal,
-              calendar_date,
-              durationTime
-            );
-            setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": "am", "TIMEfinal": "am" });
-            setShowCreate(!showcreate);
-            await actions.getPsicologiScheduleDay(id, fecha);
+    function to12HourFormat(time24h) {
+        if (typeof time24h === 'undefined') {
+            time24h = ""; // Establece un valor por defecto como una cadena vacía
           }
-        } else {
-          alert("error");
-        }
+        // Divide la cadena de tiempo en horas y minutos
+        const [hours, minutes] = time24h.split(":");
+      
+        // Convierte las horas a un número entero
+        const hourInt = parseInt(hours);
+      
+        // Determina el indicador AM/PM
+        const amPm = hourInt >= 12 ? "PM" : "AM";
+      
+        // Ajusta las horas para el formato de 12 horas
+        let hour12 = hourInt % 12;
+      
+        // Maneja el caso especial de las 12 en punto
+        hour12 = hour12 === 0 ? 12 : hour12;
+      
+        // Formatea la hora con padding de ceros y agrega los minutos y AM/PM
+        return `${hour12.toString().padStart(2, "0")}:${minutes} ${amPm}`;
       }
+
+      async function onCreatetimework(event) {
+        event.preventDefault();
+        let elemento1 = parseInt(timeInicio.replace(":","" ))
+        let elemento2 = parseInt(timeFinal.replace(":","" ))
+        let duracionMin= 45
+        let durationTime = elemento2 - elemento1
+        let schedule = store.scheduleSession
+        console.log(schedule)
+            if(elemento2 >= elemento1 && elemento2 >= (elemento1 + duracionMin)){
+                let filterStartTime = schedule.filter(schedule => {
+                    const scheduleStartTime = Number(schedule.start_time.replace(":", "").replace("PM", ""));
+                    const scheduleEndTime = Number(schedule.end_time.replace(":", "").replace("PM", ""))
+                    let orden = `${scheduleStartTime} ${scheduleEndTime}`
+                    console.log(orden)
+                    const statusInicio = elemento1 < scheduleStartTime || elemento1 > scheduleEndTime
+                    const statusFinal = elemento2 > scheduleEndTime || elemento2 < scheduleStartTime
+                    console.log(statusFinal)
+                    console.log(statusInicio)
+                        if(statusInicio == false && statusFinal == false){
+                            alert("el horario no esta disponible, verifica ambas horas")
+                            console.log(statusInicio == false && statusFinal == false)
+                            console.log(filterStartTime)
+                            return true
+                        }
+                        else if(statusInicio == false){
+                            alert("el horario no esta disponible, verificar la hora de inicio")
+                            console.log(statusInicio == false)
+                            console.log(filterStartTime)
+
+                        return true
+                        }
+                        else if(statusFinal == false){
+                            alert("el horario no esta disponible, verificar la hora final")
+                            statusInicio == false
+                            console.log(statusFinal == false)
+                        return true
+                        }else{
+                            console.log(filterStartTime)
+
+                        return false
+                    }
+
+                } );
+                console.log(filterStartTime)
+
+                if(filterStartTime == true) {
+                    alert("horario permitido")
+                    await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
+                    setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
+                    setShowCreate(!showcreate)
+                    await actions.getPsicologiScheduleDay(id, fecha)
+                    console.log(filterStartTime)
+
+                } 
+                if(filterStartTime.length == 0) {
+                    alert("horario permitido")
+                    await actions.createSchedule(timeInicio + amPmInicio, timeFinal + amPmFinal, calendar_date, durationTime )
+                    setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
+                    setShowCreate(!showcreate)
+                    await actions.getPsicologiScheduleDay(id, fecha)
+
+                }
+        }
+        else{
+            alert("error")
+            }
+        
+    }
       
 
     function deleteDate(event) {
@@ -218,8 +265,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         setTimeFinal(event)
         let elemento2 = timeFinal.replace(":","" )
 
-        console.log(typeof(elemento2))
-        console.log(amPmFinal)
         console.log(elemento2)
     }
 
@@ -272,7 +317,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                 item ? <animated.div style={style} className="col-12 col-sm-4" ><div className="info-box bg-light">
                                                     <div className="info-box-content">
                                                         {/* <span className="info-bozx-text text-center text-muted">Total amount spent</span> */}
-                                                        <span className="info-box-number text-center text-muted mb-0">{`${item.start_time} - ${item.end_time}`}</span>
+                                                        <span className="info-box-number text-center text-muted mb-0">{`${to12HourFormat(item.start_time)} - ${to12HourFormat(item.end_time)}`}</span>
                                                     </div>
                                                     <button type="button" onClick={deleteDate} name={item.id} className="close button_delete_date" aria-hidden="true">&times;</button>
                                                 </div>

@@ -40,6 +40,29 @@ export const Calendar_Psicologo = () => {
         fetchData();
       }, [selectedDate]);
 
+      function to12HourFormat(time24h) {
+        if (typeof time24h === 'undefined') {
+            time24h = ""; // Establece un valor por defecto como una cadena vacía
+          }
+        // Divide la cadena de tiempo en horas y minutos
+        const [hours, minutes] = time24h.split(":");
+      
+        // Convierte las horas a un número entero
+        const hourInt = parseInt(hours);
+      
+        // Determina el indicador AM/PM
+        const amPm = hourInt >= 12 ? "PM" : "AM";
+      
+        // Ajusta las horas para el formato de 12 horas
+        let hour12 = hourInt % 12;
+      
+        // Maneja el caso especial de las 12 en punto
+        hour12 = hour12 === 0 ? 12 : hour12;
+      
+        // Formatea la hora con padding de ceros y agrega los minutos y AM/PM
+        return `${hour12.toString().padStart(2, "0")}:${minutes} ${amPm}`;
+      }
+
     function onChangeCalendar(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setSelectedDate(event.toString().split(" "))
@@ -118,7 +141,7 @@ export const Calendar_Psicologo = () => {
                                             <div id="external-events">
                                                 {transition((style, item) =>
                                                     item ? <animated.div style={style} className={`card ${item.reserved == true ? "card-success" : "card-primary"} card-outline`} ><div id="calendarBotonDiv" className="card-header">
-                                                        <h3 className="card-title letter_small">{item.start_time + ' - ' + item.end_time}</h3>
+                                                        <h3 className="card-title letter_small">{to12HourFormat(item.start_time) + ' - ' + to12HourFormat(item.end_time)}</h3>
                                                         <div id="botonCalendar" className="card-tools button-agend">
                                                             <a onClick={onCreateSession} name={item.id} className="btn btn-tool btn-link button-agend">Agendar Cita</a>
                                                         </div>
