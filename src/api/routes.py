@@ -257,9 +257,14 @@ def handle_sessions_client_today(client_id):
         client_id=client_id).where(current_date == Session.calendar_date).all()
     response = []
     for session in sessions:
-        response.append(session.serialize())
+        # Serialize session data and include psychologist and patient names
+        session_data = session.serialize()
+        session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
+        session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
+        response.append(session_data)
+
     if sessions is None:
-        return jsonify({"message": "Not sessions available for this client"}), 401
+        return jsonify({"message": "Not sessions available for this Client"}), 401
     else:
         return jsonify(response), 201
 
@@ -268,15 +273,56 @@ def handle_sessions_today(psychologist_id):
     today = date.today()
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
-    sessions = Session.query.filter_by(
-        psychologist_id=psychologist_id).where(current_date == Session.calendar_date).all()
+
+    # Query sessions for the psychologist on today's date
+    sessions = Session.query.filter_by(psychologist_id=psychologist_id).filter(Session.calendar_date == current_date).all()
+
     response = []
     for session in sessions:
-        response.append(session.serialize())
+        # Serialize session data and include psychologist and patient names
+        session_data = session.serialize()
+        session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
+        session_data["patient_name"] = session.patient.name  # Assuming a patient relationship
+        session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
+        session_data["patient_last_name"] = session.patient.last_name  # Assuming a patient relationship
+        response.append(session_data)
+
     if sessions is None:
         return jsonify({"message": "Not sessions available for this Psychologist"}), 401
     else:
         return jsonify(response), 201
+    
+# @api.route("/sessions/today/<user_id>", methods=['GET'])
+# @jwt_required()
+# def handle_sessions_today2(user_id):
+
+#   today = date.today().strftime("%Y/%m/%d")  # Format date for comparison
+
+#   # Identify user type based on the requested field (client_id or psychologist_id)
+#   user_type = "client" if request.args.get("client_id") else "psychologist"
+
+#   # Filter sessions based on user type
+#   if user_type == "client":
+#     sessions = Session.query.filter_by(client_id=user_id, calendar_date=today).all()
+#   else:  # psychologist
+#     sessions = Session.query.filter_by(psychologist_id=user_id, calendar_date=today).all()
+
+#   response = []
+#   for session in sessions:
+#     session_data = session.serialize()
+#     if user_type == "psychologist":
+#       # Include psychologist and patient names for psychologists
+#       session_data["psychologist_name"] = session.psychologist.name
+#       session_data["patient_name"] = session.patient.name
+#       session_data["psychologist_last_name"] = session.psychologist.last_name
+#       session_data["patient_last_name"] = session.patient.last_name
+
+#     response.append(session_data)
+
+#   if not sessions:
+#     return jsonify({"message": f"Not sessions available for this {user_type}"}), 401
+#   else:
+#     return jsonify(response), 200
 
 
 # Obtain sessions by the ID of the psicologo. Return all sessions for that piscologo

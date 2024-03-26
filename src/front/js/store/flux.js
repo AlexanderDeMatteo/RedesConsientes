@@ -164,6 +164,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			getClientScheduleReservedDay: async (id, fecha) => {
+				const store = getStore()
+				let response = await fetch(`${API_URL}/api/sessions/today/client/${id}`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				});
+				if (response.ok) {
+					let body = await response.json()
+					let date = `${fecha} 00:00:00 GMT`
+					let schedule = body.filter(persona => persona.calendar_date == date && persona.reserved == true)
+					setStore({
+						...store,
+						scheduleSession: schedule
+					})
+					// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
+				}
+			},
+
 			deleteSchedule: async (data) => {
 				const store = getStore()
 				let response = await fetch(`${API_URL}/api/schedule-handle/` + data, {

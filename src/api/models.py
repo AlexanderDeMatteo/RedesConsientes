@@ -248,9 +248,8 @@ class Session(db.Model):
     psychologist_id = db.Column(
         db.Integer, db.ForeignKey('user.id'), nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    # schedule_id = db.Column(db.ForeignKey('schedule.id'),
-    #                         nullable=False, unique=False)
-    # schedule = db.relationship("Schedule", back_populates="sessions")
+    psychologist = db.relationship('User', backref='psychologist_sessions', foreign_keys=[psychologist_id])
+    client = db.relationship('User', backref='client_sessions', foreign_keys=[client_id])
     start_time = db.Column(db.String(10), nullable=False, unique=False)
     end_time = db.Column(db.String(10), nullable=False, unique=False)
     duration_time = db.Column(db.Numeric(10), nullable=False, unique=False)
@@ -269,7 +268,11 @@ class Session(db.Model):
             "room_number": self.room_number,
             "start_time": self.start_time,
             "end_time": self.end_time,
-            "duration_time":self.duration_time
+            "duration_time":self.duration_time,
+            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
+            "patient_name": self.client.name if self.client else None,  # Handle potential null values
+            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
+            "patient_last_name": self.client.last_name if self.client else None,
 
         }
     

@@ -364,13 +364,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                                                     <div className="row">
 
                                                         <div>
-                                                            <TimePicker
-                                                             onChange={onChange} 
-                                                             value={value}
-                                                             amPmAriaLabel="Select AM/PM"
-                                                              />
-                                                        </div>
-                                                        <div>
                                                             <p>Hora de inicio</p>
                                                             <TimePicker
                                                             // amPmAriaLabel="Select AM/PM"

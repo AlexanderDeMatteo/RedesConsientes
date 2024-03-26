@@ -53,9 +53,14 @@ function to12HourFormat(time24h) {
         const fetchData = async() =>{
             setIsLoading(true)
             try{
-                const date = await actions.getPsicologiScheduleReservedDay(id, fecha)
+                const data = await actions.handle_user_data()
+                if(store.userData.is_psicologo == false){
+                    const clientdate = await actions.getClientScheduleReservedDay(id, fecha)
+                    const frase = await actions.get_phrase()
+                    return true
+                }
+                const psicologodate = await actions.getPsicologiScheduleReservedDay(id, fecha)
                 const frase = await actions.get_phrase()
-
             } catch (error) {
                 console.error(error); // Handle any errors
               } finally {
@@ -115,16 +120,20 @@ function to12HourFormat(time24h) {
                                                     <div className="card-tools button-agend">
                                                         
 
-                                                        <div className="card-header header_custom">
-                                                            <h3 className="card-title title_custom">Cita</h3>
+                                                        {store.userData.is_psicologo ? <div className="card-header header_custom">
+                                                            <h3 className="card-title title_custom">Paciente</h3>
                                                             <div className="card-tools">
-                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">{item.calendar_date}
-                                                                </a>
+                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">{item.patient_name} {item.patient_last_name}</a>
                                                             </div>
-
-                                                        </div>
+                                                        </div>:<div className="card-header header_custom">
+                                                            <h3 className="card-title title_custom">Psicologo</h3>
+                                                            <div className="card-tools">
+                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">{item.psychologist_name} {item.psychologist_last_name}</a>
+                                                            </div>
+                                                        </div>}
+                                                        
                                                     </div>
-                                                    <span className="info-box-number">Hora:{item.client_name} {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</span>
+                                                    <span className="info-box-number">Hora: {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</span>
                                                     
                                                     <a href={`/session/${id}/${item.room_number}`} className="progress-description">
                                                     Ir a Session
