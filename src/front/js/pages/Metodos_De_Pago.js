@@ -67,19 +67,6 @@ export const MetodosDePago = () => {
         setShow((wasShow) => !wasShow);
     }
 
-    function Editar2() {
-        if (!show) {
-            guardarExperience();
-        }
-        setShow((wasShow) => !wasShow);
-    }
-
-    function Editar3() {
-        if (!show) {
-            guardarExperience();
-        }
-        setShow((wasShow) => !wasShow);
-    }
 
     function handleChange(event) {
         console.log(event.target.value)

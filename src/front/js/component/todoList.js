@@ -21,6 +21,21 @@ export const TodoList = () => {
     setChecked(event.target.checked);
   };
 
+  const buttonSaveTask = async () => {
+    try {
+      const response = await actions.post_patient_task(id, task);
+      await actions.get_patient_task(id);
+      setIsLoading(false);
+      setTaskList(store.patientTask);
+      if (response.ok) {
+      } else {
+        console.log("Error al guardar la tarea:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al comunicarse con la API:", error);
+    }
+  }
+
   const saveTask = async (event) => {
     if (event.key === "Enter") {
       try {
@@ -67,19 +82,21 @@ export const TodoList = () => {
 
   return (
     <div>
-    
-      <input
-        placeholder="Introduce la tarea"
-        name="description"
-        value={task.description}
-        onChange={handleChange}
-        onKeyDown={saveTask}
-        type="text"
-        className="form-control" 
-        aria-label="Sizing example input" 
-        aria-describedby="inputGroup-sizing-sm"
-        required minlength="4" maxlength="110"
-      />
+      <div className="d-flex">
+        <input
+          placeholder="Introduce la tarea"
+          name="description"
+          value={task.description}
+          onChange={handleChange}
+          onKeyUp={saveTask}
+          type="text"
+          className="form-control" 
+          aria-label="Sizing example input" 
+          aria-describedby="inputGroup-sizing-sm"
+          required minlength="4" maxlength="110"
+        />
+        <button type="button" onClick={() => buttonSaveTask()}  class="btn btn-primary">Añadir Tarea</button>
+      </div>
       {isLoading ? (
         <div>Cargando...</div>
       ) : (
