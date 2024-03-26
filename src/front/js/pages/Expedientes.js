@@ -35,7 +35,11 @@ export const Expedientes = () => {
   return (
     <>
       <div className="content-wrapper">
-        <div>Expedientes</div>
+        <div>
+          <h1>
+            Expedientes
+          </h1>
+        </div>
       {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
                                     <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (

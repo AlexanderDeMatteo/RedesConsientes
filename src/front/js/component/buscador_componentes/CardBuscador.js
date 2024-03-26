@@ -29,12 +29,12 @@ export const Card = ({
                                 <ul>
                                     <li className="instagram">
                                         <Link to={`/perfil/${id ? id : 0}`}>
-                                            <i className="fa-regular fa-user"></i>
+                                            <i id="psicologoCardIcon" className="fa-regular fa-user"></i>
                                         </Link>
                                     </li>
                                     <li className="codepen">
                                         <Link to={`/calendar/${id ? id : 0}`}>
-                                            <i className="fa-regular fa-calendar-days"></i>
+                                            <i id="psicologoCardIcon" className="fa-regular fa-calendar-days"></i>
                                         </Link>
                                     </li>
                                 </ul>

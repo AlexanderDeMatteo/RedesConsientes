@@ -48,7 +48,7 @@ export const BuscadorDePsicologos = () => {
             <div className="content-wrapper">
                 <div className="boxPrincipal">
                     <div className="d-flex py-1 justify-content-start" >
-                        <p>Encuentra tu psicologo ideal</p>
+                        <h1>Encuentra tu psicologo ideal</h1>
                         <button
                             type="button"
                             className="ms-1 btn btn-primary"
