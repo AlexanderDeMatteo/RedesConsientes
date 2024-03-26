@@ -37,7 +37,7 @@ export const Navbar = () => {
 
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="nav-link" data-widget="pushmenu" href="/perfil" role="button"><i className="fa-solid fa-brain"></i></a>
+            <a className="nav-link"  href="/perfil" role="button"><i className="fa-solid fa-brain"></i></a>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
             <a href="/perfil" className="nav-link">Home</a>
