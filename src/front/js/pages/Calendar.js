@@ -54,9 +54,52 @@ export const Calendar_custom = () => {
         setFecha(`${today_date[0]}, ${today_date[2]} ${today_date[1]} ${today_date[3]}`)
         
     }
+    
+    const months = (month) => {
+      if(month == 'Jan' ){
+        return "Enero"
+      }
+      if(month == "Feb" ){
+        return "Febrero"
+      }
+      if(month == 'Mar' ){
+        return "Marzo"
+      }
+      if(month == 'Apr' ){
+        return "Abril"
+      }
+      if(month == 'May' ){
+        return "Mayo"
+      }
+      if(month == 'Jun' ){
+        return "Junio"
+      }
+      if(month == 'Jul' ){
+        return "Julio"
+      }
+      if(month == 'Aug' ){
+        return "Agosto"
+      }
+      if(month == 'Sep' ){
+        return "Septiembre"
+      }
+      if(month == 'Oct' ){
+        return "Octubre"
+      }
+      if(month == 'Nov' ){
+        return "Noviembre"
+      }
+      if(month == 'Dec' ){
+        return "Diciembre"
+      }
+      
+    }
 
     const calendar_date= selectedDate[3] + "/" + selectedDate[1] + "/" + selectedDate[2]
-    const calendar_date2= selectedDate[2] + "/" + selectedDate[1] + "/" + selectedDate[3]
+    const calendar_date2= selectedDate[2] + " / " + months(selectedDate[1]) + " / " + selectedDate[3]
+    
+    console.log(calendar_date2)
+    console.log(selectedDate)
 
     async function onCreateSession(event) {
         event.preventDefault();
@@ -66,30 +109,6 @@ export const Calendar_custom = () => {
 
 
 
-    const months = {
-        'Oct': 'Oct',
-        'Dec': 'Dic',
-        'Jan': 'Ene',
-        'Feb': 'Feb',
-        'Mar': 'Mar',
-        'Apr': 'Abr',
-        'May': 'May',
-        'Jun': 'Jun',
-        'Jul': 'Jul',
-        'Nov': 'Nov',
-        'Aug': 'Agos',
-        'Sep': 'Sep'
-
-    }
-    const Days = {
-        'Mon': 'Lunes',
-        'Tue': 'Martes',
-        'Wed': 'Miercoles',
-        'Thu': 'Jueves',
-        'Fri': 'Viernes',
-        'Sat': 'Sabado',
-        'Sun': 'Domingo',
-    }
     function to12HourFormat(time24h) {
       if (typeof time24h === 'undefined') {
           time24h = ""; // Establece un valor por defecto como una cadena vacía
@@ -132,7 +151,7 @@ export const Calendar_custom = () => {
           <div className="sticky-top mb-3">
             <div className="card card-primary">
               <div className="card-header column">
-                <h3 className="card-title">{calendar_date2}</h3>
+                <h3 className="card-title d-flex justify-content-center">{calendar_date2}</h3>
                 <Modal calendar_date2={calendar_date2} calendar_date={calendar_date} fecha={fecha}/>
               </div>
               {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary" role="status">
