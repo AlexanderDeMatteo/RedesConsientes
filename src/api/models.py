@@ -6,6 +6,7 @@ import string
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=False, nullable=False)
@@ -14,23 +15,29 @@ class User(db.Model):
     password = db.Column(db.String(256), unique=False, nullable=False)
     is_psicologo = db.Column(db.Boolean(), unique=False, nullable=True)
     admin = db.Column(db.Boolean(), unique=False, nullable=True)
-    is_active = db.Column(db.Boolean(), unique=False,
-                          nullable=False, default=False)
+    is_active = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
     is_online = db.Column(db.Boolean(), nullable=False, default=False)
     salt = db.Column(db.String(80), unique=True, nullable=False)
     address = db.relationship("UserAddress", backref="user", uselist=False)
+
+    # Payment method relationship (if needed)
     # PaidMethod = db.relationship("UserPaymentMethod", backref="user", uselist=False)
+
     user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
     payment_account = db.relationship("PaymentAccount", backref="user", lazy="select")
-    session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id,  User.id == Session.client_id)",)
-    # Relación para psicólogos y sus tareas asignadas
-    # psychologist_tasks = db.relationship('PsychologistTask', back_populates='psychologist')
-    # Relación para clientes y sus tareas asignadas
+    session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id, User.id == Session.client_id)",)
     tasks_assigned_to_client = db.relationship('ClientTask', back_populates='client')
+
+    # Client tasks (if needed)
     # client_tasks = db.relationship('ClientTask', backref='assigned_to_client', foreign_keys='ClientTask.client_id')
+
     selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selected_psicologo = db.relationship('User', remote_side=[id])
     is_psicologo_selected = db.Column(db.Boolean, default=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+
+    # Corrected backreference name to avoid conflict
+    assigned_roles = db.relationship("Role", backref="user_roles")
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -44,10 +51,10 @@ class User(db.Model):
             "is_psicologo": self.is_psicologo,
             "session_ids": self.session_ids,
             "admin": self.admin,
-            "is_active":self.is_active
+            "is_active": self.is_active
         }
 
-    @ classmethod
+    @classmethod
     def create(cls, user):
         try:
             new_user = cls(**user)
@@ -59,10 +66,15 @@ class User(db.Model):
             print(error)
             return None
 
-            # do not serialize the password, its a security breach
+    def has_role(self, role_name):
+        return any(role.name == role_name for role in self.roles)
+
+    def assign_role(self, role):
+        if role not in self.roles:
+            self.roles.append(role)
+            db.session.commit()
 
     def update(self, ref_user):
-
         if "name" in ref_user:
             self.name = ref_user["name"]
         if "last_name" in ref_user:
@@ -76,7 +88,9 @@ class User(db.Model):
             db.session.rollback()
             return False
 
-
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
 
 
 class ClientTask(db.Model):

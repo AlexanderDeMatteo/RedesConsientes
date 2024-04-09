@@ -96,7 +96,7 @@ export const Calendar_custom = () => {
     }
 
     const calendar_date= selectedDate[3] + "/" + selectedDate[1] + "/" + selectedDate[2]
-    const calendar_date2= selectedDate[2] + " / " + months(selectedDate[1]) + " / " + selectedDate[3]
+    const calendar_date2= selectedDate[2] + " de " + months(selectedDate[1]) + " de " + selectedDate[3]
     
     console.log(calendar_date2)
     console.log(selectedDate)
