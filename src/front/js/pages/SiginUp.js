@@ -43,14 +43,9 @@ export const SignUp = () => {
 				data.is_psicologo = check_fpv
 		}
 
-		// let data = {
-		// 	name: name,
-		// 	email: email,
-		// 	password: password,
-		// 	numero_fpv: numero_fpv,
-		// };
 		if (await actions.registerUser(data)) {
 			navigate("/Perfil");
+			console.log("a")
 		} else {
 			alert("EL USUARIO YA ESTA CREADO INTENTE DE NUEVO");
 		}

@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount, MiPsicologo, Phrase
+from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount, MiPsicologo, Phrase, Role
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -13,8 +13,23 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from functools import wraps
 from datetime import date
 from sqlalchemy import func
+
+# Define roles
+ROLES = {"psicologo": "Psicologo", "cliente": "Cliente"}
+
+# Decorator to check for required role
+def requires_role(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.has_role(role):
+                return jsonify({"error": "No tienes permiso para acceder a este recurso"}), 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 api = Blueprint('api', __name__)
 # Allow CORS requests to this API
@@ -23,34 +38,60 @@ CORS(api)
 @api.route('/sign-up', methods=['POST'])
 def handle_register():
     updated_info = {}
-    user = request.json
-    updated_info = {**user}
+    user_data = request.json
+
+    # Validate required fields manually
+    required_fields = ["email", "password", "is_psicologo"]
+    missing_fields = [field for field in required_fields if field not in user_data]
+
+    if missing_fields:
+        return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
+
+    # Check if email already exists
+    existing_user = User.query.filter_by(email=user_data["email"]).first()
+    if existing_user:
+        return jsonify({"error": "Email already exists"}), 400
 
     # Add salt to the password
-    password = user['password']
+    password = user_data['password']
     salt = os.urandom(10).hex()
-    user['salt'] = salt
-    user['password'] = generate_password_hash(salt + password)
+    user_data['salt'] = salt
+    user_data['password'] = generate_password_hash(salt + password)
 
-    del user["fpv_number"]
+    del user_data["fpv_number"]  # Assuming fpv_number is not required
 
-    newUser = User.create(user)
+    # Create the user
+    newUser = User.create(user_data)
 
-    if newUser is not None:
-        access_token = create_access_token(identity=newUser.id)
-        updated_info["user_id"] = newUser.id
-        fpv = updated_info["fpv_number"]
-        create_profile_info = UserProfileInfo(
-            user_id=newUser.id,
-            fpv_number=fpv,
-        )
-        try:
-            db.session.add(create_profile_info)
-            db.session.commit()
-            return jsonify({"token": access_token, "results": create_profile_info.serialize()}), 201
-        except Exception as error:
-            db.session.rollback()
-            return jsonify(error.args), 500
+    if not newUser:
+        # Handle unexpected user creation failure (log the error)
+        print("Error creating user, check User.create implementation")
+        return jsonify({"error": "Error creating user"}), 400
+
+    access_token = create_access_token(identity=newUser.id)
+    updated_info["user_id"] = newUser.id
+    fpv = updated_info.get("fpv_number")  # Check for fpv_number existence
+
+    # Assign role based on is_psicologo field (assuming newUser is not None)
+    if newUser.is_psicologo:
+        newUser.assigned_roles.append(Role(name=ROLES["psicologo"]))
+    else:
+        newUser.assigned_roles.append(Role(name=ROLES["cliente"]))
+
+    # Create profile for the user
+    create_profile_info = UserProfileInfo(
+        user_id=newUser.id,
+        fpv_number=fpv,
+        # Add any additional profile fields here
+    )
+
+    try:
+        db.session.add(create_profile_info)
+        db.session.commit()
+        return jsonify({"token": access_token, "results": create_profile_info.serialize()}), 201
+    except Exception as error:
+        db.session.rollback()
+        return jsonify({"error": str(error)}), 500
 
 
 @api.route('/sign-in', methods=['POST'])
@@ -292,38 +333,6 @@ def handle_sessions_today(psychologist_id):
     else:
         return jsonify(response), 201
     
-# @api.route("/sessions/today/<user_id>", methods=['GET'])
-# @jwt_required()
-# def handle_sessions_today2(user_id):
-
-#   today = date.today().strftime("%Y/%m/%d")  # Format date for comparison
-
-#   # Identify user type based on the requested field (client_id or psychologist_id)
-#   user_type = "client" if request.args.get("client_id") else "psychologist"
-
-#   # Filter sessions based on user type
-#   if user_type == "client":
-#     sessions = Session.query.filter_by(client_id=user_id, calendar_date=today).all()
-#   else:  # psychologist
-#     sessions = Session.query.filter_by(psychologist_id=user_id, calendar_date=today).all()
-
-#   response = []
-#   for session in sessions:
-#     session_data = session.serialize()
-#     if user_type == "psychologist":
-#       # Include psychologist and patient names for psychologists
-#       session_data["psychologist_name"] = session.psychologist.name
-#       session_data["patient_name"] = session.patient.name
-#       session_data["psychologist_last_name"] = session.psychologist.last_name
-#       session_data["patient_last_name"] = session.patient.last_name
-
-#     response.append(session_data)
-
-#   if not sessions:
-#     return jsonify({"message": f"Not sessions available for this {user_type}"}), 401
-#   else:
-#     return jsonify(response), 200
-
 
 # Obtain sessions by the ID of the psicologo. Return all sessions for that piscologo
 # traer todas las sesiones del psicologo, para anular los botones
@@ -755,3 +764,22 @@ def handle_random_phrase():
         # Return an error message if no phrase was found
         return jsonify({"message": "No se encontraron frases en la base de datos"}), 404
 
+@api.route('/create-roles', methods=['POST'])
+def create_role():
+    """Crea un nuevo rol."""
+
+    data = request.get_json()
+    name = data.get('name')
+
+    if not name:
+        return jsonify({"error": "El nombre del rol es obligatorio"}), 400
+
+    role = Role.query.filter_by(name=name).first()
+    if role:
+        return jsonify({"error": "El nombre del rol ya está en uso"}), 409
+
+    new_role = Role(name=name)
+    db.session.add(new_role)
+    db.session.commit()
+
+    return jsonify({"success": "Rol creado exitosamente", "role": new_role.serialize()}), 201

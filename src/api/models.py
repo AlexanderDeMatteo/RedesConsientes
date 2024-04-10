@@ -26,8 +26,8 @@ class User(db.Model):
     selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selected_psicologo = db.relationship('User', remote_side=[id])
     is_psicologo_selected = db.Column(db.Boolean, default=False)
+    # Define the relationship for roles
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-    # Corrected backreference name to avoid conflict
     assigned_roles = db.relationship("Role", backref="user_roles")
 
     def __repr__(self):
@@ -61,7 +61,7 @@ class User(db.Model):
             return new_user
         except Exception as error:
             db.session.rollback()
-            print(error)
+            print(f"Error al crear usuario: {error}")
             return None
 
     def update(self, ref_user):
@@ -93,6 +93,12 @@ class User(db.Model):
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
     @classmethod
     def create_role(cls, role_name):

@@ -38,6 +38,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (response.ok) {
 					let data = await response.json();
 					setAuthToken(data.token)
+					
 					return true;
 				} else return false;
 			},
