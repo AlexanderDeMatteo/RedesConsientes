@@ -38,60 +38,34 @@ CORS(api)
 @api.route('/sign-up', methods=['POST'])
 def handle_register():
     updated_info = {}
-    user_data = request.json
-
-    # Validate required fields manually
-    required_fields = ["email", "password", "is_psicologo"]
-    missing_fields = [field for field in required_fields if field not in user_data]
-
-    if missing_fields:
-        return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
-
-    # Check if email already exists
-    existing_user = User.query.filter_by(email=user_data["email"]).first()
-    if existing_user:
-        return jsonify({"error": "Email already exists"}), 400
+    user = request.json
+    updated_info = {**user}
 
     # Add salt to the password
-    password = user_data['password']
+    password = user['password']
     salt = os.urandom(10).hex()
-    user_data['salt'] = salt
-    user_data['password'] = generate_password_hash(salt + password)
+    user['salt'] = salt
+    user['password'] = generate_password_hash(salt + password)
 
-    del user_data["fpv_number"]  # Assuming fpv_number is not required
+    del user["fpv_number"]
 
-    # Create the user
-    newUser = User.create(user_data)
+    newUser = User.create(user)
 
-    if not newUser:
-        # Handle unexpected user creation failure (log the error)
-        print("Error creating user, check User.create implementation")
-        return jsonify({"error": "Error creating user"}), 400
-
-    access_token = create_access_token(identity=newUser.id)
-    updated_info["user_id"] = newUser.id
-    fpv = updated_info.get("fpv_number")  # Check for fpv_number existence
-
-    # Assign role based on is_psicologo field (assuming newUser is not None)
-    if newUser.is_psicologo:
-        newUser.assigned_roles.append(Role(name=ROLES["psicologo"]))
-    else:
-        newUser.assigned_roles.append(Role(name=ROLES["cliente"]))
-
-    # Create profile for the user
-    create_profile_info = UserProfileInfo(
-        user_id=newUser.id,
-        fpv_number=fpv,
-        # Add any additional profile fields here
-    )
-
-    try:
-        db.session.add(create_profile_info)
-        db.session.commit()
-        return jsonify({"token": access_token, "results": create_profile_info.serialize()}), 201
-    except Exception as error:
-        db.session.rollback()
-        return jsonify({"error": str(error)}), 500
+    if newUser is not None:
+        access_token = create_access_token(identity=newUser.id)
+        updated_info["user_id"] = newUser.id
+        fpv = updated_info["fpv_number"]
+        create_profile_info = UserProfileInfo(
+            user_id=newUser.id,
+            fpv_number=fpv,
+        )
+        try:
+            db.session.add(create_profile_info)
+            db.session.commit()
+            return jsonify({"token": access_token, "results": create_profile_info.serialize()}), 201
+        except Exception as error:
+            db.session.rollback()
+            return jsonify(error.args), 500
 
 
 @api.route('/sign-in', methods=['POST'])
@@ -783,3 +757,36 @@ def create_role():
     db.session.commit()
 
     return jsonify({"success": "Rol creado exitosamente", "role": new_role.serialize()}), 201
+
+# ROLES predefinidos
+ROLES = {"psicologo": "Psicologo", "cliente": "Cliente"}
+
+@api.route('/assign-roles', methods=['POST'])
+# @jwt_required()
+def assign_roles():
+#   user_id = get_jwt_identity()
+  user_id = 1
+  # Validar datos
+  if not user_id:
+    return jsonify({"error": "Usuario no encontrado"}), 404
+
+  # Buscar usuario por ID
+  user = User.query.get(user_id)
+
+  # Manejar usuario no encontrado
+  if not user:
+    return jsonify({"error": "Usuario no encontrado"}), 404
+
+  # Asignar rol según is_psicologo
+  if user.is_psicologo:
+    role_name = ROLES["psicologo"]
+  else:
+    role_name = ROLES["cliente"]
+
+  # Llamar a User.assign_role
+  success = User.assign_role(user.id, role_name)
+
+  if success:
+    return jsonify({"message": "Rol asignado exitosamente!"}), 200
+  else:
+    return jsonify({"error": "Error al asignar rol"}), 400

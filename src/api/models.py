@@ -2,23 +2,28 @@ from email.policy import default
 from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
+from flask_login import UserMixin
 import string
 
 db = SQLAlchemy()
 
+roles_permissions = db.Table(
+  'roles_permissions',
+  db.Column('role_id', db.Integer, db.ForeignKey('roles.id')),
+  db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'))
+)
 
-class User(db.Model):
+class User(db.Model, UserMixin):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=False, nullable=False)
-    last_name = db.Column(db.String(120), unique=False, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(256), unique=False, nullable=False)
-    is_psicologo = db.Column(db.Boolean(), unique=False, nullable=True)
-    admin = db.Column(db.Boolean(), unique=False, nullable=True)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
-    is_online = db.Column(db.Boolean(), nullable=False, default=False)
+    password = db.Column(db.String(256), nullable=False)
+    is_psicologo = db.Column(db.Boolean(), nullable=True)
+    admin = db.Column(db.Boolean(), nullable=True)
+    is_active = db.Column(db.Boolean(), default=False)
+    is_online = db.Column(db.Boolean(), default=False)
     salt = db.Column(db.String(80), unique=True, nullable=False)
-    address = db.relationship("UserAddress", backref="user", uselist=False)
     user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
     payment_account = db.relationship("PaymentAccount", backref="user", lazy="select")
     session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id, User.id == Session.client_id)",)
@@ -26,18 +31,31 @@ class User(db.Model):
     selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selected_psicologo = db.relationship('User', remote_side=[id])
     is_psicologo_selected = db.Column(db.Boolean, default=False)
+
     # Define the relationship for roles
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-    assigned_roles = db.relationship("Role", backref="user_roles")
+    roles = db.relationship(
+        "Role",
+        secondary=roles_permissions,
+        backref="users",
+        lazy="select"
+    )
+
+    permissions = db.relationship(
+        "Permission",
+        secondary=roles_permissions,
+        backref="users",
+        lazy="select"
+    )
 
     def __repr__(self):
         return f'<User {self.email}>'
 
     def serialize(self):
-        user = User.query.options(db.joinedload('assigned_roles')).get(self.id)  # Assuming 'id' is available
+        user = User.query.options(db.joinedload('roles'), db.joinedload('permissions')).get(self.id)
 
-        if user:  # Check if user exists
-            roles = [role.name for role in user.assigned_roles or []]  # Handle empty roles
+        if user:
+            roles = [role.name for role in user.roles or []]
+            permissions = [permission.name for permission in user.permissions or []]
             return {
                 "id": user.id,
                 "email": user.email,
@@ -47,15 +65,23 @@ class User(db.Model):
                 "session_ids": user.session_ids,
                 "admin": user.admin,
                 "is_active": user.is_active,
-                "roles": roles  # Add roles list
+                "roles": roles,
+                "permissions": permissions
             }
         else:
-            return None  # Handle case where user is not found
+            return None
+
+    def has_permission(self, permission_name):
+        return permission_name in {permission.name for permission in self.permissions}
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     @classmethod
     def create(cls, user):
         try:
             new_user = cls(**user)
+            new_user.password = generate_password_hash(user['password'], method='sha256')
             db.session.add(new_user)
             db.session.commit()
             return new_user
@@ -71,11 +97,14 @@ class User(db.Model):
             self.last_name = ref_user["last_name"]
         if "email" in ref_user:
             self.email = ref_user["email"]
+        if "password" in ref_user:
+            self.password = generate_password_hash(ref_user['password'], method='sha256')
         try:
             db.session.commit()
             return True
         except Exception as error:
             db.session.rollback()
+            print(f"Error al actualizar usuario: {error}")
             return False
         
         
@@ -91,26 +120,55 @@ class User(db.Model):
             return False
 
 class Role(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+  __tablename__ = 'roles'
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name
-        }
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(50), unique=True, nullable=False)
+  description = db.Column(db.Text, nullable=True)
 
-    @classmethod
-    def create_role(cls, role_name):
-        try:
-            new_role = cls(name=role_name)
-            db.session.add(new_role)
-            db.session.commit()
-            return new_role
-        except Exception as error:
-            db.session.rollback()
-            print(error)
-            return None
+  def __repr__(self):
+    return f'<Role {self.name}>'
+  
+  def assign_user(self, user):
+    if not self.users.filter(User.id == user.id).first():
+        self.users.append(user)
+        db.session.commit()
+
+  def remove_user(self, user):
+    if self.users.filter(User.id == user.id).first():
+        self.users.remove(user)
+        db.session.commit()
+
+  def has_permission(self, permission_name):
+    return permission_name in {permission.name for permission in self.permissions}
+  
+  def serialize(self):
+    return {
+        "id": self.id,
+        "name": self.name,
+        "description": self.description,
+        "permissions": [permission.name for permission in self.permissions or []]
+    }
+  
+
+
+class Permission(db.Model):
+  __tablename__ = 'permissions'
+
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(50), unique=True, nullable=False)
+  description = db.Column(db.Text, nullable=True)
+
+  def __repr__(self):
+    return f'<Permission {self.name}>'
+  
+  def serialize(self):
+    return {
+        "id": self.id,
+        "name": self.name,
+        "description": self.description
+    }
+
 
 
 class ClientTask(db.Model):
@@ -145,43 +203,6 @@ class ClientTask(db.Model):
             'client_id': self.client_id,
         }
 
-
-class UserAddress(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    psychologist_id = db.Column(db.Integer, db.ForeignKey(
-        'user.id'), unique=True, nullable=False)
-
-    country = db.Column(db.String(120), unique=False, nullable=True)
-    state = db.Column(db.String(120), unique=False, nullable=True)
-    city = db.Column(db.String(120), unique=False, nullable=True)
-    address = db.Column(db.String(300), nullable=True)
-    status = db.Column(db.Boolean(), unique=False,
-                       nullable=True, default=False)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "state": self.state,
-            "city": self.city,
-            "address": self.address
-        }
-
-    def update(self, ref_user):
-        if "country" in ref_user:
-            self.country = ref_user["country"]
-        if "state" in ref_user:
-            self.state = ref_user["state"]
-        if "city" in ref_user:
-            self.city = ref_user["city"]
-        if "address" in ref_user:
-            self.address = ref_user["address"]
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
 
 
 class UserProfileInfo(db.Model):
