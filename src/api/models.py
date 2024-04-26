@@ -3,15 +3,17 @@ from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
 from flask_login import UserMixin
+from sqlalchemy import Column, Integer, ForeignKey
 import string
 
 db = SQLAlchemy()
 
 roles_permissions = db.Table(
   'roles_permissions',
-  db.Column('role_id', db.Integer, db.ForeignKey('roles.id')),
-  db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'))
+  db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True),
+  db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'), primary_key=True )
 )
+
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -24,25 +26,29 @@ class User(db.Model, UserMixin):
     is_active = db.Column(db.Boolean(), default=False)
     is_online = db.Column(db.Boolean(), default=False)
     salt = db.Column(db.String(80), unique=True, nullable=False)
-    user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
-    payment_account = db.relationship("PaymentAccount", backref="user", lazy="select")
-    session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id, User.id == Session.client_id)",)
-    tasks_assigned_to_client = db.relationship('ClientTask', back_populates='client')
-    selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    selected_psicologo = db.relationship('User', remote_side=[id])
-    is_psicologo_selected = db.Column(db.Boolean, default=False)
+    # user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
+    # payment_account = db.relationship("PaymentAccount", backref="user", lazy="select")
+    # session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id, User.id == Session.client_id)",)
+    # tasks_assigned_to_client = db.relationship('ClientTask', back_populates='client')
 
-    # Define the relationship for roles
+    # Removed circular foreign key relationship
+    # selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # selected_psicologo = db.relationship('User', remote_side=[id])
+    # is_psicologo_selected = db.Column(db.Boolean, default=False)
+
+    # Relationship with roles (assuming roles have predefined permissions)
+    role_ids = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
+    roles2 = db.relationship('Role', secondary=roles_permissions,backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
     roles = db.relationship(
         "Role",
-        secondary=roles_permissions,
+        secondary=roles_permissions,  # Assuming roles_permissions exists
         backref="users",
         lazy="select"
     )
 
-    permissions = db.relationship(
+    permissions = db.relationship(  # Optional if roles have predefined permissions
         "Permission",
-        secondary=roles_permissions,
+        # Secondary table or direct relationship definition (consider your approach)
         backref="users",
         lazy="select"
     )
@@ -176,7 +182,7 @@ class ClientTask(db.Model):
     description = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Boolean, default=False)
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    client = db.relationship('User', back_populates='tasks_assigned_to_client')
+    client = db.relationship('User', backref='tasks_assigned_to_client')
 
     def serialize(self):
         return {
@@ -207,7 +213,8 @@ class ClientTask(db.Model):
 
 class UserProfileInfo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
+    user = db.relationship("User", backref='user_info', uselist=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), unique=True, nullable=False)
     profile_picture = db.Column(db.String(500), unique=False, nullable=True)
     dob = db.Column(db.String(20), nullable=True)
     dni = db.Column(db.String(30), nullable=True)
@@ -227,9 +234,10 @@ class UserProfileInfo(db.Model):
     psych_strategies = db.Column(db.String(1000), unique=False, nullable=True)
     PsychExperiences = db.Column(db.String(1000), unique=False, nullable=True)
 
-    def __init__(self, fpv_number, user_id):
-        self.fpv_number = fpv_number,
+    def __init__(self, user_id, **kwargs):  # Use kwargs for optional attributes
         self.user_id = user_id
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def serialize(self):
         return {
@@ -406,6 +414,7 @@ class MiPsicologo(db.Model):
 
 class PaymentAccount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_payment_account = db.relationship("User", backref="payment_account", lazy="select")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     zell_email = db.Column(db.String(50), nullable=True)
     binance_route = db.Column(db.String(100), nullable=True)
