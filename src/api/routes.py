@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, UserProfileInfo, db, User, ClientTask, PaymentAccount, MiPsicologo, Phrase, Role
+from api.models import Session, PsicologyProfileInfo, db, User, ClientTask, PaymentAccount, Phrase, Role
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin

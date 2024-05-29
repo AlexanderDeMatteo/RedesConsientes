@@ -3,79 +3,58 @@ from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Numeric, Date, Table
 import string
 
 db = SQLAlchemy()
 
-roles_permissions = db.Table(
-  'roles_permissions',
-  db.Column('role_id', db.Integer, db.ForeignKey('roles.id'), primary_key=True),
-  db.Column('permission_id', db.Integer, db.ForeignKey('permissions.id'), primary_key=True )
+association_table = Table(
+    "association_table",
+    db.metadata,
+    Column('role_id', Integer, ForeignKey('role.id'), primary_key=True),
+    Column('permission_id', Integer, ForeignKey('permission.id'), primary_key=True ),
 )
 
 
-class User(db.Model, UserMixin):
-    __tablename__ = 'users'
+class User(db.Model):
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(120), unique=False, nullable=False)
+    last_name = db.Column(db.String(120), unique=False, nullable=True)
+    dni = db.Column(db.String(30), unique=True, nullable=True)
+    gender= db.Column(db.String(10), nullable=True)
+    phone_number = db.Column(db.Numeric(25), unique=False, nullable=True)
+    motivo_consulta = db.Column(db.String(10), nullable=True)
     is_psicologo = db.Column(db.Boolean(), nullable=True)
-    admin = db.Column(db.Boolean(), nullable=True)
+    profile_picture = db.Column(db.String(500), unique=False, nullable=True)
     is_active = db.Column(db.Boolean(), default=False)
     is_online = db.Column(db.Boolean(), default=False)
     salt = db.Column(db.String(80), unique=True, nullable=False)
-    # user_info = db.relationship('UserProfileInfo', backref='user', uselist=False)
-    # payment_account = db.relationship("PaymentAccount", backref="user", lazy="select")
-    # session_ids = db.relationship("Session", primaryjoin="and_(User.id == Session.psychologist_id, User.id == Session.client_id)",)
-    # tasks_assigned_to_client = db.relationship('ClientTask', back_populates='client')
-
-    # Removed circular foreign key relationship
-    # selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # selected_psicologo = db.relationship('User', remote_side=[id])
-    # is_psicologo_selected = db.Column(db.Boolean, default=False)
-
-    # Relationship with roles (assuming roles have predefined permissions)
-    role_ids = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
-    roles2 = db.relationship('Role', secondary=roles_permissions,backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
-    roles = db.relationship(
-        "Role",
-        secondary=roles_permissions,  # Assuming roles_permissions exists
-        backref="users",
-        lazy="select"
-    )
-
-    permissions = db.relationship(  # Optional if roles have predefined permissions
-        "Permission",
-        # Secondary table or direct relationship definition (consider your approach)
-        backref="users",
-        lazy="select"
-    )
+    role_id = Column(Integer, ForeignKey('role.id'))
+    user_address = Column(Integer, ForeignKey('address.id'))
+    Psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
 
     def __repr__(self):
         return f'<User {self.email}>'
 
     def serialize(self):
-        user = User.query.options(db.joinedload('roles'), db.joinedload('permissions')).get(self.id)
-
-        if user:
-            roles = [role.name for role in user.roles or []]
-            permissions = [permission.name for permission in user.permissions or []]
-            return {
-                "id": user.id,
-                "email": user.email,
-                "name": user.name,
-                "last_name": user.last_name,
-                "is_psicologo": user.is_psicologo,
-                "session_ids": user.session_ids,
-                "admin": user.admin,
-                "is_active": user.is_active,
-                "roles": roles,
-                "permissions": permissions
+        return {
+                "id": self.id,
+                "email": self.email,
+                "name": self.name,
+                "last_name": self.last_name,
+                "dni" : self.dni,
+                "gender" : self.gender,
+                "phone_number" : self.phone_number,
+                "motivo_consulta" : self.motivo_consulta,
+                "is_psicologo": self.is_psicologo,
+                "profile_picture": self.profile_picture,
+                "session_ids": self.session_ids,
+                "is_active": self.is_active,
             }
-        else:
-            return None
 
     def has_permission(self, permission_name):
         return permission_name in {permission.name for permission in self.permissions}
@@ -126,55 +105,21 @@ class User(db.Model, UserMixin):
             return False
 
 class Role(db.Model):
-  __tablename__ = 'roles'
+  __tablename__ = 'role'
 
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50), unique=True, nullable=False)
-  description = db.Column(db.Text, nullable=True)
-
-  def __repr__(self):
-    return f'<Role {self.name}>'
-  
-  def assign_user(self, user):
-    if not self.users.filter(User.id == user.id).first():
-        self.users.append(user)
-        db.session.commit()
-
-  def remove_user(self, user):
-    if self.users.filter(User.id == user.id).first():
-        self.users.remove(user)
-        db.session.commit()
-
-  def has_permission(self, permission_name):
-    return permission_name in {permission.name for permission in self.permissions}
-  
-  def serialize(self):
-    return {
-        "id": self.id,
-        "name": self.name,
-        "description": self.description,
-        "permissions": [permission.name for permission in self.permissions or []]
-    }
+  description = db.Column(db.String(250), nullable=True)
+  permission = Column(Integer, ForeignKey('permission.id'))
   
 
 
 class Permission(db.Model):
-  __tablename__ = 'permissions'
+  __tablename__ = 'permission'
 
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50), unique=True, nullable=False)
-  description = db.Column(db.Text, nullable=True)
-
-  def __repr__(self):
-    return f'<Permission {self.name}>'
-  
-  def serialize(self):
-    return {
-        "id": self.id,
-        "name": self.name,
-        "description": self.description
-    }
-
+  description = db.Column(db.String(250), nullable=True)
 
 
 class ClientTask(db.Model):
@@ -182,7 +127,7 @@ class ClientTask(db.Model):
     description = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Boolean, default=False)
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    client = db.relationship('User', backref='tasks_assigned_to_client')
+    client = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def serialize(self):
         return {
@@ -209,30 +154,25 @@ class ClientTask(db.Model):
             'client_id': self.client_id,
         }
 
-
-
-class UserProfileInfo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user = db.relationship("User", backref='user_info', uselist=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), unique=True, nullable=False)
-    profile_picture = db.Column(db.String(500), unique=False, nullable=True)
-    dob = db.Column(db.String(20), nullable=True)
-    dni = db.Column(db.String(30), nullable=True)
-    cedula = db.Column(db.String(25), unique=True, nullable=True)
-    gender = db.Column(db.String(10), nullable=True)
-    monto_consulta = db.Column(db.String(25), unique=False, nullable=True)
-    phone_number = db.Column(db.String(25), unique=False, nullable=True)
-    fpv_number = db.Column(db.String(25), unique=True, nullable=True)
-    specialty_area = db.Column(db.String(120), unique=False, nullable=True)
+class Address(db.Model):
+    __tablename__ = "address"
+    id = Column(Integer, primary_key=True)
     city = db.Column(db.String(25), unique=False, nullable=True)
     state = db.Column(db.String(25), unique=False, nullable=True)
-    twitter = db.Column(db.String(25), unique=False, nullable=True)
-    facebook = db.Column(db.String(25), unique=False, nullable=True)
-    instagram = db.Column(db.String(25), unique=False, nullable=True)
+
+
+class PsicologyProfileInfo(db.Model):
+    __tablename__ = 'psicology_profile'
+
+    id = db.Column(db.Integer, primary_key=True)
+    fpv_number = db.Column(db.String(25), unique=True, nullable=True)
+    specialty_area = db.Column(db.String(120), unique=False, nullable=True)
     education = db.Column(db.String(140), unique=False, nullable=True)
     motivo_consulta = db.Column(db.String(600), unique=False, nullable=True)
     psych_strategies = db.Column(db.String(1000), unique=False, nullable=True)
     PsychExperiences = db.Column(db.String(1000), unique=False, nullable=True)
+    socialNetwork_id = Column(Integer, ForeignKey('socialnetwork.id'))
+    # client_list = Column(Integer, ForeignKey('client_list.id'))
 
     def __init__(self, user_id, **kwargs):  # Use kwargs for optional attributes
         self.user_id = user_id
@@ -243,25 +183,12 @@ class UserProfileInfo(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "profile_picture": self.profile_picture,
-            "phone_number": self.phone_number,
-            "dob": self.dob,
-            "cedula": self.cedula,
-            "dni": self.dni,
-            "gender": self.gender,
             "fpv_number": self.fpv_number,
             "specialty_area": self.specialty_area,
-            "city": self.city,
-            "state": self.state,
-            "twitter": self.twitter,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
             "education": self.education,
-            # "academic_info": [info.serialize() for info in self.academic_info],
             "psych_strategies": self.psych_strategies,
             "PsychExperiences": self.PsychExperiences,
             "monto_consulta" : self.monto_consulta,
-            "motivo_consulta" : self.motivo_consulta,
         }
 
     def update_fpv(self, data):
@@ -278,9 +205,8 @@ class UserProfileInfo(db.Model):
 
     def update(self, ref_user):
         attributes = [
-            "profile_picture", "phone_number", "fpv_number", "specialty_area",
-            "twitter", "facebook", "instagram", "state", "city", "education", "dob", "gender",
-            "PsychExperiences", "psych_strategies", "monto_consulta", "motivo_consulta", "cedula",
+            "fpv_number", "specialty_area", "education",
+            "PsychExperiences", "psych_strategies", "monto_consulta", "motivo_consulta",
         ]
 
         for attribute in attributes:
@@ -306,26 +232,49 @@ class UserProfileInfo(db.Model):
             db.session.rollback()
             return False
 
+class SocialNetwork(db.Model):
+    __tablename__ = 'socialnetwork'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=False, nullable=True)
+    url = db.Column(db.String(120), unique=False, nullable=True)
+    icon = db.Column(db.String(120), unique=False, nullable=True)
+
+    def serialize(self):
+            return {
+                "id": self.id,
+                "name": self.name,
+                "url": self.url,
+                "icon": self.icon
+            }
+
+# class Client_List(db.Model):
+#     __tablename__ = "client_list"
+#     id = Column(Integer, primary_key=True)   
+#     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
 class Session(db.Model):
+    __tablename__ = 'session'
+
     id = db.Column(db.Integer, primary_key=True)
-    psychologist_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-    client_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    psychologist = db.relationship('User', backref='psychologist_sessions', foreign_keys=[psychologist_id])
-    client = db.relationship('User', backref='client_sessions', foreign_keys=[client_id])
     start_time = db.Column(db.String(10), nullable=False, unique=False)
     end_time = db.Column(db.String(10), nullable=False, unique=False)
     duration_time = db.Column(db.Numeric(10), nullable=False, unique=False)
     reserved = db.Column(db.Boolean(), nullable=True, default=False)
     calendar_date = db.Column(db.Date, nullable=False, unique=False)
     room_number = db.Column(db.String(200), nullable=False, unique=True)
+    psychologist_session_id = Column(Integer, ForeignKey('user.id'))
+    client_session_id = Column(Integer, ForeignKey('user.id'))
+    session_type = Column(Integer, ForeignKey('session_type.id'))
 
     # Method to serialize information of Sessions
     def serialize(self):
         return {
             "id": self.id,
             "psychologist_id": self.psychologist_id,
-            "client_id": self.client_id,
+            "client_session_id": self.client_session_id,
             "reserved": self.reserved,
             "calendar_date": self.calendar_date,
             "room_number": self.room_number,
@@ -387,8 +336,8 @@ class Session(db.Model):
 
     # Handle the reservation for a client
     def reserve_session(self, session):
-        if "client_id" in session:
-            self.client_id = session["client_id"]
+        if "client_session_id" in session:
+            self.client_session_id = session["client_session_id"]
         if "reserved" in session:
             self.reserved = session["reserved"]
         try:
@@ -398,24 +347,25 @@ class Session(db.Model):
             db.session.rollback()
             return False
 
+class Session_type(db.Model):
+    __tablename__ = "session_type"
 
-# class PsychoConsultation(db.Model):
+    id = Column(Integer, primary_key=True)
+    type_of_session = db.Column(db.String(50), nullable=True)
+
+
+
+# class MiPsicologo(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#     monto = db.Column(db.String(25), unique=False, nullable=True)
-
-
-class MiPsicologo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        'user.id'), nullable=False)
-    Psicologo_id = db.Column(db.Integer, db.ForeignKey(
-        'user.id'), nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey(
+#         'user.id'), nullable=False)
+#     Psicologo_id = db.Column(db.Integer, db.ForeignKey(
+#         'user.id'), nullable=False)
 
 class PaymentAccount(db.Model):
+    __tablename__ = "payment_acount"
+
     id = db.Column(db.Integer, primary_key=True)
-    user_payment_account = db.relationship("User", backref="payment_account", lazy="select")
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     zell_email = db.Column(db.String(50), nullable=True)
     binance_route = db.Column(db.String(100), nullable=True)
     paypal_user = db.Column(db.String(50), nullable=True)
@@ -424,6 +374,7 @@ class PaymentAccount(db.Model):
     pagomovil_bank = db.Column(db.String(50), nullable=True)
     pagomovil_ci = db.Column(db.String(50), nullable=True)
     pagomovil_phone = db.Column(db.String(50), nullable=True)
+    Psicology_profile_id = Column(Integer, ForeignKey('psicology_profile.id'))
 
     def serialize(self):
         return {
@@ -471,6 +422,8 @@ class PaymentAccount(db.Model):
             return False
 
 class Phrase(db.Model):
+    __tablename__ = "phrase"
+
     id = db.Column(db.Integer, primary_key=True)
     phrase = db.Column(db.String(400), nullable=True)
     author = db.Column(db.String(100), nullable=True)
