@@ -33,6 +33,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), default=False)
     is_online = db.Column(db.Boolean(), default=False)
     salt = db.Column(db.String(80), unique=True, nullable=False)
+    role_name = db.relationship('Role',backref='role_user')
     role_id = Column(Integer, ForeignKey('role.id'))
     user_address = Column(Integer, ForeignKey('address.id'))
     Psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
@@ -54,6 +55,7 @@ class User(db.Model):
                 "profile_picture": self.profile_picture,
                 "session_ids": self.session_ids,
                 "is_active": self.is_active,
+                "role": self.role.name if self.role else None
             }
 
     def has_permission(self, permission_name):
@@ -111,6 +113,10 @@ class Role(db.Model):
   name = db.Column(db.String(50), unique=True, nullable=False)
   description = db.Column(db.String(250), nullable=True)
   permission = Column(Integer, ForeignKey('permission.id'))
+  permissions = db.relationship('Permission', backref='permissions',lazy=True)
+#   permissions = db.relationship("Permission",
+#                     secondary=association_table,
+#                     back_populates="roles")
   
 
 
@@ -120,6 +126,10 @@ class Permission(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50), unique=True, nullable=False)
   description = db.Column(db.String(250), nullable=True)
+#   roles = db.relationship("Role",
+#                     secondary=association_table,
+#                     back_populates="permissions")
+  
 
 
 class ClientTask(db.Model):
@@ -249,11 +259,10 @@ class SocialNetwork(db.Model):
                 "icon": self.icon
             }
 
-# class Client_List(db.Model):
-#     __tablename__ = "client_list"
-#     id = Column(Integer, primary_key=True)   
-#     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
+class Client_List(db.Model):
+    __tablename__ = "client_list"
+    id = Column(Integer, primary_key=True)   
+    client_id = Column(Integer, ForeignKey('user.id'))
 
 class Session(db.Model):
     __tablename__ = 'session'
@@ -265,6 +274,8 @@ class Session(db.Model):
     reserved = db.Column(db.Boolean(), nullable=True, default=False)
     calendar_date = db.Column(db.Date, nullable=False, unique=False)
     room_number = db.Column(db.String(200), nullable=False, unique=True)
+    # client_name = db.relationship('User',backref='client_name')
+    # psycologist_name = db.relationship('User',backref='psycologist_name')
     psychologist_session_id = Column(Integer, ForeignKey('user.id'))
     client_session_id = Column(Integer, ForeignKey('user.id'))
     session_type = Column(Integer, ForeignKey('session_type.id'))

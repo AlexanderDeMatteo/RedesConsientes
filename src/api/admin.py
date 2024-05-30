@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, PsicologyProfileInfo, ClientTask, Session, SocialNetwork, ClientTask, PaymentAccount, Phrase, Role, Permission, Address
+from .models import db, User, PsicologyProfileInfo, Client_List, ClientTask, Session, SocialNetwork, ClientTask, PaymentAccount, Phrase, Role, Permission, Address
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -17,7 +17,7 @@ def setup_admin(app):
     admin.add_view(ModelView(Address, db.session))
     admin.add_view(ModelView(PsicologyProfileInfo, db.session))
     admin.add_view(ModelView(SocialNetwork, db.session))
-    # admin.add_view(ModelView(Client_List, db.session))
+    admin.add_view(ModelView(Client_List, db.session))
     admin.add_view(ModelView(ClientTask, db.session))
     admin.add_view(ModelView(Session, db.session))
     admin.add_view(ModelView(PaymentAccount, db.session))
