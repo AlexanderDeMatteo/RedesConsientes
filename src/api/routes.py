@@ -17,19 +17,6 @@ from functools import wraps
 from datetime import date
 from sqlalchemy import func
 
-# Define roles
-ROLES = {"psicologo": "Psicologo", "cliente": "Cliente"}
-
-# Decorator to check for required role
-def requires_role(role):
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if not current_user.has_role(role):
-                return jsonify({"error": "No tienes permiso para acceder a este recurso"}), 403
-            return f(*args, **kwargs)
-        return decorated_function
-    return decorator
 
 api = Blueprint('api', __name__)
 # Allow CORS requests to this API
@@ -37,35 +24,52 @@ CORS(api)
 
 @api.route('/sign-up', methods=['POST'])
 def handle_register():
-    updated_info = {}
-    user = request.json
-    updated_info = {**user}
+  updated_info = {}
+  user = request.json
 
-    # Add salt to the password
-    password = user['password']
-    salt = os.urandom(10).hex()
-    user['salt'] = salt
-    user['password'] = generate_password_hash(salt + password)
+  # Update info dictionary with user data
+  updated_info = {**user}
+  existing_user = User.query.filter_by(email=user['email']).first()
+  if existing_user:
+      return jsonify({'error': 'Email already exists'}), 400  # Bad request
+  # Add salt to the password
+  password = user['password']
+  salt = os.urandom(10).hex()
+  user['salt'] = salt
+  user['password'] = generate_password_hash(salt + password)
 
-    del user["fpv_number"]
+  del user["fpv_number"]
 
-    newUser = User.create(user)
+  newUser = User.create(user)
 
-    if newUser is not None:
-        access_token = create_access_token(identity=newUser.id)
-        updated_info["user_id"] = newUser.id
-        fpv = updated_info["fpv_number"]
-        create_profile_info = UserProfileInfo(
-            user_id=newUser.id,
-            fpv_number=fpv,
-        )
-        try:
-            db.session.add(create_profile_info)
-            db.session.commit()
-            return jsonify({"token": access_token, "results": create_profile_info.serialize()}), 201
-        except Exception as error:
-            db.session.rollback()
-            return jsonify(error.args), 500
+  if newUser is not None:
+    access_token = create_access_token(identity=newUser.id)
+    updated_info["user_id"] = newUser.id
+    fpv = updated_info["fpv_number"]
+    # Check for psychologist flag and create profile if needed
+    if user.get("is_psicologo", False):
+      create_profile_info = PsicologyProfileInfo(
+          user_id=newUser.id,
+          fpv_number=fpv,
+      )
+      try:
+        db.session.add(create_profile_info)
+        db.session.commit()
+      except Exception as error:
+        db.session.rollback()
+        return jsonify(error.args), 500
+
+    # Assign role based on psychologist flag
+    role = Role.query.get(2) if user.get("is_psicologo", False) else Role.query.get(1)
+    newUser.role_id = role.id
+    try:
+      db.session.commit()
+    except Exception as error:
+      db.session.rollback()
+      return jsonify(error.args), 500
+
+    # Always return a response, even if psychologist profile wasn't created
+    return jsonify({"token": access_token, "results": create_profile_info.serialize() if user.get("is_psicologo", False) else {}}), 201
 
 
 @api.route('/sign-in', methods=['POST'])

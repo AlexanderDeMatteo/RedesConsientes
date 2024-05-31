@@ -5,6 +5,7 @@ from sqlalchemy.sql import or_
 from flask_login import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Numeric, Date, Table
 import string
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -37,26 +38,29 @@ class User(db.Model):
     role_id = Column(Integer, ForeignKey('role.id'))
     user_address = Column(Integer, ForeignKey('address.id'))
     Psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
+    # seleccionar psicologo
+    selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    selected_psicologo = db.relationship('User', remote_side=[id])
+    is_psicologo_selected = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<User {self.email}>'
 
     def serialize(self):
         return {
-                "id": self.id,
-                "email": self.email,
-                "name": self.name,
-                "last_name": self.last_name,
-                "dni" : self.dni,
-                "gender" : self.gender,
-                "phone_number" : self.phone_number,
-                "motivo_consulta" : self.motivo_consulta,
-                "is_psicologo": self.is_psicologo,
-                "profile_picture": self.profile_picture,
-                "session_ids": self.session_ids,
-                "is_active": self.is_active,
-                "role": self.role.name if self.role else None
-            }
+        "id": self.id,
+        "email": self.email,
+        "name": self.name,
+        "last_name": self.last_name,
+        "dni" : self.dni,
+        "gender" : self.gender,
+        "phone_number" : self.phone_number,
+        "motivo_consulta" : self.motivo_consulta,
+        "is_psicologo": self.is_psicologo,
+        "profile_picture": self.profile_picture,
+        "is_active": self.is_active,
+        "role": self.role.name if self.role else None
+        }
 
     def has_permission(self, permission_name):
         return permission_name in {permission.name for permission in self.permissions}
@@ -68,7 +72,8 @@ class User(db.Model):
     def create(cls, user):
         try:
             new_user = cls(**user)
-            new_user.password = generate_password_hash(user['password'], method='sha256')
+            # Use the default hashing algorithm (probably bcrypt)
+            new_user.password = generate_password_hash(user['password'])
             db.session.add(new_user)
             db.session.commit()
             return new_user
@@ -85,7 +90,8 @@ class User(db.Model):
         if "email" in ref_user:
             self.email = ref_user["email"]
         if "password" in ref_user:
-            self.password = generate_password_hash(ref_user['password'], method='sha256')
+        # Use the default hashing algorithm (probably bcrypt)
+            self.password = generate_password_hash(ref_user['password'])
         try:
             db.session.commit()
             return True
@@ -94,23 +100,12 @@ class User(db.Model):
             print(f"Error al actualizar usuario: {error}")
             return False
         
-        
-    @classmethod
-    def assign_role(cls, user_id, role_name):
-        user = User.query.get(user_id)
-        role = Role.query.filter_by(name=role_name).first()
-        if user and role:
-            user.assigned_roles.append(role)
-            db.session.commit()
-            return True
-        else:
-            return False
 
 class Role(db.Model):
   __tablename__ = 'role'
 
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(50), unique=True, nullable=False)
+  name = db.Column(db.String(50), unique=True, nullable=True)
   description = db.Column(db.String(250), nullable=True)
   permission = Column(Integer, ForeignKey('permission.id'))
   permissions = db.relationship('Permission', backref='permissions',lazy=True)
@@ -124,7 +119,7 @@ class Permission(db.Model):
   __tablename__ = 'permission'
 
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(50), unique=True, nullable=False)
+  name = db.Column(db.String(50), unique=True, nullable=True)
   description = db.Column(db.String(250), nullable=True)
 #   roles = db.relationship("Role",
 #                     secondary=association_table,
@@ -134,7 +129,7 @@ class Permission(db.Model):
 
 class ClientTask(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.String(200), nullable=True)
     completed = db.Column(db.Boolean, default=False)
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     client = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -178,7 +173,7 @@ class PsicologyProfileInfo(db.Model):
     fpv_number = db.Column(db.String(25), unique=True, nullable=True)
     specialty_area = db.Column(db.String(120), unique=False, nullable=True)
     education = db.Column(db.String(140), unique=False, nullable=True)
-    motivo_consulta = db.Column(db.String(600), unique=False, nullable=True)
+    monto_consulta = db.Column(db.String(10), unique=False, nullable=True)
     psych_strategies = db.Column(db.String(1000), unique=False, nullable=True)
     PsychExperiences = db.Column(db.String(1000), unique=False, nullable=True)
     socialNetwork_id = Column(Integer, ForeignKey('socialnetwork.id'))
@@ -241,6 +236,13 @@ class PsicologyProfileInfo(db.Model):
         except Exception as error:
             db.session.rollback()
             return False
+
+class MiPsicologo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False)
+    Psicologo_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False)
 
 class SocialNetwork(db.Model):
     __tablename__ = 'socialnetwork'

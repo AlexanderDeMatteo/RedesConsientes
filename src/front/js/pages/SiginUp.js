@@ -42,11 +42,13 @@ export const SignUp = () => {
 				data.fpv_number = null,
 				data.is_psicologo = check_fpv
 		}
+		console.log(data)
 
 		if (await actions.registerUser(data)) {
 			navigate("/Perfil");
 			console.log("a")
 		} else {
+
 			alert("EL USUARIO YA ESTA CREADO INTENTE DE NUEVO");
 		}
 	};
