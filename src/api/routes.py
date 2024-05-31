@@ -34,9 +34,7 @@ def handle_register():
       return jsonify({'error': 'Email already exists'}), 400  # Bad request
   # Add salt to the password
   password = user['password']
-  salt = os.urandom(10).hex()
-  user['salt'] = salt
-  user['password'] = generate_password_hash(salt + password)
+  user['password'] = generate_password_hash(password,salt_length=8)
 
   del user["fpv_number"]
 
@@ -80,8 +78,9 @@ def handle_login():
     if user is None:
         return jsonify({"message": "Usuario no encontrado"}), 404
     
-    salt = user.salt
-    if check_password_hash(user.password, salt + password):
+    # salt = user.salt
+
+    if check_password_hash(user.password, password):
         access_token = create_access_token(identity=user.id)
         return jsonify({"message": "Usuario logeado con éxito", "token": access_token}), 200
     return jsonify({"message": "Credenciales Inválidas"}), 401
@@ -133,7 +132,9 @@ def delete_user(user_id):
 def handle_user_data():
     current_user = get_jwt_identity()
     user = User.query.filter_by(id=current_user).one_or_none()
-    user_profile_info = UserProfileInfo.query.filter_by(user_id = current_user).one_or_none()
+    print(user, "aquiiiii")
+    user_profile_info = PsicologyProfileInfo.query.filter_by(psicology_profile = current_user).one_or_none()
+    print(user_profile_info, "aaaaaaaaaa")
     if request.method == 'GET':
         if user is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
@@ -154,7 +155,7 @@ def handle_user_data():
         state = data["state"]
         phone_number = data["phone_number"]
         if user_profile_info is None: 
-            create_profile_info = UserProfileInfo(
+            create_profile_info = PsicologyProfileInfo(
                 user_id = current_user,
                 fpv_number = fpv,
                 city = city,
@@ -172,27 +173,13 @@ def handle_user_data():
         else:
             updated = user_profile_info.update(data)
             return jsonify({"message": "actualizalo", "ok": updated}), 200  
-# Route to update profile picture and load it directly from cloudinary.
 
-# @api.route('/usuario/<int:id>', methods=['GET'])
-# def handle_user_data_seleccinado(id):
-#     users = User.query.all()
-#     selecteduser = UserProfileInfo.query.filter_by(id=id).one_or_none()
-#     if selecteduser is None:
-#         return jsonify({"message": "Experience not found"}), 404
-#     return jsonify(selecteduser.serialize()), 200
-
-
-# @api.route('/usuario/<int:id>', methods=['GET'])
-# def handle_user_data_seleccinado(id):
-#     selecteduser = UserProfileInfo.query.get(id)
-#     return jsonify(selecteduser.serialize()), 200
 
 @api.route("/update_profile_picture", methods=['PUT'])
 @jwt_required()
 def handle_user_picture():
     current_user = get_jwt_identity()
-    user = UserProfileInfo.query.filter_by(id=current_user).one_or_none()
+    user = User.query.filter_by(id=current_user).one_or_none()
     data = request.json
     if data is not None:
         updated = user.update_profile_picture(data)

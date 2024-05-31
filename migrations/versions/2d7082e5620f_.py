@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a4b53df10403
+Revision ID: 2d7082e5620f
 Revises: 
-Create Date: 2024-05-31 01:23:56.438843
+Create Date: 2024-05-31 18:56:41.018315
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a4b53df10403'
+revision = '2d7082e5620f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -106,20 +106,18 @@ def upgrade():
     sa.Column('profile_picture', sa.String(length=500), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.Column('is_online', sa.Boolean(), nullable=True),
-    sa.Column('salt', sa.String(length=80), nullable=False),
     sa.Column('role_id', sa.Integer(), nullable=True),
     sa.Column('user_address', sa.Integer(), nullable=True),
-    sa.Column('Psicology_profile', sa.Integer(), nullable=True),
+    sa.Column('psicology_profile', sa.Integer(), nullable=True),
     sa.Column('selected_psicologo_id', sa.Integer(), nullable=True),
     sa.Column('is_psicologo_selected', sa.Boolean(), nullable=True),
-    sa.ForeignKeyConstraint(['Psicology_profile'], ['psicology_profile.id'], ),
+    sa.ForeignKeyConstraint(['psicology_profile'], ['psicology_profile.id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
     sa.ForeignKeyConstraint(['selected_psicologo_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['user_address'], ['address.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('dni'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('salt')
+    sa.UniqueConstraint('email')
     )
     op.create_table('client_list',
     sa.Column('id', sa.Integer(), nullable=False),

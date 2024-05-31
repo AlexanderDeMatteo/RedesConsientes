@@ -5,7 +5,6 @@ from sqlalchemy.sql import or_
 from flask_login import UserMixin
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Numeric, Date, Table
 import string
-from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -33,11 +32,11 @@ class User(db.Model):
     profile_picture = db.Column(db.String(500), unique=False, nullable=True)
     is_active = db.Column(db.Boolean(), default=False)
     is_online = db.Column(db.Boolean(), default=False)
-    salt = db.Column(db.String(80), unique=True, nullable=False)
+    # salt = db.Column(db.String(80), unique=True, nullable=False)
     role_name = db.relationship('Role',backref='role_user')
     role_id = Column(Integer, ForeignKey('role.id'))
     user_address = Column(Integer, ForeignKey('address.id'))
-    Psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
+    psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
     # seleccionar psicologo
     selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selected_psicologo = db.relationship('User', remote_side=[id])
@@ -62,24 +61,16 @@ class User(db.Model):
         "role": self.role.name if self.role else None
         }
 
-    def has_permission(self, permission_name):
-        return permission_name in {permission.name for permission in self.permissions}
-    
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-    @classmethod
+    @ classmethod
     def create(cls, user):
         try:
             new_user = cls(**user)
-            # Use the default hashing algorithm (probably bcrypt)
-            new_user.password = generate_password_hash(user['password'])
             db.session.add(new_user)
             db.session.commit()
             return new_user
         except Exception as error:
             db.session.rollback()
-            print(f"Error al crear usuario: {error}")
+            print(error)
             return None
 
     def update(self, ref_user):
