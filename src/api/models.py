@@ -48,6 +48,7 @@ class User(db.Model):
     def serialize(self):
         return {
         "id": self.id,
+        "psicology_profile": self.id,
         "email": self.email,
         "name": self.name,
         "last_name": self.last_name,
@@ -180,11 +181,6 @@ class PsicologyProfileInfo(db.Model):
     PsychExperiences = db.Column(db.String(1000), unique=False, nullable=True)
     socialNetwork_id = Column(Integer, ForeignKey('socialnetwork.id'))
     # client_list = Column(Integer, ForeignKey('client_list.id'))
-
-    def __init__(self, user_id, **kwargs):  # Use kwargs for optional attributes
-        self.user_id = user_id
-        for key, value in kwargs.items():
-            setattr(self, key, value)
 
     def serialize(self):
         return {

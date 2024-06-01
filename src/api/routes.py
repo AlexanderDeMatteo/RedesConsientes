@@ -42,15 +42,17 @@ def handle_register():
 
   if newUser is not None:
     access_token = create_access_token(identity=newUser.id)
-    updated_info["user_id"] = newUser.id
+    updated_info["psicology_profile"] = newUser.id
+    print(updated_info)
     fpv = updated_info["fpv_number"]
     # Check for psychologist flag and create profile if needed
     if user.get("is_psicologo", False):
       create_profile_info = PsicologyProfileInfo(
-          user_id=newUser.id,
+          id = newUser.id,
           fpv_number=fpv,
       )
       try:
+        print(create_profile_info)
         db.session.add(create_profile_info)
         db.session.commit()
       except Exception as error:
@@ -132,9 +134,9 @@ def delete_user(user_id):
 def handle_user_data():
     current_user = get_jwt_identity()
     user = User.query.filter_by(id=current_user).one_or_none()
-    print(user, "aquiiiii")
+    print(user.psicology_profile, "aquiiiii")
     user_profile_info = PsicologyProfileInfo.query.filter_by(id = current_user).one_or_none()
-    
+    print(user_profile_info)
     if user is None:
         return jsonify({"message": "Usuario no encontrado"}), 404
     if user_profile_info is None:
@@ -212,7 +214,7 @@ def protected():
 def handle_user_psicologo():
     if request.method == 'GET':
         users = User.query.filter_by(is_psicologo=True).all()
-        users_info = UserProfileInfo.query.filter(UserProfileInfo.fpv_number != "null")
+        users_info = PsicologyProfileInfo.query.filter(PsicologyProfileInfo.fpv_number != "null")
         if users is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
         else:
@@ -221,7 +223,7 @@ def handle_user_psicologo():
             full_info = []
             for user in users:
                 for info in users_info:
-                    if info["user_id"] == user["id"]:
+                    if info["id"] == user["psicology_profile"]:
                         info.update(user)
                         full_info.append(info)
             return jsonify(full_info), 200
@@ -231,7 +233,7 @@ def handle_user_psicologo():
 def handle_user_psicologo_to_aprove():
     if request.method == 'GET':
         users = User.query.filter_by(is_psicologo=True).all()
-        users_info = UserProfileInfo.query.filter(UserProfileInfo.fpv_number != "null")
+        users_info = PsicologyProfileInfo.query.filter(PsicologyProfileInfo.fpv_number != "null")
         if users is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
         else:
@@ -240,7 +242,7 @@ def handle_user_psicologo_to_aprove():
             full_info = []
             for user in users:
                 for info in users_info:
-                    if info["user_id"] == user["id"]:
+                    if info["id"] == user["psicology_profile"]:
                         info.update(user)
                         full_info.append(info)
             return jsonify(full_info), 200
