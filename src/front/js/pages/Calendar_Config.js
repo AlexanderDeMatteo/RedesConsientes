@@ -43,7 +43,6 @@ export const CalendarCogif_custom = () => {
     }
 
     function handleChange(event) {
-        console.log(event)
         const { name, value, type, checked } = event.target
         setDatesCreate(prevFormData => {
             return {
@@ -54,7 +53,7 @@ export const CalendarCogif_custom = () => {
     }
 
     function selectTime(event) {
-        console.log(event.target)
+   
         const { value } = event.target
 
 
@@ -66,7 +65,7 @@ export const CalendarCogif_custom = () => {
         })
     }
     function selectTime2(event) {
-        console.log(event.target)
+   
         const { value } = event.target
 
 

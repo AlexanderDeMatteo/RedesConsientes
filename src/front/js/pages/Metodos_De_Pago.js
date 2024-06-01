@@ -33,7 +33,6 @@ export const MetodosDePago = () => {
 
     function changeSelect(e) {
         const { name } = e.target;
-        console.log(store);
         if (e.target.name && selectedTab[name].nav === "nav-link") {
             Object.filter = (obj, predicate) =>
                 Object.keys(obj)
@@ -51,7 +50,6 @@ export const MetodosDePago = () => {
                 [firstKey]: { nav: "nav-link", tab: "tab-pane" },
             }));
         } else if (e.target.name) {
-            console.log("bbb");
             setSelectedTab((prevSelected) => ({
                 ...prevSelected,
                 [name]: { nav: "nav-link", tab: "tab-pane" },
@@ -69,8 +67,7 @@ export const MetodosDePago = () => {
 
 
     function handleChange(event) {
-        console.log(event.target.value)
-        console.log(event.target.name)
+     
         actions.handle_payment_edit(event.target.value, event.target.name);
 
     }
@@ -80,7 +77,7 @@ export const MetodosDePago = () => {
     const onDeleter = (e, value) => {
         e.preventDefault();
         let element = lista.la_lista.filter((name) => name !== value);
-        console.log(element, "Line 64");
+ 
         setLista((prevLista) => {
             return {
                 la_lista: element,

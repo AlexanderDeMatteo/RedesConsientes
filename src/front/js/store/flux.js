@@ -51,7 +51,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.status == 200) {
 					let data = await response.json();
-					console.log(data)
 					setAuthToken(data.token)
 					// setTimeout(function () {
 					// 	localStorage.remove("token");
@@ -135,7 +134,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					let body = await response.json()
 					let date = `${fecha} 00:00:00 GMT`
 					let schedule = body.filter(persona => persona.calendar_date == date)
-					console.log(schedule)
 					setStore({
 						...store,
 						scheduleSession: schedule
@@ -215,23 +213,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			// createSession: async (schedule_id, calendar_date) => {
-
-			// 	let response = await fetch(`${API_URL}/api/session-create`, {
-			// 		method: "POST",
-			// 		headers: {
-			// 			"Content-Type": "application/json",
-			// 			Authorization: `Bearer ${getAuthToken("token")}`,
-			// 		},
-			// 		body: JSON.stringify({ 'schedule_id': schedule_id, "calendar_date": calendar_date })
-			// 	});
-			// 	if (response.ok) {
-
-			// 		console.log(response.statusText)
-			// 	} else return false;
-			// 	let data = await response.json();
-
-			// },
 
 			handle_user_data_schedule: async (usuario) => {
 				const store = getStore()
@@ -300,7 +281,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
 					setStore({ userPaymentData: body })
 
 				}
@@ -318,14 +298,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
+			
 					setStore({ userPaymentData: body })
 
 				}
 			},
 
 			handle_user_data: async () => {
-				let response = await fetch(`${API_URL}/api/user-data`, {
+				let response = await fetch(`${API_URL}/api/get-user-data`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -395,7 +375,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				});
 				if (response.ok) {
-					console.log("ok")
 					let body = await response.json()
 					// let dataFiltada = body.filter((data) => data.id == usuario)
 					// let nuevaData = (Object.assign({}, ...dataFiltada));
@@ -422,7 +401,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						...store,
 						userPsicologos: dataFiltada
 					})
-					console.log(dataFiltada)
 				
 				}
 			},
@@ -490,7 +468,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					console.log(body)
 					setStore({ phrase: [body.phrase] })
 
 				}
@@ -513,6 +490,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			handle_edit: (data, prop) => {
+				console.log(data,"data")
+				console.log(prop,"prop")
 				let store = getStore()
 				let userProp = (store.userData[`${prop}`] = data)
 				setStore(prev => ({
@@ -544,7 +523,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			handle_user_upgrade: async () => {
-				let response = await fetch(`${API_URL}/api/user-data`, {
+				let response = await fetch(`${API_URL}/api/get-user-data`, {
 					method: 'PUT',
 					headers: {
 						"Content-Type": "application/json",
@@ -570,7 +549,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					body: JSON.stringify([])
 				});
-				console.log(id)
 				if (response.ok) {
 					if (response.status == 200) {
 						alert("usuario activado con exito")
@@ -588,11 +566,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				
 				});
-				console.log(id)
 				if (response.ok) {
-					console.log(response)
 					let body = await response.json()
-					console.log(body)
 					setStore({ patientTask: body })
 
 				}
@@ -661,7 +636,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: `Bearer ${getAuthToken("token")}`
 					},
 				});
-				console.log(taskId)
 				if (response.ok) {
 					alert("tarea eliminada con exito")
 				}
@@ -675,7 +649,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: `Bearer ${getAuthToken("token")}`
 					},
 				});
-				console.log(taskId)
 				if (response.status == 200) {
 					getActions().handle_user_psicologo_to_aprove()
 					alert("usuario eliminado con exito")
@@ -691,14 +664,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 				
 				});
-				console.log(id)
 				if (response.ok) {
 					try{
 						let body = await response.json()
-						console.log(body)
 						setStore({ userRelationShip: [body] })
 					}catch(error){
-						console.log(error)
 					}
 				}
 			},

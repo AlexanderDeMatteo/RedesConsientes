@@ -36,7 +36,7 @@ export const Calendar_custom = () => {
           try {
             const data = await actions.getPsicologiScheduleDay(id, fecha);
             // Usa la data aquí
-            console.log(store.scheduleSession)
+         
           } catch (error) {
             console.error(error); // Handle any errors
           } finally {
@@ -97,9 +97,7 @@ export const Calendar_custom = () => {
 
     const calendar_date= selectedDate[3] + "/" + selectedDate[1] + "/" + selectedDate[2]
     const calendar_date2= selectedDate[2] + " de " + months(selectedDate[1]) + " de " + selectedDate[3]
-    
-    console.log(calendar_date2)
-    console.log(selectedDate)
+ 
 
     async function onCreateSession(event) {
         event.preventDefault();

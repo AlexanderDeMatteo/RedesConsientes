@@ -56,7 +56,6 @@ export const Perfil = () => {
 
   function changeSelect(e) {
     const { name } = e.target;
-    console.log(store);
     if (e.target.name && selectedTab[name].nav === "nav-link") {
       Object.filter = (obj, predicate) =>
         Object.keys(obj)
@@ -74,7 +73,6 @@ export const Perfil = () => {
         [firstKey]: { nav: "nav-link", tab: "tab-pane" },
       }));
     } else if (e.target.name) {
-      console.log("bbb");
       setSelectedTab((prevSelected) => ({
         ...prevSelected,
         [name]: { nav: "nav-link", tab: "tab-pane" },
@@ -95,8 +93,6 @@ export const Perfil = () => {
 
 
   function handleChange(event) {
-    console.log(event.target.value)
-    console.log(event.target.name)
    
     actions.handle_edit(event.target.value, event.target.name);
     
@@ -107,7 +103,6 @@ export const Perfil = () => {
   const onDeleter = (e, value) => {
     e.preventDefault();
     let element = lista.la_lista.filter((name) => name !== value);
-    console.log(element, "Line 64");
     setLista((prevLista) => {
       return {
         la_lista: element,
@@ -119,7 +114,7 @@ export const Perfil = () => {
 
   const guardar = async () => {
 
-    const response = await fetch(`${API_URL}/api/user-data`, {
+    const response = await fetch(`${API_URL}/api/user-profile`, {
       method: "PUT",
       body: JSON.stringify(store.userData),
       headers: {
@@ -139,15 +134,10 @@ export const Perfil = () => {
 
 
   function handleSelect(event, value) {
-    // lista.push({ title: value.title, year: value.year })
-    console.log(lista, "Line 109");
-    console.log(lista.la_lista, "Line 110");
-    // setLista(lista)
-    // this.forceUpdate()
+  
     let vistaPsicologo = lista.la_lista;
     if (value != null) {
       vistaPsicologo.push({ title: value.title });
-      console.log(vistaPsicologo, "Line 115");
       setLista((prevLista) => {
         return {
           la_lista: vistaPsicologo,
@@ -429,7 +419,7 @@ export const Perfil = () => {
                                     {!show ? (
                                       <input
                                         onChange={handleChange}
-                                        type="email"
+                                        type="name"
                                         className="form-control"
                                         name="name"
                                         placeholder="Nombre"
@@ -455,7 +445,7 @@ export const Perfil = () => {
                                     {!show ? (
                                       <input
                                         onChange={handleChange}
-                                        type="email"
+                                        type="last_name"
                                         className="form-control"
                                         name="last_name"
                                         placeholder="Apellido"
@@ -482,15 +472,15 @@ export const Perfil = () => {
                                       {!show ? (
                                         <input
                                           onChange={handleChange}
-                                          type="email"
+                                          type="dni"
                                           className="form-control"
-                                          name="cedula"
+                                          name="dni"
                                           placeholder="Ingresa tu cedula"
-                                          value={store.userData.cedula || ""}
+                                          value={store.userData.dni || ""}
                                         />
                                       ) : (
                                         <p className="text-muted mb-0">
-                                          {store.userData.cedula}
+                                          {store.userData.dni}
                                         </p>
                                       )}
                                     </div>
@@ -529,7 +519,7 @@ export const Perfil = () => {
                                 </div>
                               </div>
 
-                              <div className="form-group row">
+                              {/* <div className="form-group row">
                                 <label
                                   htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
@@ -538,23 +528,14 @@ export const Perfil = () => {
                                 </label>
                                 <div className="col-sm-10">
                                   <div>
-                                    {!show ? (
-                                      <input
-                                        onChange={handleChange}
-                                        type="email"
-                                        className="form-control"
-                                        name="email"
-                                        placeholder="Correo"
-                                        value={store.userData.email || ""}
-                                      />
-                                    ) : (
+                          
                                       <p className="text-muted mb-0">
                                         {store.userData.email}
                                       </p>
-                                    )}
+                                    
                                   </div>
                                 </div>
-                              </div>
+                              </div> */}
                               <div className="form-group row">
                                 <label
                                   htmlFor="inputName"
@@ -629,7 +610,7 @@ export const Perfil = () => {
                                     {!show ? (
                                       <input
                                         onChange={handleChange}
-                                        type="email"
+                                        type="state"
                                         className="form-control"
                                         name="state"
                                         placeholder="Estado"
@@ -655,7 +636,7 @@ export const Perfil = () => {
                                     {!show ? (
                                       <input
                                         onChange={handleChange}
-                                        type="email"
+                                        type="city"
                                         className="form-control"
                                         name="city"
                                         placeholder="Ciudad"
@@ -892,7 +873,7 @@ export const Perfil = () => {
                                         {!show ? (
                                           <input
                                             onChange={handleChange}
-                                            type="email"
+                                            type="monto_consulta"
                                             className="form-control"
                                             name="monto_consulta"
                                             placeholder="Monto"

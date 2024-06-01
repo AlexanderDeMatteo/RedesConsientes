@@ -5,7 +5,7 @@ import React, { Component } from "react";
 
 export const AboutMe = (data) => {
   // const [userData, setUserData] = useState(data.user_data);
-  console.log(data.user_data)
+
 
 
   return (

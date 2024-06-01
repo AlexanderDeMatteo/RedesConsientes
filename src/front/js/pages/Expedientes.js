@@ -7,7 +7,7 @@ export const Expedientes = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [patients, setPatients] = useState([]);
 
-  console.log(patients)
+
 
   
   useEffect(() => {

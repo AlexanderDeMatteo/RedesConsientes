@@ -30,10 +30,9 @@ export const MetodosDePagoPaciente = (id) => {
         // actions.privateData()
         actions.psicology_payment_data(id.psicologoID);
     }, []);
-    console.log(id.psicologoID)
+
     function changeSelect(e) {
         const { name } = e.target;
-        console.log(store);
         if (e.target.name && selectedTab[name].nav === "nav-link") {
             Object.filter = (obj, predicate) =>
                 Object.keys(obj)
@@ -51,7 +50,6 @@ export const MetodosDePagoPaciente = (id) => {
                 [firstKey]: { nav: "nav-link", tab: "tab-pane" },
             }));
         } else if (e.target.name) {
-            console.log("bbb");
             setSelectedTab((prevSelected) => ({
                 ...prevSelected,
                 [name]: { nav: "nav-link", tab: "tab-pane" },
@@ -82,8 +80,6 @@ export const MetodosDePagoPaciente = (id) => {
     }
 
     function handleChange(event) {
-        console.log(event.target.value)
-        console.log(event.target.name)
         actions.handle_payment_edit(event.target.value, event.target.name);
 
     }
@@ -93,7 +89,6 @@ export const MetodosDePagoPaciente = (id) => {
     const onDeleter = (e, value) => {
         e.preventDefault();
         let element = lista.la_lista.filter((name) => name !== value);
-        console.log(element, "Line 64");
         setLista((prevLista) => {
             return {
                 la_lista: element,

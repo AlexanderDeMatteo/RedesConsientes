@@ -25,8 +25,8 @@ class User(db.Model):
     name = db.Column(db.String(120), unique=False, nullable=False)
     last_name = db.Column(db.String(120), unique=False, nullable=True)
     dni = db.Column(db.String(30), unique=True, nullable=True)
-    gender= db.Column(db.String(10), nullable=True)
-    phone_number = db.Column(db.Numeric(25), unique=False, nullable=True)
+    gender= db.Column(db.String(20), nullable=True)
+    phone_number = db.Column(db.String(25), unique=False, nullable=True)
     motivo_consulta = db.Column(db.String(10), nullable=True)
     is_psicologo = db.Column(db.Boolean(), nullable=True)
     profile_picture = db.Column(db.String(500), unique=False, nullable=True)
@@ -58,9 +58,45 @@ class User(db.Model):
         "is_psicologo": self.is_psicologo,
         "profile_picture": self.profile_picture,
         "is_active": self.is_active,
-        "role": self.role.name if self.role else None
         }
 
+    # def update(self, ref_user):
+    #     if "last_name" in ref_user:
+    #         self.last_name = ref_user["last_name"]
+    #     if "motivo_consulta" in ref_user:
+    #         self.name = ref_user["motivo_consulta"]
+    #     if "dni" in ref_user:
+    #         self.email = ref_user["dni"]
+    #     if "gender" in ref_user:
+    #         self.email = ref_user["gender"]
+    #     if "phone_number" in ref_user:
+    #         self.email = ref_user["phone_number"]
+    #     try:
+    #         db.session.commit()
+    #         return True
+    #     except Exception as error:
+    #         db.session.rollback()
+    #         print(f"Error al actualizar usuario: {error}")
+    #         return False
+        
+    def update(self, ref_user):
+        attributes = [
+            "name", "last_name", "motivo_consulta", "dni"
+            "gender", "phone_number"
+        ]
+
+        for attribute in attributes:
+            if attribute in ref_user:
+                setattr(self, attribute, ref_user[attribute])
+
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            print(error)
+            db.session.rollback()
+            return False
+            
     @ classmethod
     def create(cls, user):
         try:
@@ -73,23 +109,6 @@ class User(db.Model):
             print(error)
             return None
 
-    def update(self, ref_user):
-        if "name" in ref_user:
-            self.name = ref_user["name"]
-        if "last_name" in ref_user:
-            self.last_name = ref_user["last_name"]
-        if "email" in ref_user:
-            self.email = ref_user["email"]
-        if "password" in ref_user:
-        # Use the default hashing algorithm (probably bcrypt)
-            self.password = generate_password_hash(ref_user['password'])
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            print(f"Error al actualizar usuario: {error}")
-            return False
         
 
 class Role(db.Model):
@@ -178,7 +197,6 @@ class PsicologyProfileInfo(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
             "fpv_number": self.fpv_number,
             "specialty_area": self.specialty_area,
             "education": self.education,
@@ -201,7 +219,7 @@ class PsicologyProfileInfo(db.Model):
 
     def update(self, ref_user):
         attributes = [
-            "fpv_number", "specialty_area", "education",
+            "fpv_number", "specialty_area", "education", "dni", "gender"
             "PsychExperiences", "psych_strategies", "monto_consulta", "motivo_consulta",
         ]
 

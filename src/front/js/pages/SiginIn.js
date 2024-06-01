@@ -24,7 +24,6 @@ export const SignIn = () => {
         };
         if (await actions.loginUser(data)) {
             if(data.admin == true){
-                console.log(data)
                 navigate("/panel");
             }else{
                 navigate("/Perfil");

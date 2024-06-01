@@ -22,7 +22,6 @@ export const Pagination = ({ currentPage, setCurrentPage, psicologytotal, psicol
             setCurrentPage(currentPage + 1)
         }
     }
-    console.log(currentPage)
     const onSpecificPage = (e) => {
         setCurrentPage(e)
     }

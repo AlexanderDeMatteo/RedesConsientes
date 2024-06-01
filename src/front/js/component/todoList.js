@@ -71,8 +71,7 @@ export const TodoList = () => {
     });
   }, []);
   
-  console.log(store.patientTask.completed)
-  console.log(store.patientTask)
+ 
   useEffect(() => {
     // Actualizar taskList cuando la lista de tareas en el store cambie
     if (!isLoading) {

@@ -14,30 +14,7 @@ export const Sidebarx = () => {
     const navigate = useNavigate();
     const toggle = () => setIsOpen(!isOpen)
 
-    // const guardarId = async () => {
-    //     try {
-    //         // Agrego el await antes del Axios
-    //         let response = await fetch(`${API_URL}/api/user-data`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${getAuthToken("token")}`
-    //             },
-    //             // body: JSON.stringify([])
-    //         });
-    //         console.log(response)
-    //          //Asegurate si viene en response o response.data y usa el correspondiente, axios generalmente tiene .data
-    //         if(response.ok){
-    //             let body = response.json()
-    //             console.log(body)
-    //             console.log("aaaaaaaaaaaaaaaaaaaaaa")
-    //           navigate(`/calendar_today/${id}/`, { state: {id: body.id} });
-    //           // o este otro
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+ 
     
     const id = {
         id: store.userData.id

@@ -127,52 +127,85 @@ def delete_user(user_id):
         return "Usuario no encontrado", 404
 
 
-@api.route("/user-data", methods=['GET', 'PUT'])
+@api.route("/get-user-data", methods=['GET'])
 @jwt_required()
 def handle_user_data():
     current_user = get_jwt_identity()
     user = User.query.filter_by(id=current_user).one_or_none()
     print(user, "aquiiiii")
-    user_profile_info = PsicologyProfileInfo.query.filter_by(psicology_profile = current_user).one_or_none()
-    print(user_profile_info, "aaaaaaaaaa")
-    if request.method == 'GET':
-        if user is None:
-            return jsonify({"message": "Usuario no encontrado"}), 404
-        if user_profile_info is None:
-            return jsonify(user.serialize()), 200
-        else: 
-            user_info = user.serialize()
-            profile_info = user_profile_info.serialize()
-            full_info = {**user_info,**profile_info }
-            return jsonify(full_info), 200 
-    if request.method == 'PUT':
-        data = request.json
-        #data_decode = json.loads(data)
-        user.update(data)
-        email = data["email"]
-        fpv = data["fpv_number"]
-        city = data["city"]
-        state = data["state"]
-        phone_number = data["phone_number"]
-        if user_profile_info is None: 
-            create_profile_info = PsicologyProfileInfo(
-                user_id = current_user,
-                fpv_number = fpv,
-                city = city,
-                state = state,
-                phone_number = phone_number,
+    user_profile_info = PsicologyProfileInfo.query.filter_by(id = current_user).one_or_none()
+    
+    if user is None:
+        return jsonify({"message": "Usuario no encontrado"}), 404
+    if user_profile_info is None:
+        return jsonify(user.serialize()), 200
+    else: 
+        user_info = user.serialize()
+        profile_info = user_profile_info.serialize()
+        full_info = {**user_info,**profile_info }
+        return jsonify(full_info), 200 
+
+@api.route('/user-profile', methods=['PUT'])
+@jwt_required()
+def update_user():
+    current_user = get_jwt_identity()
+    print(current_user)  # For debugging purposes (can be removed)
+
+    user_data = request.json
+    user = User.query.filter_by(id=current_user).one_or_none()
+    profile = PsicologyProfileInfo.query.filter_by(id=current_user).one_or_none()
+    print(profile)
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Validate email update request (if allowed)
+    if 'email' in user_data and user_data['email'] != user.email:
+        # Implement logic to handle email updates (e.g., confirmation email)
+        return jsonify({'error': 'Email update not allowed yet'}), 400  # Placeholder
+
+    for key, value in user_data.items():
+        if key in ['password', 'role_id']:
+            # Disallow updates to password and role via PUT request
+            return jsonify({'error': 'Cannot update password or role'}), 400
+        setattr(user, key, value)
+    
+    for key, value in user_data.items():
+      if key not in ['id', 'user_id']:  # Prevent updates to these read-only fields
+          setattr(profile, key, value)
+
+    try:
+        db.session.commit()
+        return jsonify(user.serialize(), profile.serialize()), 200
+    except Exception as error:
+        db.session.rollback()
+        print(error)
+        return jsonify({'error': 'Error updating user'}), 500
+    
+  
+    # if request.method == 'PUT':
+    #     data = request.json
+    #     print(data)
+    #     #data_decode = json.loads(data)
+    #     user.update(data)
+    #     fpv = data["fpv_number"]
+
+    #     phone_number = data["phone_number"]
+    #     if user_profile_info is None: 
+    #         create_profile_info = PsicologyProfileInfo(
+    #             fpv_number = fpv,
+    #             phone_number = phone_number,
                 
-            ) 
-            try:
-                db.session.add(create_profile_info)
-                db.session.commit()
-                return jsonify(create_profile_info.serialize()), 201
-            except Exception as error:
-                db.session.rollback()
-                return jsonify(error), 500
-        else:
-            updated = user_profile_info.update(data)
-            return jsonify({"message": "actualizalo", "ok": updated}), 200  
+    #         ) 
+    #         try:
+    #             db.session.add(create_profile_info)
+    #             db.session.commit()
+    #             return jsonify(create_profile_info.serialize()), 201
+    #         except Exception as error:
+    #             db.session.rollback()
+    #             return jsonify(error), 500
+    #     else:
+    #         updated = user_profile_info.update(data)
+    #         return jsonify({"message": "actualizalo", "ok": updated}), 200  
 
 
 @api.route("/update_profile_picture", methods=['PUT'])

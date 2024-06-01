@@ -29,7 +29,7 @@ export const PsicologoCards = ({ filtros }) => {             // recibe por props
       || psico.specialty_area?.toLowerCase() == filtros?.especialidades?.toLowerCase()
     )
     if(filtrados.length == 0){
-      console.log("hola")
+
     }
     return filtrados
   }

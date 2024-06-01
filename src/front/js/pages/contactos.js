@@ -8,7 +8,7 @@ export const Contactos = () => {
   const [psicologo, setPsicologo] = useState([]);
 
   
-    console.log(psicologo)
+
   
   useEffect(() => {
         

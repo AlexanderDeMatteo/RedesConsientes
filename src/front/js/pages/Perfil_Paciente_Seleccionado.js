@@ -23,7 +23,6 @@ export const PerfilPacienteSeleccionado = () => {
 
     function changeSelect(e) {
         const { name } = e.target;
-        console.log(store);
         if (e.target.name && selectedTab[name].nav === "nav-link") {
           Object.filter = (obj, predicate) =>
             Object.keys(obj)
@@ -41,7 +40,6 @@ export const PerfilPacienteSeleccionado = () => {
             [firstKey]: { nav: "nav-link", tab: "tab-pane" },
           }));
         } else if (e.target.name) {
-          console.log("bbb");
           setSelectedTab((prevSelected) => ({
             ...prevSelected,
             [name]: { nav: "nav-link", tab: "tab-pane" },

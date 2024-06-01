@@ -45,7 +45,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     }, [fecha])
 
     useEffect(()=>{
-        console.log(timeInicio)
+     
     },[timeInicio])
     
     useEffect(() => {
@@ -73,21 +73,20 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     // }
     const filtroTiempoMenor = (item) =>{
         if(item == 0){
-            console.log(item)
+          
             const str = "1200"
             const halfInicio = str.slice(0,2)
             const halfFinal = str.slice(2)
             const timeFinal = halfInicio+":"+halfFinal
-            console.log(timeFinal)
+       
             return timeFinal
         }
         if(item == -1200){
-            console.log(item)
+        
             const str = "0000"
             const halfInicio = str.slice(0,2)
             const halfFinal = str.slice(2)
             const timeFinal = halfInicio+":"+halfFinal
-            console.log(timeFinal)
             return timeFinal
         }
         const str = item.toString()
@@ -106,7 +105,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
             return timeFinal
         }
         if(item == -1200){
-            console.log(item)
             const str = "0000"
             const halfInicio = str.slice(0,2)
             const halfFinal = str.slice(2)
@@ -149,43 +147,33 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         let duracionMin= 45
         let durationTime = elemento2 - elemento1
         let schedule = store.scheduleSession
-        console.log(schedule)
             if(elemento2 >= elemento1 && elemento2 >= (elemento1 + duracionMin)){
                 let filterStartTime = schedule.filter(schedule => {
                     const scheduleStartTime = Number(schedule.start_time.replace(":", "").replace("PM", ""));
                     const scheduleEndTime = Number(schedule.end_time.replace(":", "").replace("PM", ""))
                     let orden = `${scheduleStartTime} ${scheduleEndTime}`
-                    console.log(orden)
                     const statusInicio = elemento1 < scheduleStartTime || elemento1 > scheduleEndTime
                     const statusFinal = elemento2 > scheduleEndTime || elemento2 < scheduleStartTime
-                    console.log(statusFinal)
-                    console.log(statusInicio)
                         if(statusInicio == false && statusFinal == false){
                             alert("el horario no esta disponible, verifica ambas horas")
-                            console.log(statusInicio == false && statusFinal == false)
-                            console.log(filterStartTime)
                             return true
                         }
                         else if(statusInicio == false){
                             alert("el horario no esta disponible, verificar la hora de inicio")
-                            console.log(statusInicio == false)
-                            console.log(filterStartTime)
 
                         return true
                         }
                         else if(statusFinal == false){
                             alert("el horario no esta disponible, verificar la hora final")
                             statusInicio == false
-                            console.log(statusFinal == false)
                         return true
                         }else{
-                            console.log(filterStartTime)
 
                         return false
                     }
 
                 } );
-                console.log(filterStartTime)
+
 
                 if(filterStartTime == true) {
                     alert("horario permitido")
@@ -193,7 +181,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
                     setDatesCreate({ "horaincio": 0, "horafina": 0, "TIMEinicio": 'am', "TIMEfinal": 'am' })
                     setShowCreate(!showcreate)
                     await actions.getPsicologiScheduleDay(id, fecha)
-                    console.log(filterStartTime)
 
                 } 
                 if(filterStartTime.length == 0) {
@@ -231,21 +218,6 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
             }
         })
     }
-
-    const timefilter = (time) =>{
-            // console.log(time.replace(":","" ))
-            // let filter1 = time.replace(":","" )
-            // console.log(filter2)
-            // const filter2 = filter1.replace("AM","" )
-            // console.log(filter3)
-            // const filter3 = filter2.replace("PM","" )
-            // console.log(filter4)
-            // const filter4 = parseInt(filter3)
-            // console.log(filter5)
-            // const filter5 = filter4 - 1200
-        
-
-    } 
    
 
 
@@ -255,17 +227,11 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
         setTimeInicio(event)
         let elemento1 = parseInt(timeInicio.replace(":","" ))
 
-        console.log(typeof(elemento1))
-        console.log(amPmInicio)
-        console.log(elemento1)
-  
     }
     function onChangeTimeFinal(event) {
         // setItems([{ text: '9am - 10am' }, { text: '1pm-2pm' }, { text: '3pm-4pm' }]);
         setTimeFinal(event)
         let elemento2 = timeFinal.replace(":","" )
-
-        console.log(elemento2)
     }
 
 

@@ -18,11 +18,11 @@ export const Panel = () => {
     const [aproved,setAproved] = useState("todo")
     const navigate = useNavigate();
 
-    console.log(aproved)
+  
 
     const activar = (id) =>{
         actions.active_user(id)
-        console.log(id)
+   
     }
 
     const deleteUser = (id) =>{
@@ -61,7 +61,6 @@ export const Panel = () => {
         }
 
         if(search.length === 0){
-            console.log(aproved == "true")
             return psicologos.slice(currentPage,currentPage+10)
         }
         if(cedula == "cedula"){

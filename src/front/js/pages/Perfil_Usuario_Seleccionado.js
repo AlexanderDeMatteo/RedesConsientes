@@ -24,7 +24,6 @@ export const PerfilUsuarioSeleccionado = () => {
     const navigate = useNavigate();
     const { actions, store } = useContext(Context);
     const [isSelected, setIsSelected] = useState(false)
-    console.log("aaaaaaaaaaa", store.userDataSelecionado)
     const [selectedTab, setSelectedTab] = React.useState({
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
         li_1: { nav: "nav-link active", tab: "active tab-pane" },
@@ -51,12 +50,8 @@ export const PerfilUsuarioSeleccionado = () => {
         // actions.handle_user_data_seleccinado(id);
     }, []);
 
-    console.log(id)
 
-    // let pepe = store.userDataSelecionado 
-    // console.log(pepe)
-    // const perfilSeleccionado = pepe.filter(usuario => usuario.edad)
-    // console.log("aaaaaaaa", perfilSeleccionado)
+
 
     return (
         <div>

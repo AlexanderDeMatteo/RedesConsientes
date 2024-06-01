@@ -30,7 +30,6 @@ export const Drag_and_drop = () => {
             });
             if (response.ok) {
                 const body = await response.json()
-                console.log(body)
                 //funcion al flux
                 setUrlMedia(body.url)
             }

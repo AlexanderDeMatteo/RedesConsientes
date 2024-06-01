@@ -10,7 +10,7 @@ export const TodoListPaciente = () => {
   const [checked, setChecked] = useState(true); // Estado del checkbox
   const [id, setId] = useState([])
   
-console.log(id)
+
   const handleChange = (event) => {
     setTask({
       ...task,
@@ -28,7 +28,6 @@ console.log(id)
   
   const hola = (taskId, completed) =>{
     actions.complete_patient_task(taskId, completed)
-    console.log("hola")
   }
 
   const addTask = (newTask) => {
@@ -70,8 +69,6 @@ console.log(id)
                 {taskList.map((item, index) => (
                   <div className="input-group-text">
                   <li key={index} className="p-0">
-
-                    {console.log(item.completed)}
                   <label className="form-check-label  w-100"style={{paddingLeft:20}} for="task">
                       
                   <input className="form-check-input mt-1" type="checkbox" onClick={hola(item.id, item.completed)} onChange={() => handleTaskCompletion(item.id)} checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
