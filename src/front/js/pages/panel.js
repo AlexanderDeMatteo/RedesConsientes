@@ -153,7 +153,7 @@ export const Panel = () => {
                             onClick={() => checkFpv_number("fpv_number")}
                         />
                         <label htmlFor="fpv_number" className="mr-2">Numero de fpv</label>
-                        <label htmlFor="validationCustom04" className="form-label">Aprobado</label>
+                        <label htmlFor="validationCustom04" className="form-label">Status</label>
                         <select className="form-select col-md-2"
                             id="validationCustom04"
                             required
@@ -175,7 +175,7 @@ export const Panel = () => {
                     <th>Nombre</th>
                     <th>cedula</th>
                     <th>Numero de federado</th>
-                    <th>Aprobado</th>
+                    <th>Status</th>
                     <th>acciones</th>
 
                 </tr>
