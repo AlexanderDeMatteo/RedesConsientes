@@ -366,7 +366,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			handle_user_data_seleccinado: async (id) => {
-				const store = getStore()
 				let response = await fetch(`${API_URL}/api/user-psicologo-data/${id}`, {
 					method: 'GET',
 					headers: {
@@ -374,10 +373,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: `Bearer ${getAuthToken("token")}`
 					},
 				});
+				console.log(response)
 				if (response.ok) {
 					let body = await response.json()
-					// let dataFiltada = body.filter((data) => data.id == usuario)
-					// let nuevaData = (Object.assign({}, ...dataFiltada));
+					console.log(body)
 					setStore({ userDataSelecionado: body })
 
 

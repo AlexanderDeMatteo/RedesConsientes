@@ -251,9 +251,13 @@ def handle_user_psicologo_to_aprove():
 @jwt_required()
 def handle_user_data_seleccinado(id):
     selected_user = id
+    print(selected_user, "selected user")
     user = User.query.filter_by(id=selected_user).one_or_none()
-    user_profile_info = UserProfileInfo.query.filter_by(
-        user_id=selected_user).one_or_none()
+    print(user, "userrrr")
+    user_profile_info = PsicologyProfileInfo.query.filter_by(
+        id=selected_user).one_or_none()
+    print(user_profile_info, "user_profile_infoooooo")
+    
     if request.method == 'GET':
         if user is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
