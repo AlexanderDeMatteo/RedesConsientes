@@ -182,31 +182,6 @@ def update_user():
         return jsonify({'error': 'Error updating user'}), 500
     
   
-    # if request.method == 'PUT':
-    #     data = request.json
-    #     print(data)
-    #     #data_decode = json.loads(data)
-    #     user.update(data)
-    #     fpv = data["fpv_number"]
-
-    #     phone_number = data["phone_number"]
-    #     if user_profile_info is None: 
-    #         create_profile_info = PsicologyProfileInfo(
-    #             fpv_number = fpv,
-    #             phone_number = phone_number,
-                
-    #         ) 
-    #         try:
-    #             db.session.add(create_profile_info)
-    #             db.session.commit()
-    #             return jsonify(create_profile_info.serialize()), 201
-    #         except Exception as error:
-    #             db.session.rollback()
-    #             return jsonify(error), 500
-    #     else:
-    #         updated = user_profile_info.update(data)
-    #         return jsonify({"message": "actualizalo", "ok": updated}), 200  
-
 
 @api.route("/update_profile_picture", methods=['PUT'])
 @jwt_required()
@@ -214,8 +189,10 @@ def handle_user_picture():
     current_user = get_jwt_identity()
     user = User.query.filter_by(id=current_user).one_or_none()
     data = request.json
+    print(data)
     if data is not None:
         updated = user.update_profile_picture(data)
+        print(updated)
         if updated is False:
             return jsonify({"message": "error"}), 404
         else:

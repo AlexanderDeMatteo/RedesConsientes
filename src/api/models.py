@@ -60,24 +60,16 @@ class User(db.Model):
         "is_active": self.is_active,
         }
 
-    # def update(self, ref_user):
-    #     if "last_name" in ref_user:
-    #         self.last_name = ref_user["last_name"]
-    #     if "motivo_consulta" in ref_user:
-    #         self.name = ref_user["motivo_consulta"]
-    #     if "dni" in ref_user:
-    #         self.email = ref_user["dni"]
-    #     if "gender" in ref_user:
-    #         self.email = ref_user["gender"]
-    #     if "phone_number" in ref_user:
-    #         self.email = ref_user["phone_number"]
-    #     try:
-    #         db.session.commit()
-    #         return True
-    #     except Exception as error:
-    #         db.session.rollback()
-    #         print(f"Error al actualizar usuario: {error}")
-    #         return False
+    def update_profile_picture(self, data):
+        print("hola")
+        if "profile_picture" in data:
+            self.profile_picture = data["profile_picture"]
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            db.session.rollback()
+            return False
         
     def update(self, ref_user):
         attributes = [
@@ -205,18 +197,6 @@ class PsicologyProfileInfo(db.Model):
             "monto_consulta" : self.monto_consulta,
         }
 
-    def update_fpv(self, data):
-        if "fpv_number" in data:
-            self.fpv_number = data["fpv_number"]
-        if "user_id" in data:
-            self.user_id = data["user_id"]
-        try:
-            db.session.commit()
-            return True
-        except Exception as error:
-            db.session.rollback()
-            return False
-
     def update(self, ref_user):
         attributes = [
             "fpv_number", "specialty_area", "education", "dni", "gender"
@@ -237,6 +217,7 @@ class PsicologyProfileInfo(db.Model):
 
 # Method to update profile picture
     def update_profile_picture(self, data):
+        print("hola")
         if "profile_picture" in data:
             self.profile_picture = data["profile_picture"]
         try:
