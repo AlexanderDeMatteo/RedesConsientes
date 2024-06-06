@@ -105,7 +105,7 @@ def delete_user(user_id):
 
     if user:
         # Elimina la cuenta de pago asociada al usuario
-        sessions_to_delete = Session.query.filter_by(psychologist_id=user_id).all()
+        sessions_to_delete = Session.query.filter_by(psychologist_session_id=user_id).all()
         for session in sessions_to_delete:
             db.session.delete(session)
         payment_account = PaymentAccount.query.filter_by(user_id=user_id).first()
@@ -117,7 +117,7 @@ def delete_user(user_id):
         mi_psicologo = MiPsicologo.query.filter_by(user_id=user_id).first()
         if mi_psicologo:
             db.session.delete(mi_psicologo)
-        session = Session.query.filter_by(psychologist_id=user_id).first()
+        session = Session.query.filter_by(psychologist_session_id=user_id).first()
         if mi_psicologo:
             db.session.delete(session)
         
@@ -271,18 +271,22 @@ def handle_user_data_seleccinado(id):
             return jsonify(full_info), 200
     
 @api.route("/sessions/today/client/<int:client_id>", methods=['GET'])
+@jwt_required()
 def handle_sessions_client_today(client_id):
     today = date.today()
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
     sessions = Session.query.filter_by(
-        client_id=client_id).where(current_date == Session.calendar_date).all()
+        client_session_id=client_id).where(current_date == Session.calendar_date).all()
+    print(Session.client_session_id)
+    print(sessions, "aquiiii")
     response = []
+    print(sessions, "aquiiii")
     for session in sessions:
         # Serialize session data and include psychologist and patient names
         session_data = session.serialize()
-        session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
-        session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
+        # session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
+        # session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
         response.append(session_data)
 
     if sessions is None:
@@ -290,14 +294,15 @@ def handle_sessions_client_today(client_id):
     else:
         return jsonify(response), 201
 
-@api.route("/sessions/today/<int:psychologist_id>", methods=['GET'])
-def handle_sessions_today(psychologist_id):
+@api.route("/sessions/today/<int:psychologist_session_id>", methods=['GET'])
+@jwt_required()
+def handle_sessions_today(psychologist_session_id):
     today = date.today()
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
 
     # Query sessions for the psychologist on today's date
-    sessions = Session.query.filter_by(psychologist_id=psychologist_id).filter(Session.calendar_date == current_date).all()
+    sessions = Session.query.filter_by(psychologist_session_id=psychologist_session_id).filter(Session.calendar_date == current_date).all()
 
     response = []
     for session in sessions:
@@ -317,9 +322,10 @@ def handle_sessions_today(psychologist_id):
 
 # Obtain sessions by the ID of the psicologo. Return all sessions for that piscologo
 # traer todas las sesiones del psicologo, para anular los botones
-@api.route("/sessions/<int:psychologist_id>/", methods=['GET'])
-def handle_get_sessions(psychologist_id):
-    sessions = Session.query.filter_by(psychologist_id=psychologist_id ).all()
+@api.route("/sessions/<int:psychologist_session_id>/", methods=['GET'])
+@jwt_required()
+def handle_get_sessions(psychologist_session_id):
+    sessions = Session.query.filter_by(psychologist_session_id=psychologist_session_id ).all()
     response = []
     for session in sessions:
         response.append(session.serialize())
@@ -339,11 +345,11 @@ def handle_session_create():
             User.is_psicologo == True).one_or_none()  # Confirma si el usuario actual es psicologo o no
         if psychologist is not None:
             schedule_data = request.json
-            schedule_data["psychologist_id"] = psychologist.id
+            schedule_data["psychologist_session_id"] = psychologist.id
             schedule = Session.create_schedule(schedule_data)
             room_number = os.urandom(20).hex()
             session_data = request.json
-            session_data["psychologist_id"] = psychologist.id
+            session_data["psychologist_session_id"] = psychologist.id
             session_data["room_number"] = room_number
             session = Session.create(session_data)
             if session is not None:
@@ -357,7 +363,7 @@ def handle_session_create():
 @jwt_required()
 def handle_one_session(session_id):
     current_psychologist = get_jwt_identity()
-    psychologist = Session.query.filter_by(psychologist_id=current_psychologist).where(
+    psychologist = Session.query.filter_by(psychologist_session_id=current_psychologist).where(
         Session.id == session_id).one_or_none()  # Verifica si al psicologo actual le pertenece el servicio y si puede borrarlo
     session = Session.query.filter_by(id=session_id).one_or_none()
     if request.method == 'DELETE':
@@ -416,9 +422,9 @@ def handle_unbook_session(session_id):
         else:
             return jsonify({"message": "error"}), 500
 
-@api.route('/select-psicologo/<int:psychologist_id>', methods=['POST'])
+@api.route('/select-psicologo/<int:psychologist_session_id>', methods=['POST'])
 @jwt_required()
-def select_psicologo(psychologist_id):
+def select_psicologo(psychologist_session_id):
     # Obtén el usuario/cliente actual (seguramente a través de la autenticación)
     user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
     user = User.query.get(user_id)
@@ -426,13 +432,13 @@ def select_psicologo(psychologist_id):
     # Verifica que el usuario sea un cliente y actualiza selected_psicologo_id
     if not user.is_psicologo:
         if user.is_psicologo_selected:
-            if user.selected_psicologo_id == psychologist_id:
+            if user.selected_psicologo_id == psychologist_session_id:
                 user.selected_psicologo_id = None
                 user.is_psicologo_selected= False
                 db.session.commit()
                 return jsonify({'message': ' Psicologo deseleccionado exitosamente '}), 200
             return jsonify({'message': 'Deselecciona primero el psiologo en la pestaña mi psicologo'}), 400
-        user.selected_psicologo_id = psychologist_id
+        user.selected_psicologo_id = psychologist_session_id
         user.is_psicologo_selected= True
         db.session.commit()
         return jsonify({'message': 'Psicólogo seleccionado exitosamente'}), 200
@@ -745,55 +751,3 @@ def handle_random_phrase():
         # Return an error message if no phrase was found
         return jsonify({"message": "No se encontraron frases en la base de datos"}), 404
 
-@api.route('/create-roles', methods=['POST'])
-def create_role():
-    """Crea un nuevo rol."""
-
-    data = request.get_json()
-    name = data.get('name')
-
-    if not name:
-        return jsonify({"error": "El nombre del rol es obligatorio"}), 400
-
-    role = Role.query.filter_by(name=name).first()
-    if role:
-        return jsonify({"error": "El nombre del rol ya está en uso"}), 409
-
-    new_role = Role(name=name)
-    db.session.add(new_role)
-    db.session.commit()
-
-    return jsonify({"success": "Rol creado exitosamente", "role": new_role.serialize()}), 201
-
-# ROLES predefinidos
-ROLES = {"psicologo": "Psicologo", "cliente": "Cliente"}
-
-@api.route('/assign-roles', methods=['POST'])
-# @jwt_required()
-def assign_roles():
-#   user_id = get_jwt_identity()
-  user_id = 1
-  # Validar datos
-  if not user_id:
-    return jsonify({"error": "Usuario no encontrado"}), 404
-
-  # Buscar usuario por ID
-  user = User.query.get(user_id)
-
-  # Manejar usuario no encontrado
-  if not user:
-    return jsonify({"error": "Usuario no encontrado"}), 404
-
-  # Asignar rol según is_psicologo
-  if user.is_psicologo:
-    role_name = ROLES["psicologo"]
-  else:
-    role_name = ROLES["cliente"]
-
-  # Llamar a User.assign_role
-  success = User.assign_role(user.id, role_name)
-
-  if success:
-    return jsonify({"message": "Rol asignado exitosamente!"}), 200
-  else:
-    return jsonify({"error": "Error al asignar rol"}), 400

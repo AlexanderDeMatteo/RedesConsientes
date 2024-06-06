@@ -272,7 +272,7 @@ class Session(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "psychologist_id": self.psychologist_id,
+            "psychologist_session_id": self.psychologist_session_id,
             "client_session_id": self.client_session_id,
             "reserved": self.reserved,
             "calendar_date": self.calendar_date,
@@ -280,10 +280,10 @@ class Session(db.Model):
             "start_time": self.start_time,
             "end_time": self.end_time,
             "duration_time":self.duration_time,
-            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
-            "patient_name": self.client.name if self.client else None,  # Handle potential null values
-            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
-            "patient_last_name": self.client.last_name if self.client else None,
+            # "psychologist_name": self.psychologist_session_id.name if self.psychologist_session_id else None,  # Handle potential null values
+            # "patient_name": self.client.name if self.client else None,  # Handle potential null values
+            # "psychologist_last_name": self.psychologist_session_id.last_name if self.psychologist_session_id else None,
+            # "patient_last_name": self.client.last_name if self.client else None,
 
         }
     
