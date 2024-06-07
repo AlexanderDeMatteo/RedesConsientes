@@ -285,8 +285,9 @@ def handle_sessions_client_today(client_id):
     for session in sessions:
         # Serialize session data and include psychologist and patient names
         session_data = session.serialize()
-        # session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
-        # session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
+        session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
+        session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
+        print(session_data)
         response.append(session_data)
 
     if sessions is None:
@@ -308,10 +309,11 @@ def handle_sessions_today(psychologist_session_id):
     for session in sessions:
         # Serialize session data and include psychologist and patient names
         session_data = session.serialize()
+        print(session_data, "a")
         session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
-        session_data["patient_name"] = session.patient.name  # Assuming a patient relationship
+        session_data["patient_name"] = session.client.name  # Assuming a patient relationship
         session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
-        session_data["patient_last_name"] = session.patient.last_name  # Assuming a patient relationship
+        session_data["patient_last_name"] = session.client.last_name  # Assuming a patient relationship
         response.append(session_data)
 
     if sessions is None:
@@ -386,19 +388,24 @@ def handle_one_session(session_id):
 
 
 # Handle the reservation of the service by a client
-@api.route("/session-reserved/<int:session_id>", methods=['PUT'])
+@api.route("/session-reserved/<int:client_session_id>", methods=['PUT'])
 @jwt_required()
-def handle_reserved_session(session_id):
+def handle_reserved_session(client_session_id):
     current_user = get_jwt_identity()
     # Confirma el id del usuario actual
     user = User.query.filter_by(id=current_user).one_or_none()
+    print(user)
     data = request.json
-    session = Session.query.filter_by(id=session_id).one_or_none()
+    print(data, "data")
+    session = Session.query.filter_by(id=client_session_id).one_or_none()
+    print(session,"session")
     if session is not None:
         # añade el id del usuario actual al response
-        data["client_id"] = user.id
+        data["client_session_id"] = user.id
+        print(data["client_session_id"],"data2")
         # actualiza la session y le coloca el id del usuario. tambien cambia el estado de reservacion a true
         reserved = session.reserve_session(data)
+        print(reserved, "reserved") 
         if reserved is True:
             return jsonify({"message": "session is reserved"}), 200
         else:
@@ -703,12 +710,13 @@ def handle_patient_data_seleccinado(id):
         User.selected_psicologo_id == current_user_id,
         User.is_psicologo == False
     ).first()
+    print(usuario_filtrado, "usuario filtrado")
 
     if not usuario_filtrado:
         return jsonify({"message": "Usuario no encontrado o no es paciente del psicólogo actual"}), 404
 
     # Si el usuario existe, buscamos su perfil
-    profile_info = usuario_filtrado.user_info
+    profile_info = usuario_filtrado
 
     if request.method == 'GET':
         if usuario_filtrado is None:
@@ -718,9 +726,7 @@ def handle_patient_data_seleccinado(id):
             return jsonify(usuario_filtrado.serialize()), 200
         else:
             user_info = usuario_filtrado.serialize()
-            profile_info = profile_info.serialize()
-            full_info = {**user_info, **profile_info}
-            return jsonify(full_info), 200
+            return jsonify(user_info), 200
 
 @api.route('/patients/own/tasks', methods=['GET'])
 @jwt_required()
