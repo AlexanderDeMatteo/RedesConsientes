@@ -269,11 +269,14 @@ class Session(db.Model):
     client_session_id = Column(Integer, ForeignKey('user.id'))
     client = db.relationship('User', backref='client_sessions', foreign_keys=[client_session_id])
     session_type = Column(Integer, ForeignKey('session_type.id'))
+    session_type_info = db.relationship('Session_type', backref='session_type', foreign_keys=[session_type])
 
     # Method to serialize information of Sessions
     def serialize(self):
         return {
             "id": self.id,
+            "session_type": self.session_type,
+            "session_type_info":self.session_type_info,
             "psychologist_session_id": self.psychologist_session_id,
             "client_session_id": self.client_session_id,
             "reserved": self.reserved,
@@ -286,6 +289,7 @@ class Session(db.Model):
             "patient_name": self.client.name if self.client else None,  # Handle potential null values
             "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
             "patient_last_name": self.client.last_name if self.client else None,
+            "session_type_cost": self.session_type_info.cost if self.session_type_info else None,
 
         }
     
@@ -348,12 +352,21 @@ class Session(db.Model):
             db.session.rollback()
             return False
 
+
 class Session_type(db.Model):
-    __tablename__ = "session_type"
+    __tablename__ = 'session_type'
 
-    id = Column(Integer, primary_key=True)
-    type_of_session = db.Column(db.String(50), nullable=True)
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(10), nullable=False, unique=False)
+    cost = db.Column(db.String(10), nullable=True, unique=False)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "cost": self.cost,
+
+        }
 
 
 # class MiPsicologo(db.Model):

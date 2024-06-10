@@ -463,7 +463,7 @@ def obtener_usuarios_relacionados():
         return jsonify({'message': 'Acceso no autorizado'}), 403
 
     # Filtra los resultados por el ID del usuario actual como psicólogo
-    clientes_seleccionados = User.query.filter(User.selected_psicologo_id == user_id, User.is_psicologo == False).all()
+    clientes_seleccionados = User.query.filter(User.selected_psicologo_id == user_id).all()
 
     # Convierte los resultados en un formato JSON para la respuesta
     resultados = []
