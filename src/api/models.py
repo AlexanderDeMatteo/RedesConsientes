@@ -37,10 +37,13 @@ class User(db.Model):
     role_id = Column(Integer, ForeignKey('role.id'))
     user_address = Column(Integer, ForeignKey('address.id'))
     psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
+    Marketplace = Column(Integer, ForeignKey('marketplace.id'))
+    factura = Column(Integer, ForeignKey('factura.id'))
     # seleccionar psicologo
     selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selected_psicologo = db.relationship('User', remote_side=[id])
     is_psicologo_selected = db.Column(db.Boolean, default=False)
+    client_list = Column(Integer, ForeignKey('client_list.id'))
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -110,8 +113,8 @@ class Role(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50), unique=True, nullable=True)
   description = db.Column(db.String(250), nullable=True)
-  permission = Column(Integer, ForeignKey('permission.id'))
-  permissions = db.relationship('Permission', backref='permissions',lazy=True)
+#   permission = Column(Integer, ForeignKey('permission.id'))
+#   permissions = db.relationship('Permission', backref='permissions',lazy=True)
 #   permissions = db.relationship("Permission",
 #                     secondary=association_table,
 #                     back_populates="roles")
@@ -124,6 +127,8 @@ class Permission(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50), unique=True, nullable=True)
   description = db.Column(db.String(250), nullable=True)
+  role = Column(Integer, ForeignKey('role.id'))
+  roles = db.relationship('Role', backref='roles',lazy=True)
 #   roles = db.relationship("Role",
 #                     secondary=association_table,
 #                     back_populates="permissions")
@@ -180,7 +185,6 @@ class PsicologyProfileInfo(db.Model):
     psych_strategies = db.Column(db.String(1000), unique=False, nullable=True)
     PsychExperiences = db.Column(db.String(1000), unique=False, nullable=True)
     socialNetwork_id = Column(Integer, ForeignKey('socialnetwork.id'))
-    # client_list = Column(Integer, ForeignKey('client_list.id'))
 
     def serialize(self):
         return {
@@ -250,7 +254,19 @@ class SocialNetwork(db.Model):
 class Client_List(db.Model):
     __tablename__ = "client_list"
     id = Column(Integer, primary_key=True)   
+    psychologist_id = Column(Integer, ForeignKey('user.id'))
+    psychologist = db.relationship('User', backref='psychologist_clientlist_id', foreign_keys=[psychologist_id])
     client_id = Column(Integer, ForeignKey('user.id'))
+    client = db.relationship('User', backref='client_clientlist_id', foreign_keys=[client_id])
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
+            "patient_name": self.client.name if self.client else None,  # Handle potential null values
+            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
+            "patient_last_name": self.client.last_name if self.client else None,
+        }
 
 class Session(db.Model):
     __tablename__ = 'session'
@@ -434,6 +450,59 @@ class PaymentAccount(db.Model):
         except Exception as error:
             db.session.rollback()
             return False
+
+class Marketplace(db.Model):
+    __tablename__ = "marketplace"
+
+    id = db.Column(db.Integer, primary_key=True)
+    product = db.Column(db.String(400), nullable=True)
+    description = db.Column(db.String(400), nullable=True)
+    status = db.Column(db.Boolean(), nullable=True)
+    cost = db.Column(db.String(400), nullable=True)
+    psychologist_id_marketplace = Column(Integer, ForeignKey('user.id'))
+    psychologist = db.relationship('User', backref='psychologist_id', foreign_keys=[psychologist_id_marketplace])
+    client_id_marketplace = Column(Integer, ForeignKey('user.id'))
+    client = db.relationship('User', backref='client_id', foreign_keys=[client_id_marketplace])
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "product": self.product,
+            "description": self.description,
+            "status": self.status,
+            "cost": self.cost,
+            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
+            "patient_name": self.client.name if self.client else None,  # Handle potential null values
+            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
+            "patient_last_name": self.client.last_name if self.client else None,
+        }
+
+class Factura(db.Model):
+    __tablename__ = "factura"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    facturacion = db.Column(db.String(400), nullable=True)
+    product = db.Column(db.String(400), nullable=True)
+    status = db.Column(db.Boolean(), nullable=True)
+    cost = db.Column(db.String(400), nullable=True)
+    psychologist_id = Column(Integer, ForeignKey('user.id'))
+    psychologist = db.relationship('User', backref='psychologist_id_factura', foreign_keys=[psychologist_id])
+    client_id = Column(Integer, ForeignKey('user.id'))
+    client = db.relationship('User', backref='client_id_factura', foreign_keys=[client_id])
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "facturacion": self.facturacion,
+            "product": self.product,
+            "status": self.status,
+            "cost": self.cost,
+            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
+            "patient_name": self.client.name if self.client else None,  # Handle potential null values
+            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
+            "patient_last_name": self.client.last_name if self.client else None,
+        }
+
 
 class Phrase(db.Model):
     __tablename__ = "phrase"

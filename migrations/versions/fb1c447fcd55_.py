@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1de85835d2b5
+Revision ID: fb1c447fcd55
 Revises: 
-Create Date: 2024-06-10 14:52:55.861766
+Create Date: 2024-06-12 14:27:53.785780
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1de85835d2b5'
+revision = 'fb1c447fcd55'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,12 +24,21 @@ def upgrade():
     sa.Column('state', sa.String(length=25), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('permission',
+    op.create_table('factura',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=True),
-    sa.Column('description', sa.String(length=250), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.Column('facturacion', sa.String(length=400), nullable=True),
+    sa.Column('product', sa.String(length=400), nullable=True),
+    sa.Column('status', sa.Boolean(), nullable=True),
+    sa.Column('cost', sa.String(length=400), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('marketplace',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('product', sa.String(length=400), nullable=True),
+    sa.Column('description', sa.String(length=400), nullable=True),
+    sa.Column('status', sa.Boolean(), nullable=True),
+    sa.Column('cost', sa.String(length=400), nullable=True),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('phrase',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -37,10 +46,17 @@ def upgrade():
     sa.Column('author', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('role',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=50), nullable=True),
+    sa.Column('description', sa.String(length=250), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     op.create_table('session_type',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('type', sa.String(length=10), nullable=False),
-    sa.Column('cost', sa.String(length=10), nullable=False),
+    sa.Column('cost', sa.String(length=10), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('socialnetwork',
@@ -49,6 +65,15 @@ def upgrade():
     sa.Column('url', sa.String(length=120), nullable=True),
     sa.Column('icon', sa.String(length=120), nullable=True),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('permission',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=50), nullable=True),
+    sa.Column('description', sa.String(length=250), nullable=True),
+    sa.Column('role', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['role'], ['role.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
     )
     op.create_table('psicology_profile',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -62,15 +87,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['socialNetwork_id'], ['socialnetwork.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('fpv_number')
-    )
-    op.create_table('role',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=True),
-    sa.Column('description', sa.String(length=250), nullable=True),
-    sa.Column('permission', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['permission'], ['permission.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
     )
     op.create_table('association_table',
     sa.Column('role_id', sa.Integer(), nullable=False),
@@ -110,8 +126,12 @@ def upgrade():
     sa.Column('role_id', sa.Integer(), nullable=True),
     sa.Column('user_address', sa.Integer(), nullable=True),
     sa.Column('psicology_profile', sa.Integer(), nullable=True),
+    sa.Column('Marketplace', sa.Integer(), nullable=True),
+    sa.Column('factura', sa.Integer(), nullable=True),
     sa.Column('selected_psicologo_id', sa.Integer(), nullable=True),
     sa.Column('is_psicologo_selected', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['Marketplace'], ['marketplace.id'], ),
+    sa.ForeignKeyConstraint(['factura'], ['factura.id'], ),
     sa.ForeignKeyConstraint(['psicology_profile'], ['psicology_profile.id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
     sa.ForeignKeyConstraint(['selected_psicologo_id'], ['user.id'], ),
@@ -173,11 +193,13 @@ def downgrade():
     op.drop_table('user')
     op.drop_table('payment_acount')
     op.drop_table('association_table')
-    op.drop_table('role')
     op.drop_table('psicology_profile')
+    op.drop_table('permission')
     op.drop_table('socialnetwork')
     op.drop_table('session_type')
+    op.drop_table('role')
     op.drop_table('phrase')
-    op.drop_table('permission')
+    op.drop_table('marketplace')
+    op.drop_table('factura')
     op.drop_table('address')
     # ### end Alembic commands ###

@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, PsicologyProfileInfo, db, User, ClientTask, PaymentAccount, Phrase, Role
+from api.models import Session, PsicologyProfileInfo, MiPsicologo, db, User, ClientTask, PaymentAccount, Phrase, Role
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -111,7 +111,7 @@ def delete_user(user_id):
         payment_account = PaymentAccount.query.filter_by(user_id=user_id).first()
         if payment_account:
             db.session.delete(payment_account)
-        user_profile_info = UserProfileInfo.query.filter_by(user_id=user_id).first()
+        user_profile_info = PsicologyProfileInfo.query.filter_by(user_id=user_id).first()
         if user_profile_info:
             db.session.delete(user_profile_info)
         mi_psicologo = MiPsicologo.query.filter_by(user_id=user_id).first()
