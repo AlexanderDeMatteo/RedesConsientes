@@ -52,7 +52,7 @@ export const Navbar = () => {
             <a href="/signin" className="nav-link">Login</a>
           </li> : ""}
           {store.userData.is_psicologo ? <li className="nav-item d-none d-sm-inline-block">
-            <a href="/#" className="nav-link">Noticias</a>
+            <a href="/news" className="nav-link">Noticias</a>
           </li> : ""}
           {store.userData.is_psicologo ? <li className="nav-item d-none d-sm-inline-block">
             <a href="/#" className="nav-link">Mercado</a>

@@ -30,6 +30,8 @@ import { PerfilPacienteSeleccionado } from "./pages/Perfil_Paciente_Seleccionado
 import { Panel } from "./pages/panel";
 import { Contactos } from "./pages/contactos";
 import { Buscador2 } from "./pages/BuscadorDePsicologos2";
+import { Noticias } from "./pages/Noticias";
+import { Dashboard, Dashborad } from "./pages/Dashboard";
 
 
 //create your first component
@@ -97,6 +99,32 @@ const Layout = () => {
                 </div>
               </div>}
               path="/buscador"
+            />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+              <div className="box">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                  <Noticias />
+                </div>
+              </div>}
+              path="/news"
+            />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+              <div className="box">
+                <div id="navbar2">
+                  <Sidebarx />
+                </div>
+                <div id="paginaCentral">
+                  <Dashboard />
+                </div>
+              </div>}
+              path="/dashboard"
             />
             </Route>
             <Route element={<PrivateRoutes/>}>
