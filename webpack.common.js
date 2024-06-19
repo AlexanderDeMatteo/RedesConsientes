@@ -4,45 +4,53 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: [
-    './src/front/js/index.js'
-  ],
+  mode: 'development', // Set mode to 'production' for minified builds
+  entry: './src/front/js/index.js', // Your existing entry point
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
-    publicPath: '/'
+    publicPath: '/',
   },
   module: {
     rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: ['babel-loader']
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader'],
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          'style-loader', // Creates style nodes from JS strings
+          'css-loader', // Translates CSS into CommonJS
+          'postcss-loader', // Applies Tailwind CSS and other PostCSS plugins
+        ],
+      },
+      {
+        test: /\.(png|svg|jpg|gif|jpeg|webp)$/,
+        use: {
+          loader: 'file-loader',
+          options: { name: '[name].[ext]' },
         },
-        {
-          test: /\.(css|scss)$/, use: [{
-              loader: "style-loader" // creates style nodes from JS strings
-          }, {
-              loader: "css-loader" // translates CSS into CommonJS
-          }]
-        }, //css only files
-        {
-          test: /\.(png|svg|jpg|gif|jpeg|webp)$/, use: {
-            loader: 'file-loader',
-            options: { name: '[name].[ext]' }
-          }
-        }, //for images
-        { test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/, use: ['file-loader'] } //for fonts
-    ]
-  },
-  resolve: {
-    extensions: ['*', '.js']
+      },
+      {
+        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
+        use: ['file-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-        favicon: '4geeks.ico',
-        template: 'template.html'
+      favicon: '4geeks.ico',
+      template: 'template.html',
     }),
-    new Dotenv({ safe: true, systemvars: true })
-  ]
+    new Dotenv({ safe: true, systemvars: true }),
+  ],
+  devServer: {
+    hot: true, // Enable hot reloading
+    open: true, // Open the browser automatically
+  },
+  resolve: {
+    extensions: ['*', '.js'],
+  },
 };

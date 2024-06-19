@@ -31,7 +31,7 @@ import { Panel } from "./pages/panel";
 import { Contactos } from "./pages/contactos";
 import { Buscador2 } from "./pages/BuscadorDePsicologos2";
 import { Noticias } from "./pages/Noticias";
-import { Dashboard, Dashborad } from "./pages/Dashboard";
+import { Dashboard } from "./pages/Dashboard";
 
 
 //create your first component
