@@ -165,7 +165,7 @@ export const Sidebarx = () => {
                                 </a>
                             </li>
                             <li>
-                                <a>
+                                <a href="/dashboard">
                                     <i id="sideBarIcon"className="fa-solid fa-store"></i>
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Tienda</span>
 
