@@ -167,7 +167,7 @@ export const Sidebarx = () => {
                             <li>
                                 <a>
                                     <i id="sideBarIcon"className="fa-solid fa-store"></i>
-                                    <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Mercado</span>
+                                    <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Tienda</span>
 
                                 </a>
                             </li>
