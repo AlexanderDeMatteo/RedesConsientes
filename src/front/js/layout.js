@@ -32,6 +32,7 @@ import { Contactos } from "./pages/contactos";
 import { Buscador2 } from "./pages/BuscadorDePsicologos2";
 import { Noticias } from "./pages/Noticias";
 import { Dashboard } from "./pages/Dashboard";
+import { Navbar2 } from "./component/navbar2";
 
 
 //create your first component
@@ -44,7 +45,7 @@ const Layout = () => {
     <div>
        <BrowserRouter basename={basename}>
         <ScrollToTop>
-          <Navbar />
+          {/* <Navbar /> */}
           <Routes>
             <Route element={<Home />} path="/"/>
             <Route element={<SignUp />} path="/signup"/>
@@ -99,6 +100,19 @@ const Layout = () => {
                 </div>
               </div>}
               path="/buscador"
+            />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+              <div className="box">
+                {/* <div id="navbar2">
+                  <Sidebarx />
+                </div> */}
+                <div id="paginaCentral">
+                  <Navbar2 />
+                </div>
+              </div>}
+              path="/avatar"
             />
             </Route>
             <Route element={<PrivateRoutes/>}>

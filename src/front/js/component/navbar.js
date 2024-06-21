@@ -3,6 +3,7 @@ import { useNavigate, NavLink,redirect} from "react-router-dom";
 import "../../styles/navbar.css";
 import { Context } from "../store/appContext";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User} from "@nextui-org/react";
 
 import {
   setAuthToken,
@@ -10,7 +11,11 @@ import {
   removeAuthToken,
   hasValidToken
 } from '../../utils/AuthTokenUtil';
+
+
 export const Navbar = () => {
+
+
   const [isLogOut, setIsLogOut] = useState(false);
   const { actions, store } = useContext(Context);
 
@@ -60,28 +65,6 @@ export const Navbar = () => {
         </ul>
 
         <ul className="navbar-nav ml-auto">
-
-          {/* <li className="nav-item">
-            <a className="nav-link" data-widget="navbar-search" data-target="#main-header-search" href="#" role="button">
-              <i className="fas fa-search"></i>
-            </a>
-            <div className="navbar-search-block" id="main-header-search">
-              <form className="form-inline">
-                <div className="input-group input-group-sm">
-                  <input className="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" />
-                  <div className="input-group-append">
-                    <button className="btn btn-navbar" type="submit">
-                      <i className="fas fa-search"></i>
-                    </button>
-                    <button className="btn btn-navbar" type="button" data-widget="navbar-search">
-                      <i className="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </li> */}
-
           <li className="nav-item dropdown">
             {hasValidToken() ? <a className="nav-link" data-toggle="dropdown" href="#">
               <i className="far fa-comments"></i>
@@ -170,30 +153,62 @@ export const Navbar = () => {
             </div>
           </li>
           {hasValidToken() ?
-            <li className="nav-item dropdown" id="hola">
-              <a className="nav-link dropdown-toggle arrow-avatar" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                {store.userData.profile_picture ? <img id="avatar"
-                  width="40" height="40" className="rounded-circle img-fluid"
-                  src={store.userData.profile_picture}
-                  alt="Sample image"
-                /> : <img id="avatar"
-                  width="40" height="40" className="rounded-circle img-fluid"
-                  src={psicologo_img}
-                  alt="Sample image" />}
-              </a>
-              <ul className="dropdown-menu">
-                <li className="dropdown-item"><NavLink to="/perfil">Perfil</NavLink></li>
-                {/* <li className="dropdown-item"><NavLink to="/status">Status</NavLink></li>
-                <li className="dropdown-item"><NavLink to="/facturacion">Facturacion</NavLink></li> */}
-                <li onClick={(e) => {
+            <div className="flex items-center gap-4">
+            {/* <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Avatar id="avatar"
+                  isBordered
+                  as="button"
+                  className="transition-transform object-cover"
+                  src={!store.userData.profile_picture ? psicologo_img : store.userData.profile_picture }
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-semibold">Signed in as</p>
+                  <p className="font-semibold">{store.userData.name}</p>
+                </DropdownItem>
+                <DropdownItem key="settings">
+                  Perfil
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger">
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown> */}
+            <Dropdown placement="bottom-start">
+              <DropdownTrigger>
+                <User 
+                  id="avatar"
+                  as="button"
+                  avatarProps={{
+                    isBordered: true,
+                    src:!store.userData.profile_picture ? psicologo_img : store.userData.profile_picture 
+                  }}
+                  height="40px"
+                  
+                  className=" jose transition-transform"
+                  description="@tonyreichert"
+                  name={store.userData.name}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="User Actions" variant="flat">
+                <DropdownItem key="profile" id="as" className="h-14 gap-2">
+                  <p className=" font-bold" >Signed in as {store.userData.name}</p>
+                  <p className=" font-bold" >@tonyreichert</p>
+                </DropdownItem>
+                <DropdownItem key="perfil" href="perfil">
+                  Perfil
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger" onClick={(e) => {
                     removeAuthToken()
                     navigate("/")
-                
-                  // handleLogOut()
-                  // setIsLogOut(true)
-                }} className="dropdown-item">Log Out</li>
-              </ul>
-            </li>
+                }}>
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
             : ""}
           {/* {hasValidToken() && navigate("/")} */}
         </ul>
@@ -202,38 +217,4 @@ export const Navbar = () => {
   );
 };
 
-// <nav id="menu" className="navbar navbar-expand-sm nav justify-content-center">
-// 	<NavLink className="nav-link" id="nav-item" to="/">Home</NavLink>
-// 	<NavLink className="nav-link" id="nav-item" to="/servicios">Servicios</NavLink>
-// 	<NavLink className="nav-link" id="nav-item" to="/about_us">About Us</NavLink>
-// 	{!hasValidToken() ? <NavLink className="nav-link" id="nav-item"
-// 		to="/signup">registro</NavLink> : ""}
-// 	{!hasValidToken() ? <NavLink className="nav-link" id="nav-item" to="/signin">Login</NavLink> : ""}
-// 	{/* {!hasValidToken() && store.userData.is_psicologo ? <NavLink className="nav-link" to="/market_place">Mercado</NavLink> : ""} */}
-// 	<NavLink className="nav-link" id="nav-item" to="/noticias">Noticias</NavLink>
 
-// 	{hasValidToken() ?
-// 		<li className="nav-item dropdown" id="hola">
-// 			<a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-// 				{store.userData.profile_picture ? <img id="avatar"
-// 					width="40" height="40" className="rounded-circle img-fluid"
-// 					src={store.userData.profile_picture}
-// 					alt="Sample image"
-// 				/> : <img id="avatar"
-// 					width="40" height="40" className="rounded-circle img-fluid"
-// 					src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-// 					alt="Sample image" />}
-// 			</a>
-// 			<ul className="dropdown-menu">
-// 				<li className="dropdown-item"><NavLink to="/perfil">Perfil</NavLink></li>
-// 				<li className="dropdown-item"><NavLink to="/status">Status</NavLink></li>
-// 				<li className="dropdown-item"><NavLink to="/facturacion">Facturacion</NavLink></li>
-// 				<li onClick={(e) => {
-// 					localStorage.removeItem("token");
-// 					setIsLogOut(true)
-// 				}} className="dropdown-item">Log Out</li>
-// 			</ul>
-// 		</li>
-// 		: ""}
-// 	{isLogOut && <Redirect to={"/"} />}
-// </nav>

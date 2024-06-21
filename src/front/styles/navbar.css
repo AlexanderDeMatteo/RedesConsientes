@@ -1,9 +1,30 @@
-#avatar {
+  #avatar span:first-child {
     height: 50px;
     width: 50px;
-    border-radius: 500px;
-    /* margin-top: 20px; */
   }
+
+  #avatar div span:first-child {
+    height: auto;
+    width: auto;
+  }
+
+  #navbar header:first-child{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+
+  }
+  #navbar{
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #avatar span:last-child {
+    height: auto;
+    width: auto;
+  }
+
+
   .arrow-avatar {
     margin-top: 12px;
   }
