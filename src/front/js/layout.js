@@ -46,6 +46,7 @@ const Layout = () => {
        <BrowserRouter basename={basename}>
         <ScrollToTop>
           {/* <Navbar /> */}
+          <Navbar2 />
           <Routes>
             <Route element={<Home />} path="/"/>
             <Route element={<SignUp />} path="/signup"/>
@@ -53,9 +54,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Perfil />
                 </div>
@@ -66,9 +67,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <PerfilUsuarioSeleccionado />
                 </div>
@@ -79,9 +80,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <MetodosDePago />
                 </div>
@@ -92,9 +93,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <BuscadorDePsicologos />
                 </div>
@@ -118,9 +119,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Noticias />
                 </div>
@@ -131,9 +132,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Dashboard />
                 </div>
@@ -144,9 +145,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Calendar_custom />
                 </div>
@@ -157,9 +158,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Calendar_custom/>
                 </div>
@@ -170,9 +171,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <CalendarCogif_custom />
                 </div>
@@ -183,9 +184,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <CalendarToday_custom />
                 </div>
@@ -196,9 +197,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Sessions />
                 </div>
@@ -209,9 +210,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="box">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Buscador2 />
                 </div>
@@ -222,9 +223,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <ReservedSession/>
                 </div>
@@ -235,9 +236,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                   <Expedientes/>
                 </div>
@@ -248,9 +249,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                 <PerfilPacienteSeleccionado />
                 </div>
@@ -271,9 +272,9 @@ const Layout = () => {
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
-                <div id="navbar2">
+                {/* <div id="navbar2">
                   <Sidebarx />
-                </div>
+                </div> */}
                 <div id="paginaCentral">
                 <Contactos/>
                 </div>
