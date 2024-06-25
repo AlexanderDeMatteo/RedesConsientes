@@ -3,6 +3,7 @@ import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, Navba
 import {DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
 import {Badge} from "@nextui-org/react";
 import {Listbox, ListboxItem, Chip, ScrollShadow} from "@nextui-org/react";
+import psicologo_img from "../component/perfil_componentes/psicologo.png";
 import {ListboxWrapper} from "./ListboxWrapper.jsx";
 import {users} from "./data";
 import { Context } from "../store/appContext";
@@ -251,7 +252,9 @@ export const Navbar2 = () => {
               color="secondary"
               name="Jason Hughes"
               size="md"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              src={store.userData.profile_picture
+                ? store.userData.profile_picture
+                : psicologo_img}
               />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">

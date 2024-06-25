@@ -17,7 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userPacientes: JSON.parse(sessionStorage.getItem(!"psicos")) || [],
 			phrase:[],
 			userFpvData: {},
-			patientTask: {},
+			patientTask: [],
 			userScheduleData:{},
 			userSession:{},
 			scheduleSession:{},
