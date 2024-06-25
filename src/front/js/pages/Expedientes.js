@@ -1,15 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext.js";
+import { useNavigate } from "react-router-dom";
 import psicologo_img from "../component/perfil_componentes/psicologo.png";
+import {Card, CardFooter, Image, Button} from "@nextui-org/react";
 
 export const Expedientes = () => {
   const { actions, store } = useContext(Context);
   const [isLoading, setIsLoading] = useState(false);
   const [patients, setPatients] = useState([]);
+  const navigate = useNavigate();
 
   console.log(store.userDataSelecionado)
   console.log(patients)
 
+  function handleClick(url) {
+    console.log(url)
+    navigate(`/Expedientes/${url}`);
+    }
 
   
   useEffect(() => {
@@ -49,30 +56,31 @@ export const Expedientes = () => {
           {patients.length === 0 ? "no hay expedientes disponibles" :
             <div className="row">
                   {patients.map((patient, index) => (
-                  <div className="col-md-3">
-                  <div className="card card-primary card-outline">
-                    <div>
-                      <div className="text-center">
-                          <img
-                          src={
-                              psicologo_img
-                          }
-                          alt="User profile picture"
-                          id="avatar_perfil"
-                          className="profile-user-img img-fluid img-circle"
-                          />
-                      </div>
-                      <h5 className="my-3 text-center">
-                          {patient.name} {patient.last_name}
-                      </h5>
+                  <div className=" p-3" key={index}>
+                  <Card
+                    isFooterBlurred
+                    radius="lg"
+                    className="border-none"
+                  >
+                    <Image
+                      alt="Woman listing to music"
+                      className="object-cover"
+                      height={200}
+                      src={patient.profile_picture
+                        ? patient.profile_picture
+                        : psicologo_img}
+                      width={200}
+                    />
+                    <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                      <p className="text-tiny text-white/80">{patient.name} {patient.last_name}</p>
+                      <Button className="text-tiny text-white bg-black/20" onClick={() => handleClick(patient.id)} variant="flat" color="default" radius="lg" size="sm">
+                        Expediente
+                      </Button>
+                    </CardFooter>
+                  </Card>
 
-                      <a href={`/Expedientes/${patient.id}`} className="btn btn-primary btn-block">
-                          <b>perfil paciente</b>
-                      </a>
-                      </div>
                   </div>
-
-                  </div>
+                  
                   ))}
             </div>}
         </div>
