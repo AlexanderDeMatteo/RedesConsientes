@@ -18,6 +18,10 @@ export const TodoListPaciente = () => {
     });
   };
 
+
+
+  console.log(store.patientTask)
+
   const handleTaskCompletion = async (taskId) => {
     // Actualizar el estado local de la tarea
     setTaskList(taskList.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task)));
@@ -53,6 +57,7 @@ export const TodoListPaciente = () => {
     // Actualizar taskList cuando la lista de tareas en el store cambie
     if (!isLoading) {
       setTaskList(store.patientTask);
+      setChecked(taskList.filter((task) => task.completed !== true))
     }
   }, [store.patientTask, isLoading]);
 
@@ -72,14 +77,14 @@ export const TodoListPaciente = () => {
                   <label className="form-check-label  w-100"style={{paddingLeft:20}} for="task">
                       
                   <input className="form-check-input mt-1" type="checkbox" onClick={hola(item.id, item.completed)} onChange={() => handleTaskCompletion(item.id)} checked={item.completed} style={{cursor: "pointer"}}  aria-label="Checkbox for following text input" />
-                    {`${index + 1}- ${item.description} ${item.id} `}
+                    {`${index + 1}- ${item.description} `}
                     {store.userData.is_psicologo ? <i className="fa-regular fa-trash-can" onClick={() => deleteTask(item.id)} style={{cursor: "pointer"}}></i> : " " }
                     </label>
                   </li>
                 </div>  
                 ))}
               </ul>
-              <div>Tienes {taskList.length} tareas pendientes</div>
+              <div>Tienes {checked.length} tareas pendientes</div>
 
             </>
           ) : (
