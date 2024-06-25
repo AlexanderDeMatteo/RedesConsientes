@@ -7,6 +7,8 @@ export const Expedientes = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [patients, setPatients] = useState([]);
 
+  console.log(store.userDataSelecionado)
+  console.log(patients)
 
 
   
@@ -17,7 +19,7 @@ export const Expedientes = () => {
       
       try{
           const data = await actions.handle_patient_data();
-          
+          console.log(data, "data")
       } catch (error) {
           console.error(error); // Handle any errors
         } finally {
@@ -44,12 +46,12 @@ export const Expedientes = () => {
                                     <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
         <div>
-          {patients.length == 0 ? "no hay expedientes disponibles" :
+          {patients.length === 0 ? "no hay expedientes disponibles" :
             <div className="row">
                   {patients.map((patient, index) => (
                   <div className="col-md-3">
                   <div className="card card-primary card-outline">
-                      <div>
+                    <div>
                       <div className="text-center">
                           <img
                           src={

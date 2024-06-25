@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
 import {DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
 import {Badge} from "@nextui-org/react";
 import {Listbox, ListboxItem, Chip, ScrollShadow} from "@nextui-org/react";
 import {ListboxWrapper} from "./ListboxWrapper.jsx";
 import {users} from "./data";
+import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
+import "../../styles/navbar.css";
 import {
   setAuthToken,
   getAuthToken,
@@ -15,19 +18,64 @@ import {
 export const Navbar2 = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isInvisible, setIsInvisible] = React.useState(false);
+  const [contentPerfil, setContentPerfil] = useState(false)
+  const [contentAdmPaciente, setContentAdmPaciente] = useState(false)
+  const [contentadmCuenta, setContentadmCuenta] = useState(false)
+  const [contentNavega, setContentNavega] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const { actions, store } = useContext(Context)
+  const navigate = useNavigate();
+  const toggle = () => setIsOpen(!isOpen)
+
+  const [isLogOut, setIsLogOut] = useState(false);
+  
+  console.log(store.userData.role_id)
+  
+  const handleLogOut = () =>{
+    setIsLogOut(true)
+  }
+  
+  const id = {
+      id: store.userData.id
+  };
+  let calendar = "calendar"
+  let calendar_today = "calendar_today"
+  
+  function handleClick(a) {
+  navigate(`/${a}/${store.userData.id}`);
+  }
+
+  const menuItemsPsicologo = [
+    {name:"Perfil", url:"perfil"},
+    {name:"Agenda del dia", url:`calendar_today/${store.userData.id}`},
+    {name:"Contactos", url:"contactos"},
+    {name:"Expedientes", url:"expedientes"},
+    {name:"Manejo de agenda", url:`manejo_de_agenda/${store.userData.id}`},
+    {name:"Facturacion", url:"facturacion"},
+    {name:"Modalidad de pago", url:"metodosDePago"},
+    {name:"Noticias", url:"noticias"},
+    {name:"Buscador de psicologos", url:"buscador"},
+    {name:"Cursos", url:"cursos"},
+    {name:"Cerrar sesión", url:"#"},
+  ];
 
   const menuItems = [
-    "Perfil",
-    "Agenda del dia",
-    "Contactos",
-    "Expedientes",
-    "Manejo de agenda",
-    "Facturacion",
-    "Modalidad de pago",
-    "Noticias",
-    "Buscador de psicologos",
-    "tienda",
+    {name:"Perfil", url:"perfil"},
+    {name:"Agenda del dia", url:`calendar_today/${store.userData.id}`},
+    {name:"Contactos", url:"contactos"},
+    {name:"Buscador de psicologos", url:"buscador"},
+    {name:"Cerrar sesión", url:"#"},
   ];
+
+  const menuItems3 = [
+    {name:"Iniciar sesión", url:"signin"},
+    {name:"Registro", url:"signup"},
+    {name:"Sobre nosotros", url:"#"},
+  ];
+
+  useEffect(() => {
+    actions.handle_user_data()
+}, [])
 
   const [values, setValues] = React.useState(new Set(["1"]));
 
@@ -52,18 +100,22 @@ export const Navbar2 = () => {
   }, [arrayValues.length]);
 
   return (
-    <div className=" w-100% h-100%">
+    <div className=" navbar p-0 " >
     <Navbar
       maxWidth="xl"
       isBordered
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       >
+        <>
+        {!hasValidToken() ? "" :
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
+        }
+        </>
 
-      <NavbarContent className="sm:hidden pr-3" justify="center">
+      <NavbarContent className="sm:hidden " justify="center">
         <NavbarBrand>
         <i className="fa-solid fa-brain"></i>
         <p className="font-bold text-inherit">RedesConscientes</p>
@@ -77,39 +129,69 @@ export const Navbar2 = () => {
         </NavbarBrand>
       </NavbarContent>
 
+      <>
+      {!hasValidToken() ? "":
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
+        {/* <NavbarItem>
           <Link color="foreground" href="#">
           Sobre nosotros
           </Link>
-        </NavbarItem>
+        </NavbarItem> */}
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
+          <Link href="noticias" aria-current="page">
             Noticias
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="buscador">
             Buscador de psicologos
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            cursos
+          <Link color="foreground" href="/cursos">
+            Cursos
           </Link>
         </NavbarItem>
       </NavbarContent>
-    
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-        {!hasValidToken() ? <Link href="#">Login</Link> : ""}
+        }
+      </>
+
+      <>
+    {!hasValidToken() ?
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarItem>
+        <Link color="foreground" href="/sobre-nosotros">
+        Home
+        </Link>
+      </NavbarItem>
+      <NavbarItem isActive>
+        <Link href="noticias" aria-current="/">
+        Sobre nosotros
+        </Link>
+      </NavbarItem>
+    </NavbarContent>
+       : ""}
+    </>
+
+    <>
+    {!hasValidToken() ?
+      <NavbarContent justify="end" className="">
+        
+        <NavbarItem>
+          <Link href="/signin">Login</Link>
         </NavbarItem>
         <NavbarItem>
-        {!hasValidToken() ? <Button as={Link} color="warning" href="#" variant="flat">
+          <Button as={Link} color="warning" href="/signup" variant="flat">
             Sign Up
-          </Button> : ""}
+          </Button> 
         </NavbarItem>
+      </NavbarContent>
+       : ""}
+    </>
 
+    <>
+    {!hasValidToken() ? "" :
+    <NavbarContent  justify="end" >
     <Badge content="99+" shape="circle" color="warning">
        <Dropdown >
       <DropdownTrigger>
@@ -119,7 +201,7 @@ export const Navbar2 = () => {
         aria-label="more than 99 notifications"
         variant="light"
         isInvisible="true"
-      >
+        >
         <i class="fa-regular fa-bell" style={{"font-size":20, color:"grey"}}></i>
       </Button>
       </DropdownTrigger>
@@ -143,7 +225,7 @@ export const Navbar2 = () => {
         aria-label="more than 99 notifications"
         variant="light"
         isInvisible="true"
-      >
+        >
         <i class="fa-regular fa-comments" style={{"font-size":20, color:"grey"}}></i>
       </Button>
       </DropdownTrigger>
@@ -158,9 +240,10 @@ export const Navbar2 = () => {
     </Dropdown> 
     </Badge>
     {/*  */}
-      
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
+
+    <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <Dropdown>
+          <DropdownTrigger >
             <Avatar
               isBordered
               as="button"
@@ -169,45 +252,83 @@ export const Navbar2 = () => {
               name="Jason Hughes"
               size="md"
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-            />
+              />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
+              <p className="font-semibold">Signed in as {store.userData.name}</p>
+              <p className="font-semibold">{store.userData.email}</p>
             </DropdownItem>
-            <DropdownItem key="settings">Perfil</DropdownItem>
-            <DropdownItem key="team_settings">Agenda del dia</DropdownItem>
-            <DropdownItem key="analytics">Contactos</DropdownItem>
-            <DropdownItem key="system">Expedientes</DropdownItem>
-            <DropdownItem key="configurations">Manejo de agenda</DropdownItem>
-            <DropdownItem key="help_and_feedback">Facturacion</DropdownItem>
-            <DropdownItem key="help_and_feedback">Modalidad de pago</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="Perfil" href="/perfil">Perfil</DropdownItem>
+            <DropdownItem key="Agenda_del_dia" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
+            <DropdownItem key="Contactos" href="/contactos">Contactos</DropdownItem>
+            <DropdownItem key="Expedientes" href="/Expedientes">Expedientes</DropdownItem>
+            <DropdownItem key="Manejo_de_agend" onClick={() => handleClick(calendar)}>Manejo de agenda</DropdownItem>
+            <DropdownItem key="Facturacion">Facturacion</DropdownItem>
+            <DropdownItem key="Modalidad_de_pago">Modalidad de pago</DropdownItem>
+            <DropdownItem key="logout" onClick={(e) => {
+              removeAuthToken()
+              navigate("/")
+            }} color="danger">
               Log Out
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
-    
       </NavbarContent>
-
+    </NavbarContent>
+   }
+    </>
+        <>
+        {!hasValidToken() ? 
+        " "
+        :   
+        <>
+        {store.userData.role_id === 2 || store.userData.role_id === 3 ? 
       <NavbarMenu>
-        {menuItems.map((item, index) => (
+        {menuItemsPsicologo.map((item, index) => (   
           <NavbarMenuItem key={`${item}-${index}`} >
-            <Link
-              className="w-100%"
-              color={
-                index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
-              href="#"
-              size="lg"
-            
-            >
-              {item}
-            </Link>
+          <Link
+          className="w-100%"
+          color={
+            index === 2 ? "warning" : index === menuItemsPsicologo.length - 1 ? "danger" : "foreground"
+          }
+          href={`/${item.url}`}
+          size="lg"
+          onClick={ item.name == "Cerrar sesión" ? (e) => {
+            removeAuthToken()
+            navigate("/")
+          } : ""}
+          >
+          {item.name}
+          </Link>
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
+      : 
+      <NavbarMenu>
+      {menuItems.map((item, index) => (   
+        <NavbarMenuItem key={`${item}-${index}`} >
+        <Link
+        className="w-100%"
+        color={
+          index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
+        }
+        href={`/${item.url}`}
+        size="lg"
+        onClick={ item.name == "Cerrar sesión" ? (e) => {
+          removeAuthToken()
+          navigate("/")
+        } : ""}
+        
+        >
+        {item.name}
+        </Link>
+        </NavbarMenuItem>
+      ))}
+    </NavbarMenu>}
+        </>
+    }
+    </>
     </Navbar>
     </div>
   );

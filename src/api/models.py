@@ -62,6 +62,7 @@ class User(db.Model):
         "is_psicologo": self.is_psicologo,
         "profile_picture": self.profile_picture,
         "is_active": self.is_active,
+        "role_id": self.role_id
         }
 
     def update_profile_picture(self, data):

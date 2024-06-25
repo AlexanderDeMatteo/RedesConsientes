@@ -13,6 +13,7 @@ import {
 } from '../../utils/AuthTokenUtil';
 
 
+
 export const Navbar = () => {
 
 
@@ -29,10 +30,6 @@ export const Navbar = () => {
     actions.handle_user_data();
   }, []);
 
-  // useEffect(() => {
-    
-  //   if (getAuthToken() && isLogOut) setIsLogOut(false);
-  // }, [isLogOut]);
 
 
   return (
@@ -57,7 +54,7 @@ export const Navbar = () => {
             <a href="/signin" className="nav-link">Login</a>
           </li> : ""}
           {store.userData.is_psicologo ? <li className="nav-item d-none d-sm-inline-block">
-            <a href="/news" className="nav-link">Noticias</a>
+            <a href="/noticias" className="nav-link">Noticias</a>
           </li> : ""}
           {store.userData.is_psicologo ? <li className="nav-item d-none d-sm-inline-block">
             <a href="/#" className="nav-link">Mercado</a>

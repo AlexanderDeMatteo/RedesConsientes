@@ -1,11 +1,9 @@
 import React from "react";
 import {Card, CardHeader, CardBody, CardFooter, Image, Button} from "@nextui-org/react";
-import "../../styles/dashboard.css"
+import "../../styles/cursos.css"
 
 
-
-
-export const Dashboard = () => {
+export const Cursos = () => {
 
   return (
   <>

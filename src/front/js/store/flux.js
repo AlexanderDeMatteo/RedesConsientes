@@ -10,7 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 		store: {
 			userData: {},
-			userDataSelecionado: {},
+			userDataSelecionado: [],
 			userPatientSelecionado: {},
 			userPsicologostoaprove: JSON.parse(sessionStorage.getItem("psicos")) || [],
 			userPsicologos: [],
@@ -23,7 +23,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			scheduleSession:{},
 			clientScheduleData:{},
 			userPaymentData:{},
-			userPatients:{},
+			userPatients:[],
 			userRelationShip:[]
 		},
 

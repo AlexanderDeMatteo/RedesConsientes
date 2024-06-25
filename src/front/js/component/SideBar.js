@@ -152,7 +152,7 @@ export const Sidebarx = () => {
                         {contentNavega && <ul className="ulContent">
                             <li>
                                 <a>
-                                    <i id="sideBarIcon"className="fa-regular fa-newspaper"></i>
+                                    <i id="sideBarIcon"className="fa-regular fa-noticiaspaper"></i>
                                     <span className="links_name" style={{ opacity: isOpen ? "1" : "0", display: !isOpen ? "none" : "block" }}>Noticias</span>
 
                                 </a>

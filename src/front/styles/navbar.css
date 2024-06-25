@@ -1,4 +1,4 @@
-  #avatar span:first-child {
+  /* #avatar span:first-child {
     height: 50px;
     width: 50px;
   }
@@ -6,9 +6,20 @@
   #avatar div span:first-child {
     height: auto;
     width: auto;
+  } */
+
+  .navbar nav header{
+    gap: 0.7rem !important;
+    padding-left: 10px !important;
+    padding-right: 20px !important;
+
   }
 
-  #navbar header:first-child{
+  .margen{
+    gap: 0.7rem !important
+  }
+
+  /* #navbar header:first-child{
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin: 0 !important;
@@ -22,10 +33,10 @@
   #avatar span:last-child {
     height: auto;
     width: auto;
-  }
+  } */
 
 
-  .arrow-avatar {
+  /* .arrow-avatar {
     margin-top: 12px;
   }
   #menu {
@@ -59,4 +70,4 @@
   
   #navbarcontainer{
     margin-left: 0 !important;
-  }
+  } */

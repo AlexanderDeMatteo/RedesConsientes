@@ -31,7 +31,7 @@ import { Panel } from "./pages/panel";
 import { Contactos } from "./pages/contactos";
 import { Buscador2 } from "./pages/BuscadorDePsicologos2";
 import { Noticias } from "./pages/Noticias";
-import { Dashboard } from "./pages/Dashboard";
+import { Cursos } from "./pages/Cursos";
 import { Navbar2 } from "./component/navbar2";
 
 
@@ -126,7 +126,7 @@ const Layout = () => {
                   <Noticias />
                 </div>
               </div>}
-              path="/news"
+              path="/noticias"
             />
             </Route>
             <Route element={<PrivateRoutes/>}>
@@ -136,10 +136,10 @@ const Layout = () => {
                   <Sidebarx />
                 </div> */}
                 <div id="paginaCentral">
-                  <Dashboard />
+                  <Cursos />
                 </div>
               </div>}
-              path="/dashboard"
+              path="Cursos"
             />
             </Route>
             <Route element={<PrivateRoutes/>}>
