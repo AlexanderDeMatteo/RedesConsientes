@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import "../../../styles/imagenes.css";
 import { Context } from "../../store/appContext";
+import {Button} from "@nextui-org/react";
 
 export const Imagenes = () => {
   const { actions } = useContext(Context);
@@ -51,10 +52,17 @@ export const Imagenes = () => {
   return (
     <>
       <header id="header" className="header">
+      <Button color="success" href="#modal" className="cta" endContent={<i class="fa-solid fa-camera"></i>}>
+        Take a photo
+      </Button>    
         <a href="#modal" className="cta">
           cambiar imagen de perfil
         </a>
       </header>
+
+      <div className="flex gap-4 items-center">
+      </div>
+
 
       <section id="modal" className="modal">
         <div className="modal_container">

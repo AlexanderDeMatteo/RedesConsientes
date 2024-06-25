@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { TodoList } from "../component/todoList";
 import { TodoListPaciente } from "../component/todoListpaciente";
 import { Panel } from "./panel";
+import { Imagenes2 } from "../component/perfil_componentes/imagenes2";
 // import { uploadFile } from "../component/drag_and_drop";
 // import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -199,7 +200,7 @@ export const Perfil = () => {
                         </p>
 
                         <div className="text-center">
-                          <Imagenes />
+                          <Imagenes2 />
                         </div>
 
                         <a href="#" className="btn btn-primary btn-block">
