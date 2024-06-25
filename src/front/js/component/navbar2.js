@@ -144,7 +144,7 @@ export const Navbar2 = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="buscador">
+          <Link color="foreground" href="/buscador">
             Buscador de psicologos
           </Link>
         </NavbarItem>

@@ -4,6 +4,7 @@ import { Context } from "../store/appContext.js";
 import 'react-calendar/dist/Calendar.css';
 import { useTransition, animated } from "react-spring";
 import { useParams } from "react-router-dom";
+import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image} from "@nextui-org/react";
 import Calendar from 'react-calendar';
 // import { useParams } from "react-router-dom";
 
@@ -92,9 +93,9 @@ function to12HourFormat(time24h) {
                 <div className="row">
 
                     <div className="container-fluid">
-                        <div className="row">
+                        <div className="row justify-content-between">
                            {store.scheduleSession == false ? ( 
-                           <div className="col-md-7">
+                           <div className="col-md-5 ">
                                 
                                         <div className="col-md-3 col-sm-6 col-12">
 
@@ -108,68 +109,114 @@ function to12HourFormat(time24h) {
                                         </div>
                                     
 
-                            </div>):(<div className="col-md-7">
+                            </div>):(<div className="col-md-5 p-4 ">
                                 {transition((style, item) =>
-                                    item ? <animated.div style={style} className="row row_custom" >
-                                        <div className="col-md-3 col-sm-6 col-12">
-
-                                            <div className="info-box bg-primary box_info">
-                                                <span className="info-box-icon"><i className="far fa-bookmark"></i></span>
-                                                <div className="info-box-content">
-
-                                                    <div className="card-tools button-agend">
-                                                        
-
-                                                        {store.userData.is_psicologo ? <div className="card-header header_custom">
-                                                            <h3 className="card-title title_custom">Paciente</h3>
-                                                            <div className="card-tools">
-                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">{item.patient_name} {item.patient_last_name}</a>
-                                                            </div>
-                                                        </div>:<div className="card-header header_custom">
-                                                            <h3 className="card-title title_custom">Psicologo</h3>
-                                                            <div className="card-tools">
-                                                                <a className="btn btn-tool btn-link button-agend" data-card-widget="collapse">{item.psychologist_name} {item.psychologist_last_name}</a>
-                                                            </div>
-                                                        </div>}
-                                                        
-                                                    </div>
-                                                    <span className="info-box-number">Hora: {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</span>
-                                                    
-                                                    <a href={`/session/${id}/${item.room_number}`} className="progress-description">
-                                                    Ir a Session
-                                                    </a>
+                                    item ? <animated.div style={style} className="p-2" >
+                                        <>
+                                        {store.userData.is_psicologo ? 
+                                         <Card className="max-w-[400px]">
+                                            <CardHeader className="flex gap-3 bg-blue">
+                                                <Image
+                                                alt="nextui logo"
+                                                height={40}
+                                                radius="sm"
+                                                src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
+                                                width={40}
+                                                />
+                                                <div className="flex flex-col">
+                                                <p className="text-md">Paciente</p>
+                                                <p className="text-md ">{item.patient_name} {item.patient_last_name}</p>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                    </animated.div> : '')}
+                                            </CardHeader>
+                                            <Divider/>
+                                            <CardBody>
+                                                <p>Hora: {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</p>
+                                            </CardBody>
+                                            <Divider/>
+                                            <CardFooter>
+                                                <Link
+                                                isExternal
+                                                showAnchorIcon
+                                                href={`/session/${id}/${item.room_number}`}
+                                                >
+                                                ir a session
+                                                </Link>
+                                            </CardFooter>
+                                            </Card>
+                                            :
+                                            <Card className="max-w-[400px]">
+                                            <CardHeader className="flex gap-3 bg-blue">
+                                                <Image
+                                                alt="nextui logo"
+                                                height={40}
+                                                radius="sm"
+                                                src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
+                                                width={40}
+                                                />
+                                                <div className="flex flex-col">
+                                                <p className="text-md">Psicologo</p>
+                                                <p className="text-small text-default-500">{item.psychologist_name} {item.psychologist_last_name}</p>
+                                                </div>
+                                            </CardHeader>
+                                            <Divider/>
+                                            <CardBody>
+                                            <p>Hora: {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</p>
+                                                
+                                            </CardBody>
+                                            <Divider/>
+                                            <CardFooter>
+                                                <Link
+                                                isExternal
+                                                showAnchorIcon
+                                                href={`/session/${id}/${item.room_number}`}
+                                                >
+                                                ir a session
+                                                </Link>
+                                            </CardFooter>
+                                            </Card>
+                                }
+                                </>
+                                </animated.div> : '')}
 
                             </div>)}
                             
-                            <div className="col-md-5 custom_card">
-                                <div className="card card-primary">
-                                    <div className="card-header">
-                                        <h3 className="card-title">Frase del Dia</h3>
-
-                                    </div>
-
-                                    <div className="card-body">
-                                         {phrase ? (
+                            <div className="col-md-5 p-4">
+                                
+                                    {phrase.length == 0 ? (
+                                                <Card className="max-w-[400px]">
+                                            <CardHeader className="flex gap-3 bg-blue">
+                                                <div className="flex flex-col">
+                                                <p className="text-md">Frase del Dia</p>
+                                                </div>
+                                            </CardHeader>
+                                            <Divider/>
+                                            <CardBody>
+                                            <p>no hay frase el dia de hoy</p> 
+                                            </CardBody>
+                                            <Divider/>
+                                            </Card>
+                                            ) : (
                                             phrase.map((item, index) => 
                                             <>
-                                                <p>{item.phrase}</p>
-                                                <p>- {item.author}.</p>
+                                                <Card className="max-w-[400px]">
+                                            <CardHeader className="flex gap-3">
+                                                <div className="flex flex-col">
+                                                <p className="text-md">Frase del dia</p>
+                                                </div>
+                                            </CardHeader>
+                                            <Divider/>
+                                            <CardBody>
+                                            <p>{item.phrase}</p>
+                                            <p>- {item.author}.</p>
+                                            </CardBody>
+                                            <Divider/>
+                                            </Card>
                                             </>
                                             )
-                                             ):(
-                                                 <p>no hay frase el dia de hoy</p> 
-                                                
-                                            )
+                                             )
                                         } 
                                         
-                                    </div>
-
-                                </div>
+                                   
 
                             </div>
                         </div>
