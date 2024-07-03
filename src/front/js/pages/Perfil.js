@@ -13,8 +13,10 @@ import { AboutMe } from "../component/perfil_componentes/AboutMe";
 import { useNavigate } from 'react-router-dom';
 import { TodoList } from "../component/todoList";
 import { TodoListPaciente } from "../component/todoListpaciente";
+import {Card, CardHeader, CardBody, Avatar, Image, Button} from "@nextui-org/react";
 import { Panel } from "./panel";
 import { Imagenes2 } from "../component/perfil_componentes/imagenes2";
+import { ProfileTabs } from "../component/perfil_componentes/profileTabs";
 // import { uploadFile } from "../component/drag_and_drop";
 // import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
@@ -171,7 +173,7 @@ export const Perfil = () => {
             <section className="content">
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-md-3">
+                  {/* <div className="col-md-3">
                     <div className="card card-primary card-outline">
                       <div >
                         <div className="text-center">
@@ -215,10 +217,32 @@ export const Perfil = () => {
 
 
 
-                  </div>
+                  </div> */}
+                  <div className="col-md-3">
+                   <Card className="pt-4 mb-4">
+                     <CardHeader className="pb-0 pt-2 px-4 flex-col col-md-auto">
+                        <Avatar isBordered className="w-40 h-40"  color="primary" src={store.userData.profile_picture
+                                ? store.userData.profile_picture
+                                : psicologo_img} />
+                        </CardHeader>
+                      <CardBody className="overflow-visible py-2 text-center">
+                        <p className="text-tiny uppercase font-bold">{store.userData.name} {store.userData.last_name}</p>
+                        <small className="text-default-500">{store.userData.area_de_especialidad}</small>
+                        <h4 className="font-bold text-large">{store.userData.email}</h4>
+                        <div className="text-center">
+                          <Imagenes2 />
+                        </div>
+                      </CardBody>
+                      <Button color="primary" variant="ghost">
+                        Seleccionar psicologo
+                      </Button> 
+                    </Card>
 
+                    <AboutMe user_data={store.userData} />
+                  </div>
                   <div className="col-md-9">
-                    <div className="card">
+                    <ProfileTabs/>
+                    {/* <div className="card">
                       <div className="card-header p-2">
                         <ul className="nav nav-pills" id="seleccionadorPerfil">
                           <li onClick={changeSelect} className="nav-item">
@@ -302,7 +326,7 @@ export const Perfil = () => {
                             <div className="post clearfix">
                               <div className="user-block">
                                 {/* <span className="username"> */}
-                                <strong>
+                                {/* <strong>
 
                                   <a >Estrategia Terapeutica o enfoque terapeutico</a>
                                 </strong>
@@ -331,20 +355,20 @@ export const Perfil = () => {
                               )}
 
                             
-                            </div>
+                            </div> */}
 
-
+{/* 
                             <div className="post">
                               <div className="user-block">
                                 {/* <span className="username"> */}
-                                <strong>
+                                {/* <strong>
 
                                   <a >Experiencias</a>
-                                </strong>
+                                </strong> */}
                                 {/* <a href="#" className="float-right btn-tool"><i className="fas fa-times"></i></a> */}
                                 {/* </span> */}
 
-                              </div>
+                              {/* </div>
 
                               <div className="row mb-3">
                                 <div className="col-sm-6">
@@ -367,8 +391,8 @@ export const Perfil = () => {
 
                                 </div>
 
-                              </div>
-
+                              </div> */}
+{/* 
                               {!show ? (
                                 <textarea
                                   cols="50"
@@ -388,11 +412,11 @@ export const Perfil = () => {
                                 </p>
 
                               )}
+ */}
 
 
 
-
-                            </div>
+                            {/* </div>
                             <div className="form-group row">
                               <div >
                                 <button
@@ -404,9 +428,9 @@ export const Perfil = () => {
                                 </button>
 
                               </div>
-                            </div>
-                          </div>
-                          <div className={selectedTab["li_1"]["tab"]} id="activity">
+                            </div> */}
+                          {/* </div> */} 
+                          {/* <div className={selectedTab["li_1"]["tab"]} id="activity">
                             <div className="form-horizontal">
                               <div className="form-group row">
                                 <label
@@ -537,7 +561,7 @@ export const Perfil = () => {
                                   </div>
                                 </div>
                               </div> */}
-                              <div className="form-group row">
+                              {/* <div className="form-group row">
                                 <label
                                   htmlFor="inputName"
                                   className="col-sm-2 col-form-label"
@@ -565,10 +589,10 @@ export const Perfil = () => {
                                     )}
                                   </div>
                                 </div>
-                              </div>
+                              </div> */}
 
 
-
+{/* 
                               <div className="form-group row">
                                 <label
                                   htmlFor="inputName"
@@ -594,11 +618,11 @@ export const Perfil = () => {
                                     )}
                                   </div>
                                 </div>
-                              </div>
+                              </div> */}
 
 
 
-
+{/* 
                               <div className="form-group row">
                                 <label
                                   htmlFor="inputName"
@@ -666,8 +690,8 @@ export const Perfil = () => {
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div className={selectedTab["li_2"]["tab"]} id="timeline">
+                          </div>  */}
+                          {/* <div className={selectedTab["li_2"]["tab"]} id="timeline">
                             <div className="tab-pane" id="settings">
                               <div className="form-horizontal">
                                 <div className="form-group row">
@@ -790,9 +814,9 @@ export const Perfil = () => {
                               </div>
                             </div>
 
-                          </div>
+                          </div> */}
 
-                          <div className={selectedTab["li_3"]["tab"]} id="timeline">
+                          {/* <div className={selectedTab["li_3"]["tab"]} id="timeline">
                             <div className="tab-pane" id="settings">
                               <div className="form-horizontal">
                                 <div className="form-group row">
@@ -908,14 +932,14 @@ export const Perfil = () => {
                                       >
                                         hola
                                       </button> */}
-                                  </div>
+                                  {/* </div>
                                 </div>
                               </div>
                             </div>
 
-                          </div>
+                          </div>  */}
 
-                          <div className={selectedTab["li_4"]["tab"]} id="timeline">
+                          {/* <div className={selectedTab["li_4"]["tab"]} id="timeline">
                             <div className="tab-pane" id="settings">
                               <div className="form-horizontal">
                                 <div className="form-group row">
@@ -959,9 +983,9 @@ export const Perfil = () => {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                           
-                          <div className={selectedTab["li_5"]["tab"]} id="timeline">
+                          {/* <div className={selectedTab["li_5"]["tab"]} id="timeline">
                             <div className="tab-pane" id="settings">
                               <div className="form-horizontal">
                                 <div className="form-group row">
@@ -970,12 +994,12 @@ export const Perfil = () => {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div> */}
 
-                    
+{/*                     
                         </div>
                       </div>
-                    </div>
+                    </div>  */}
                   </div>
                 </div>
               </div>

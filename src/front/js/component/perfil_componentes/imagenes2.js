@@ -78,13 +78,11 @@ export const Imagenes2 = () => {
               <ModalHeader className="flex flex-col gap-1">Selecciona tu imagen de perfil</ModalHeader>
               <ModalBody>
                 <p> 
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
+                  Se recomienda que selecciones una imagen pulcra y profecional
                 </p>
                 <label htmlFor="img" className="agregarFoto">
                 Seleccionar Imagen
-              </label>
+                </label>
               <input
                 type="file"
                 id="img"
