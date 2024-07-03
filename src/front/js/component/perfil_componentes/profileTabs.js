@@ -1,6 +1,8 @@
 import React from "react";
 import {Tabs, Tab, Chip} from "@nextui-org/react";
 import {Card, CardBody, CardHeader} from "@nextui-org/react";
+import { InfoTab } from "./tabs profile/InfoTab";
+
 
 export const ProfileTabs = () => {
     return (
@@ -30,7 +32,7 @@ export const ProfileTabs = () => {
         >
           <Card>
             <CardBody>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              <InfoTab/>
             </CardBody>
           </Card>  
         </Tab>
