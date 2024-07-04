@@ -11,6 +11,7 @@ import { Context } from "../../../store/appContext";
 export const InfoTab = () => {
 const [show, setShow] = useState(true);
 const { actions, store } = useContext(Context);
+const API_URL = process.env.BACKEND_URL;
 
     function Editar() {
         if (!show) {
@@ -20,18 +21,20 @@ const { actions, store } = useContext(Context);
       }
     
       const guardar = async () => {
-
+        // Create a copy of user data without role_id
+        const userDataCopy = { ...store.userData };
+        delete userDataCopy.role_id;
+      
         const response = await fetch(`${API_URL}/api/user-profile`, {
           method: "PUT",
-          body: JSON.stringify(store.userData),
+          body: JSON.stringify(userDataCopy),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-    
+      
         if (response.ok) {
-    
           alert("datos actualizados");
           // actions.handle_user_data();
         }
@@ -66,6 +69,7 @@ const { actions, store } = useContext(Context);
             <div className="pb-3">
                 <p>Estrategia Terapeutica</p>
             </div>
+            <> {!show ? 
             <Textarea
             name="psych_strategies"
             onChange={handleChange}
@@ -74,6 +78,15 @@ const { actions, store } = useContext(Context);
             className={{fullWidth:"true"}}
             value={store.userData.psych_strategies || ""}
             />
+          : <Textarea
+          isDisabled
+          label=""
+          labelPlacement="outside"
+          placeholder="Estrategia Terapeutica o enfoque terapeutico"
+          value={!store.userData.psych_strategies ? "Estrategia Terapeutica o enfoque terapeutico" : store.userData.psych_strategies}
+          className="max-w-xs"
+        />}
+            </>
             <div className="row mb-3 mt-3">
                                 <div className="col-sm-6">
                                   <img className="img-fluid" src={Imager} alt="Photo" />
@@ -101,15 +114,24 @@ const { actions, store } = useContext(Context);
         <div className="pb-3">
             <p>Experiencia Terapeutica</p>
         </div>
-        <Textarea
+        <> {!show ? 
+            <Textarea
             name="PsychExperiences"
             onChange={handleChange}
             label=""
             placeholder="introduce tu experiencia o enfoque terapeutico"
             className={{fullWidth:"true"}}
             value={store.userData.PsychExperiences || ""}
-            
-        />
+            />
+          : <Textarea
+          isDisabled
+          label=""
+          labelPlacement="outside"
+          placeholder="Enter your description"
+          value={!store.userData.PsychExperiences ? "introduce tu estrategiao enfoque terapeutico" : store.userData.PsychExperiences}
+          className="max-w-xs"
+        />}
+         </>
 
     <div className="flex flex-wrap gap-4 justify-content-center mt-3">
     <Button color="primary" variant="shadow" type="submit"

@@ -157,31 +157,37 @@ def update_user():
     user = User.query.filter_by(id=current_user).one_or_none()
     profile = PsicologyProfileInfo.query.filter_by(id=current_user).one_or_none()
     print(profile)
+
     if user is None:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({"error": "User not found"}), 404
 
     # Validate email update request (if allowed)
-    if 'email' in user_data and user_data['email'] != user.email:
+    if "email" in user_data and user_data["email"] != user.email:
         # Implement logic to handle email updates (e.g., confirmation email)
-        return jsonify({'error': 'Email update not allowed yet'}), 400  # Placeholder
+        return jsonify({"error": "Email update not allowed yet"}), 400  # Placeholder
 
     for key, value in user_data.items():
-        if key in ['password', 'role_id']:
+        if key in ["password", "role_id"]:
             # Disallow updates to password and role via PUT request
-            return jsonify({'error': 'Cannot update password or role'}), 400
-        setattr(user, key, value)
-    
+            return jsonify({"error": "Cannot update password or role"}), 400
+
+        # Update user attributes
+        if key not in ["id", "user_id"]:
+            setattr(user, key, value)
+
+    # Update profile attributes
     for key, value in user_data.items():
-      if key not in ['id', 'user_id']:  # Prevent updates to these read-only fields
-          setattr(profile, key, value)
+        if key not in ["id", "user_id"]:  # Prevent updates to these read-only fields
+            setattr(profile, key, value)
 
     try:
         db.session.commit()
-        return jsonify(user.serialize(), profile.serialize()), 200
+        return jsonify(User.serialize(user), profile.serialize()), 200
     except Exception as error:
         db.session.rollback()
         print(error)
-        return jsonify({'error': 'Error updating user'}), 500
+        return jsonify({"error": "Error updating user"}), 500
+
     
   
 
