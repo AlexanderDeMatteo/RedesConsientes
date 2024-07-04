@@ -2,6 +2,7 @@ import React from "react";
 import {Tabs, Tab, Chip} from "@nextui-org/react";
 import {Card, CardBody, CardHeader} from "@nextui-org/react";
 import { InfoTab } from "./tabs profile/InfoTab";
+import { ProfileTab } from "./tabs profile/ProfileTab";
 
 
 export const ProfileTabs = () => {
@@ -13,14 +14,15 @@ export const ProfileTabs = () => {
         color="primary" 
         variant="underlined"
         classNames={{
-          tabList: "gap-6 w-full relative rounded-small p-0 border-b border-divider bg-white",
+          tabList: "gap-6 w-full relative rounded-small p-3 border-b border-divider bg-white",
           cursor: "w-full bg-[#22d3ee]",
           tab: "max-w-fit px-0 h-12",
-          tabContent: "group-data-[selected=true]:text-[#06b6d4]"
+          tabContent: "group-data-[selected=true]:text-[#06b6d4]",
+          
         }}
       >
         <Tab
-          className="pl-3"
+          className=""
           key="informacion"
           title={
             <div className="flex items-center space-x-2">
@@ -48,7 +50,7 @@ export const ProfileTabs = () => {
           >
             <Card>
               <CardBody>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                <ProfileTab/>
               </CardBody>
             </Card>  
           </Tab>
