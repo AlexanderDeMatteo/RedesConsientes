@@ -25,6 +25,7 @@ class User(db.Model):
     name = db.Column(db.String(120), unique=False, nullable=False)
     last_name = db.Column(db.String(120), unique=False, nullable=True)
     dni = db.Column(db.String(30), unique=True, nullable=True)
+    dob = db.Column(db.String(30), unique=True, nullable=True)
     gender= db.Column(db.String(20), nullable=True)
     phone_number = db.Column(db.String(25), unique=False, nullable=True)
     motivo_consulta = db.Column(db.String(10), nullable=True)
@@ -36,6 +37,7 @@ class User(db.Model):
     role_name = db.relationship('Role',backref='role_user')
     role_id = Column(Integer, ForeignKey('role.id'))
     user_address = Column(Integer, ForeignKey('address.id'))
+    user_socialNetwork = Column(Integer, ForeignKey('socialnetwork.id'))
     psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
     Marketplace = Column(Integer, ForeignKey('marketplace.id'))
     factura = Column(Integer, ForeignKey('factura.id'))
@@ -51,11 +53,14 @@ class User(db.Model):
     def serialize(self):
         return {
         "id": self.id,
+        "user_address": self.id,
+        "user_socialNetwork": self.id,
         "psicology_profile": self.id,
         "email": self.email,
         "name": self.name,
         "last_name": self.last_name,
         "dni" : self.dni,
+        "dob" : self.dob,
         "gender" : self.gender,
         "phone_number" : self.phone_number,
         "motivo_consulta" : self.motivo_consulta,
@@ -173,6 +178,13 @@ class Address(db.Model):
     id = Column(Integer, primary_key=True)
     city = db.Column(db.String(25), unique=False, nullable=True)
     state = db.Column(db.String(25), unique=False, nullable=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "city": self.city,
+            "state": self.state,
+        }
 
 
 class PsicologyProfileInfo(db.Model):

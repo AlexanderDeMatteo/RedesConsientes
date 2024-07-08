@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, PsicologyProfileInfo, MiPsicologo, db, User, ClientTask, PaymentAccount, Phrase, Role
+from api.models import Session, PsicologyProfileInfo, MiPsicologo, db, User, ClientTask, PaymentAccount, Phrase, Role, Address, SocialNetwork
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -45,15 +45,27 @@ def handle_register():
     updated_info["psicology_profile"] = newUser.id
     print(updated_info)
     fpv = updated_info["fpv_number"]
+    create_address = Address(
+        id = newUser.id
+    )
+    try:
+        db.session.add(create_address)
+        db.session.commit()
+    except Exception as error:
+        db.session.rollback()
+        return jsonify(error.args), 500
+   
     # Check for psychologist flag and create profile if needed
     if user.get("is_psicologo", False):
       create_profile_info = PsicologyProfileInfo(
           id = newUser.id,
           fpv_number=fpv,
-      )
+      ),
+      create_socialNetwork = SocialNetwork(
+        id = newUser.id
+        )
       try:
-        print(create_profile_info)
-        db.session.add(create_profile_info)
+        db.session.add(create_profile_info, create_socialNetwork )
         db.session.commit()
       except Exception as error:
         db.session.rollback()
@@ -134,9 +146,11 @@ def delete_user(user_id):
 def handle_user_data():
     current_user = get_jwt_identity()
     user = User.query.filter_by(id=current_user).one_or_none()
-    print(user.psicology_profile, "aquiiiii")
     user_profile_info = PsicologyProfileInfo.query.filter_by(id = current_user).one_or_none()
-    print(user_profile_info)
+    print(user.id)
+    user_address_info = Address.query.filter_by(id = current_user).one_or_none()
+    user_socialNetwork_info = SocialNetwork.query.filter_by(id = current_user).one_or_none()
+    
     if user is None:
         return jsonify({"message": "Usuario no encontrado"}), 404
     if user_profile_info is None:
@@ -144,7 +158,9 @@ def handle_user_data():
     else: 
         user_info = user.serialize()
         profile_info = user_profile_info.serialize()
-        full_info = {**user_info,**profile_info }
+        address_info = user_address_info.serialize()
+        socialnetwork_info = user_socialNetwork_info.serialize()
+        full_info = {**user_info,**profile_info, **address_info, **socialnetwork_info }
         return jsonify(full_info), 200 
 
 @api.route('/user-profile', methods=['PUT'])

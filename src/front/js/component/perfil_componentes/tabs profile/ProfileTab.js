@@ -63,10 +63,12 @@ const genero = ["Masculino", "Femenino", "otros"]
 
   return (
     <>
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
       <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-        <Input
+        <>{!show ? 
+          <Input
           type="last_name"
+          onChange={handleChange}
           name="last_name"
           label="Apellido"
           placeholder="ingresa tu apellido"
@@ -74,9 +76,25 @@ const genero = ["Masculino", "Femenino", "otros"]
           startContent={
             <i class="fa-regular fa-address-card"></i>
           }
-        />
-        <Input
+          />
+          :<Input
+          isDisabled
+          type="last_name"
+          onChange={handleChange}
+          name="last_name"
+          label="Apellido"
+          placeholder="ingresa tu apellido"
+          labelPlacement="outside"
+          startContent={
+            <i class="fa-regular fa-address-card"></i>
+          }
+          value={store.userData.last_name}
+          />}
+        </>
+        <>{!show ? 
+          <Input
           type="dni"
+          onChange={handleChange}
           name="dni"
           label="Cedula"
           placeholder="ingresa tu cedula"
@@ -84,8 +102,25 @@ const genero = ["Masculino", "Femenino", "otros"]
           startContent={
             <i class="fa-solid fa-address-card"></i>
           }
-        />
-        <DateInput
+          />
+          : <Input
+          isDisabled
+          type="dni"
+          onChange={handleChange}
+          name="dni"
+          label="Cedula"
+          placeholder="ingresa tu cedula"
+          labelPlacement="outside"
+          value={store.userData.dni}
+          startContent={
+            <i class="fa-solid fa-address-card"></i>
+          }
+          />}
+        </>
+        <>{!show ?
+          <DateInput
+          name="dob"
+          onChange={handleChange}
           label= <strong>Fecha de nacimiento</strong>
           className="m-0"
           defaultValue={parseDate("2024-04-04")} 
@@ -94,7 +129,21 @@ const genero = ["Masculino", "Femenino", "otros"]
           startContent={
             <i class="fa-solid fa-calendar-days"></i>
           }
-        />
+          />
+          : <DateInput
+          isDisabled
+          name="dob"
+          onChange={handleChange}
+          label= <strong>Fecha de nacimiento</strong>
+          className="m-0"
+          defaultValue={parseDate("2024-04-04")} 
+          placeholderValue={new CalendarDate(1995, 11, 6)} 
+          labelPlacement="outside"
+          startContent={
+            <i class="fa-solid fa-calendar-days"></i>
+          }
+          /> }
+        </>
       {/* <Select
       className="max-w-xs"
       defaultSelectedKeys={["Select"]}
@@ -112,6 +161,8 @@ const genero = ["Masculino", "Femenino", "otros"]
     </Select> */}
 
     <Select
+      name="gender"
+      onChange={handleChange}
       className="max-w-xs junstify-content-center"
       label="Genero"
     >
@@ -135,6 +186,7 @@ const genero = ["Masculino", "Femenino", "otros"]
       </SelectItem>
     </Select>
         <Input
+          name="phone_number"
           type="number"
           label="Numero Telefonico"
           placeholder="ingresa tu numero telefonico"
@@ -143,24 +195,63 @@ const genero = ["Masculino", "Femenino", "otros"]
             <i class="fa-solid fa-mobile-screen-button"></i>
           }
         />
-        <Input
+        <>
+          {!show ? 
+            <Input
+            name="state"
+            onChange={handleChange}
+            type="state"
+            label="Estado"
+            placeholder="ingresa el estado donde reside"
+            labelPlacement="outside"
+            startContent={
+              <i class="fa-solid fa-earth-americas"></i>
+            }
+            />
+          : <Input
+          isDisabled
+          name="state"
+          onChange={handleChange}
           type="state"
           label="Estado"
           placeholder="ingresa el estado donde reside"
           labelPlacement="outside"
+          value={store.userData.state}
           startContent={
             <i class="fa-solid fa-earth-americas"></i>
           }
-        />
-      <Input
-          type="city"
-          label="Ciudad"
-          placeholder="ingresa la ciudad donde reside"
-          labelPlacement="outside"
-          startContent={
-            <i class="fa-solid fa-map-location-dot"></i>
-          }
-        />
+          />}
+        </>
+        <>{
+          !show ?
+          <Input
+              name="city"
+              onChange={handleChange}
+              type="city"
+              label="Ciudad"
+              placeholder="ingresa la ciudad donde reside"
+              labelPlacement="outside"
+              startContent={
+                <i class="fa-solid fa-map-location-dot"></i>
+              }
+            />
+            :
+            <Input
+              isDisabled
+              name="city"
+              onChange={handleChange}
+              type="city"
+              label="Ciudad"
+              placeholder="ingresa la ciudad donde reside"
+              labelPlacement="outside"
+              value={store.userData.city}
+              startContent={
+                <i class="fa-solid fa-map-location-dot"></i>
+              }
+            />
+
+        }
+        </>
             </div>
     </div>   
 
