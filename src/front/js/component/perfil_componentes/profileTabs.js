@@ -3,6 +3,7 @@ import {Tabs, Tab, Chip} from "@nextui-org/react";
 import {Card, CardBody, CardHeader} from "@nextui-org/react";
 import { InfoTab } from "./tabs profile/InfoTab";
 import { ProfileTab } from "./tabs profile/ProfileTab";
+import { ProfesionalProfileTab } from "./tabs profile/ProfesionalProfileTab";
 
 
 export const ProfileTabs = () => {
@@ -82,23 +83,7 @@ export const ProfileTabs = () => {
           >
             <Card>
               <CardBody>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-              </CardBody>
-            </Card>  
-          </Tab>
-        <Tab
-          key="perfil_paciente"
-          title={
-            <div className="flex items-center space-x-2">
-              <i class="fa-solid fa-user"></i>
-              <span>Perfil Paciente</span>
-              {/* <Chip size="sm" variant="faded">1</Chip> */}
-            </div>
-          }
-          >
-            <Card>
-              <CardBody>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+               <ProfesionalProfileTab/>
               </CardBody>
             </Card>  
           </Tab>
