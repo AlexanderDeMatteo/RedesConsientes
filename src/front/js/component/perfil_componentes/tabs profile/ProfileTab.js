@@ -159,12 +159,13 @@ const genero = ["Masculino", "Femenino", "otros"]
         <SelectItem key={item.key}>{item}</SelectItem>
       ))}
     </Select> */}
-
+    <> {!show ?
     <Select
       name="gender"
       onChange={handleChange}
       className="max-w-xs junstify-content-center"
       label="Genero"
+      placeholder="Selecciona"
     >
       <SelectItem
         key="Masculino"
@@ -185,16 +186,43 @@ const genero = ["Masculino", "Femenino", "otros"]
         Otro
       </SelectItem>
     </Select>
-        <Input
-          name="phone_number"
-          type="number"
-          label="Numero Telefonico"
-          placeholder="ingresa tu numero telefonico"
-          labelPlacement="outside"
-          startContent={
-            <i class="fa-solid fa-mobile-screen-button"></i>
-          }
-        />
+    :
+    <Select
+      isDisabled
+      name="gender"
+      onChange={handleChange}
+      className="max-w-xs junstify-content-center"
+      label="Genero"
+      placeholder={store.userData.gender ? store.userData.gender : "Selecciona" }
+    >
+      
+    </Select>}
+    </>
+        <>
+        {!show ?
+          <Input
+            name="phone_number"
+            type="number"
+            label="Numero Telefonico"
+            placeholder="ingresa tu numero telefonico"
+            labelPlacement="outside"
+            startContent={
+              <i class="fa-solid fa-mobile-screen-button"></i>
+            }
+          />
+          :
+          <Input
+            isDisabled
+            name="phone_number"
+            type="number"
+            label="Numero Telefonico"
+            placeholder="ingresa tu numero telefonico"
+            labelPlacement="outside"
+            startContent={
+              <i class="fa-solid fa-mobile-screen-button"></i>
+            }
+          />}
+        </>
         <>
           {!show ? 
             <Input
