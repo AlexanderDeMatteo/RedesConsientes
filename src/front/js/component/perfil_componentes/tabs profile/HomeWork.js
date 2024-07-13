@@ -12,10 +12,6 @@ export const HomeWork = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [tareasCumplidas, setTareasCumplidas] = useState([])
   
-  const ListaPrueba = [
-    { description: 'Item 1', completed: true },
-    { description: 'Item 2', completed: false },
-    { description: 'Item 3', completed: true },]
 
   const handleChange = (event) => {
     setTask({
@@ -24,18 +20,19 @@ export const HomeWork = () => {
     });
   };
 
+  const tareasCompletadas  = () => {
+    const completedItems = [];
 
-    let contador = 0;
-    let cantidadCompleted = 0;
-
-    for (i = 0; i< ListaPrueba.length; i++) {
-    if (ListaPrueba.completed === true) {
-        contador++;
-        cantidadCompleted++;
+    for (const item of taskList) {
+      if (item.completed) {
+      completedItems.push(item);
     }
     }
-    console.log(contador, cantidadCompleted)
+    return completedItems.length
+
+  }
  
+
   const buttonSaveTask = async () => {
     try {
       const response = await actions.post_patient_task(id, task);
@@ -83,16 +80,18 @@ export const HomeWork = () => {
     actions.get_patient_task(id).then(() => {
       setIsLoading(false);
       setTaskList(store.patientTask);
+      tareasCompletadas()
+
     });
   }, []);
   
  
-//   useEffect(() => {
-//     // Actualizar taskList cuando la lista de tareas en el store cambie
-//     if (!isLoading) {
-//       setTaskList(store.patientTask);
-//     }
-//   }, [store.patientTask, isLoading]);
+  useEffect(() => {
+    // Actualizar taskList cuando la lista de tareas en el store cambie
+    if (!isLoading) {
+      setTaskList(store.patientTask);
+    }
+  }, [store.patientTask, isLoading]);
 
   return (
     <div>
@@ -108,27 +107,27 @@ export const HomeWork = () => {
           labelPlacement="outside"
           required minlength="4" maxlength="110"
           startContent={
-            <i class="fa-solid fa-list-check"></i>
+            <i className="fa-solid fa-list-check"></i>
           }
           />
         <Button color="primary"
         type="button" onClick={() => buttonSaveTask()}
         >
-      Añadir tarea <i class="fa-solid fa-pencil"></i>
+      Añadir tarea <i className="fa-solid fa-pencil"></i>
         </Button>
-        {/* <button type="button" onClick={() => buttonSaveTask()}  class="btn btn-primary">Añadir Tarea</button> */}
       </div>
       {isLoading ? (
         <div>Cargando...</div>
       ) : (
         <>
-          {ListaPrueba.length > 0 ? (
+          {taskList.length > 0 ? (
             <>
             <Card>
             <CardBody>
               <ul className="lista">
-                {ListaPrueba.map((item, index) => (
+                {taskList.map((item, index) => (
                 <>
+                 
                 
                 <li key={index} className="p-0">
 <Input
@@ -144,7 +143,7 @@ export const HomeWork = () => {
                 </>
                 ))}
               </ul>
-              <div>Tienes {ListaPrueba.length} tareas pendientes</div>
+              <div>Tienes {taskList.length - tareasCompletadas()} tareas pendientes</div>
               </CardBody>
               </Card>
             </>
