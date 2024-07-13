@@ -5,6 +5,7 @@ import { InfoTab } from "./tabs profile/InfoTab";
 import { ProfileTab } from "./tabs profile/ProfileTab";
 import { ProfesionalProfileTab } from "./tabs profile/ProfesionalProfileTab";
 import { HomeWork } from "./tabs profile/HomeWork";
+import { NetworkTab } from "./tabs profile/NetworkTab";
 
 
 export const ProfileTabs = () => {
@@ -68,7 +69,7 @@ export const ProfileTabs = () => {
           >
             <Card>
               <CardBody>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                <NetworkTab/>
               </CardBody>
             </Card>  
           </Tab>

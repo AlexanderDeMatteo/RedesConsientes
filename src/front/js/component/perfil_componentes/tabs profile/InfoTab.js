@@ -84,7 +84,7 @@ const API_URL = process.env.BACKEND_URL;
           labelPlacement="outside"
           placeholder="Estrategia Terapeutica o enfoque terapeutico"
           value={!store.userData.psych_strategies ? "Estrategia Terapeutica o enfoque terapeutico" : store.userData.psych_strategies}
-          className="max-w-xs"
+          className={{fullWidth:"true"}}
         />}
             </>
             <div className="row mb-3 mt-3">
@@ -119,7 +119,7 @@ const API_URL = process.env.BACKEND_URL;
             name="PsychExperiences"
             onChange={handleChange}
             label=""
-            placeholder="introduce tu experiencia o enfoque terapeutico"
+            placeholder="introduce tu experiencia terapeutica"
             className={{fullWidth:"true"}}
             value={store.userData.PsychExperiences || ""}
             />
@@ -128,8 +128,8 @@ const API_URL = process.env.BACKEND_URL;
           label=""
           labelPlacement="outside"
           placeholder="Enter your description"
-          value={!store.userData.PsychExperiences ? "introduce tu estrategiao enfoque terapeutico" : store.userData.PsychExperiences}
-          className="max-w-xs"
+          value={!store.userData.PsychExperiences ? "introduce tu experiencia terapeutica" : store.userData.PsychExperiences}
+          className={{fullWidth:"true"}}
         />}
          </>
 
