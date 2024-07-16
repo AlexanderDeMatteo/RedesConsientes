@@ -33,6 +33,7 @@ import { Buscador2 } from "./pages/BuscadorDePsicologos2";
 import { Noticias } from "./pages/Noticias";
 import { Cursos } from "./pages/Cursos";
 import { Navbar2 } from "./component/navbar2";
+import { Eventos } from "./pages/Eventos";
 
 
 //create your first component
@@ -144,10 +145,20 @@ const Layout = () => {
             </Route>
             <Route element={<PrivateRoutes/>}>
             <Route element={
-              <div className="contenedor">
+              <div className="box">
                 {/* <div id="navbar2">
                   <Sidebarx />
                 </div> */}
+                <div id="paginaCentral">
+                  <Eventos />
+                </div>
+              </div>}
+              path="Eventos"
+            />
+            </Route>
+            <Route element={<PrivateRoutes/>}>
+            <Route element={
+              <div className="contenedor">
                 <div id="paginaCentral">
                   <Calendar_custom />
                 </div>

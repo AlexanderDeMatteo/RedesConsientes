@@ -153,6 +153,11 @@ export const Navbar2 = () => {
             Cursos
           </Link>
         </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/eventos">
+            Eventos
+          </Link>
+        </NavbarItem>
       </NavbarContent>
         }
       </>
