@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button, user} from "@nextui-org/react";
 import {DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
 import {Badge} from "@nextui-org/react";
 import {Listbox, ListboxItem, Chip, ScrollShadow} from "@nextui-org/react";
@@ -68,11 +68,6 @@ export const Navbar2 = () => {
     {name:"Cerrar sesión", url:"#"},
   ];
 
-  const menuItems3 = [
-    {name:"Iniciar sesión", url:"signin"},
-    {name:"Registro", url:"signup"},
-    {name:"Sobre nosotros", url:"#"},
-  ];
 
   useEffect(() => {
     actions.handle_user_data()
@@ -133,11 +128,7 @@ export const Navbar2 = () => {
       <>
       {!hasValidToken() ? "":
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {/* <NavbarItem>
-          <Link color="foreground" href="#">
-          Sobre nosotros
-          </Link>
-        </NavbarItem> */}
+        
         <NavbarItem isActive>
           <Link href="noticias" aria-current="page">
             Noticias
@@ -148,11 +139,14 @@ export const Navbar2 = () => {
             Buscador de psicologos
           </Link>
         </NavbarItem>
-        <NavbarItem>
+        {store.userData.is_psicologo ? 
+
+          <NavbarItem>
           <Link color="foreground" href="/cursos">
-            Cursos
+          Cursos
           </Link>
-        </NavbarItem>
+          </NavbarItem>
+        : " "}
         <NavbarItem>
           <Link color="foreground" href="/eventos">
             Eventos
@@ -270,10 +264,14 @@ export const Navbar2 = () => {
             <DropdownItem key="Perfil" href="/perfil">Perfil</DropdownItem>
             <DropdownItem key="Agenda_del_dia" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
             <DropdownItem key="Contactos" href="/contactos">Contactos</DropdownItem>
+            {store.userData.is_psicologo ? 
+            <>
             <DropdownItem key="Expedientes" href="/Expedientes">Expedientes</DropdownItem>
             <DropdownItem key="Manejo_de_agend" onClick={() => handleClick(calendar)}>Manejo de agenda</DropdownItem>
             <DropdownItem key="Facturacion">Facturacion</DropdownItem>
             <DropdownItem key="Modalidad_de_pago">Modalidad de pago</DropdownItem>
+            </>
+            : " " }
             <DropdownItem key="logout" onClick={(e) => {
               removeAuthToken()
               navigate("/")

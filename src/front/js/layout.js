@@ -13,11 +13,9 @@ import { Calendar_custom } from "./pages/Calendar";
 import { CalendarCogif_custom } from "./pages/Calendar_Config";
 import { CalendarToday_custom } from "./pages/Calendar_today";
 
-import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import "../styles/layout.css";
 import Sessions from "./pages/Session";
-import { Sidebarx } from "./component/SideBar";
 // import { Expedientes } from "./pages/Expedientes";
 import { PerfilUsuarioSeleccionado } from "./pages/Perfil_Usuario_Seleccionado";
 import { MetodosDePago } from "./pages/Metodos_De_Pago";
@@ -34,6 +32,7 @@ import { Noticias } from "./pages/Noticias";
 import { Cursos } from "./pages/Cursos";
 import { Navbar2 } from "./component/navbar2";
 import { Eventos } from "./pages/Eventos";
+import { LoginSiginUp } from "./pages/LoginSiginUp";
 
 
 //create your first component
@@ -52,6 +51,7 @@ const Layout = () => {
             <Route element={<Home />} path="/"/>
             <Route element={<SignUp />} path="/signup"/>
             <Route element={<SignIn />} path="/signin"/>
+            <Route element={<LoginSiginUp />} path="/LoginSiginUp"/>
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
