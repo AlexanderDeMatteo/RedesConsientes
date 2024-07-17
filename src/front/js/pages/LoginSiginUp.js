@@ -1,15 +1,29 @@
 import React, { useState } from "react";
-import {Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader, Checkbox, Image} from "@nextui-org/react";
+import {
+  Tabs,
+  Tab,
+  Input,
+  Link,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Checkbox,
+  Image,
+} from "@nextui-org/react";
+import "../../styles/loginSiginup.css"
 
-export const LoginSiginUp  = () => {
+export const LoginSiginUp = () => {
   const [selected, setSelected] = React.useState("Inicia Sesion");
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   return (
-    <div className="flex flex-col-12 w-full justify-content-center mt-2">
-        
-      <Card className="max-w-full flex-row w-[400px] h-[650px] justify-content-center">
-        <CardBody className="overflow-hidden">
+    <div className="flex flex-col-12 ">
+      <Card id="card" className="max-w-full h-auto m-2 justify-content-center">
+        <CardBody className=" ">
+          <Image src="https://img.freepik.com/vector-gratis/dibujado-mano-ilustracion-dia-mundial-salud-mental_23-2149664792.jpg?t=st=1718861213~exp=1718864813~hmac=472f6c611b046bfb370ae4aa1c8d6a1022ee8e82b6ced3654dbb00ad6ca14581&w=740" />
+        </CardBody>
+        <CardBody className=" h-auto">
           <Tabs
             fullWidth
             size="md"
@@ -56,13 +70,14 @@ export const LoginSiginUp  = () => {
                   placeholder="Repite la contraseña"
                   type="password"
                 />
-                <Checkbox defaultSelected isSelected={show} onClick={()=> {show == false ? setShow(true) : setShow(false)}}>Eres Psicologo?</Checkbox>
-                {show == true ? 
-                <Input isRequired label="Numero de federado" placeholder="Ingresa tu numero de FPV" type="number" />
-                : ""}
+                <Checkbox defaultSelected isSelected={show} onClick={() => setShow(!show)}>
+                  Eres Psicologo?
+                </Checkbox>
+                {show && ( // Use logical AND for conditional rendering
+                  <Input isRequired label="Numero de federado" placeholder="Ingresa tu numero de FPV" type="number" />
+                )}
 
-                <Checkbox defaultSelected isSelected={false}>acepto los terminos y condiciones del contrato</Checkbox>
-                
+                <Checkbox defaultSelected isSelected={false}>Acepto los terminos y condiciones del contrato</Checkbox>
 
                 <p className="text-center text-small">
                   Ya tienes una cuenta?{" "}
