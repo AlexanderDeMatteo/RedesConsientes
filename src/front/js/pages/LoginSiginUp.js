@@ -18,8 +18,8 @@ export const LoginSiginUp = () => {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="flex flex-col-12 ">
-      <Card id="card" className="max-w-full h-auto m-2 justify-content-center">
+    <div className=" max-w-full max-h-full h-auto justify-content-center flex ">
+      <Card id="card" className="w-auto h-auto m-2 ">
         <CardBody className=" ">
           <Image src="https://img.freepik.com/vector-gratis/dibujado-mano-ilustracion-dia-mundial-salud-mental_23-2149664792.jpg?t=st=1718861213~exp=1718864813~hmac=472f6c611b046bfb370ae4aa1c8d6a1022ee8e82b6ced3654dbb00ad6ca14581&w=740" />
         </CardBody>
@@ -55,8 +55,8 @@ export const LoginSiginUp = () => {
             </Tab>
             <Tab key="sign-up" title="Registrate">
               <form className="flex flex-col gap-4 h-[300px]">
-                <Input isRequired label="Nombre" placeholder="Ingresa tu nombre" type="password" />
-                <Input isRequired label="Apellido" placeholder="Ingresa tu apellido" type="password" />
+                <Input isRequired label="Nombre" placeholder="Ingresa tu nombre" type="text" />
+                <Input isRequired label="Apellido" placeholder="Ingresa tu apellido" type="text" />
                 <Input isRequired label="Email" placeholder="Ingresa tu email" type="email" />
                 <Input
                   isRequired
