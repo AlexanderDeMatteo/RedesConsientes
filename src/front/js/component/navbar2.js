@@ -177,12 +177,12 @@ export const Navbar2 = () => {
     {!hasValidToken() ?
       <NavbarContent justify="end" className="">
         
+        {/* <NavbarItem>
+          <Link href="/loginsiginup">Ingresa</Link>
+        </NavbarItem> */}
         <NavbarItem>
-          <Link href="/signin">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="warning" href="/signup" variant="flat">
-            Sign Up
+          <Button as={Link} color="primary" href="/loginsiginup" variant="flat">
+            Ingresa
           </Button> 
         </NavbarItem>
       </NavbarContent>
@@ -289,7 +289,7 @@ export const Navbar2 = () => {
         " "
         :   
         <>
-        {store.userData.role_id === 2 || store.userData.role_id === 3 ? 
+        {store.userData.role_id == 2 || store.userData.role_id == 3 ? 
       <NavbarMenu>
         {menuItemsPsicologo.map((item, index) => (   
           <NavbarMenuItem key={`${item}-${index}`} >

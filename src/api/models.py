@@ -39,13 +39,13 @@ class User(db.Model):
     user_address = Column(Integer, ForeignKey('address.id'))
     user_socialNetwork = Column(Integer, ForeignKey('socialnetwork.id'))
     psicology_profile = Column(Integer, ForeignKey('psicology_profile.id'))
-    Marketplace = Column(Integer, ForeignKey('marketplace.id'))
-    factura = Column(Integer, ForeignKey('factura.id'))
     # seleccionar psicologo
     selected_psicologo_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     selected_psicologo = db.relationship('User', remote_side=[id])
     is_psicologo_selected = db.Column(db.Boolean, default=False)
-    client_list = Column(Integer, ForeignKey('client_list.id'))
+    # marketplace = Column(Integer, ForeignKey('marketplace.id'))
+    # client_list = Column(Integer, ForeignKey('client_list.id'))
+    # factura = Column(Integer, ForeignKey('factura.id'))
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -264,22 +264,6 @@ class SocialNetwork(db.Model):
                 "icon": self.icon
             }
 
-class Client_List(db.Model):
-    __tablename__ = "client_list"
-    id = Column(Integer, primary_key=True)   
-    psychologist_id = Column(Integer, ForeignKey('user.id'))
-    psychologist = db.relationship('User', backref='psychologist_clientlist_id', foreign_keys=[psychologist_id])
-    client_id = Column(Integer, ForeignKey('user.id'))
-    client = db.relationship('User', backref='client_clientlist_id', foreign_keys=[client_id])
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
-            "patient_name": self.client.name if self.client else None,  # Handle potential null values
-            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
-            "patient_last_name": self.client.last_name if self.client else None,
-        }
 
 class Session(db.Model):
     __tablename__ = 'session'
@@ -464,26 +448,35 @@ class PaymentAccount(db.Model):
             db.session.rollback()
             return False
 
-class Marketplace(db.Model):
-    __tablename__ = "marketplace"
+
+
+
+class Phrase(db.Model):
+    __tablename__ = "phrase"
 
     id = db.Column(db.Integer, primary_key=True)
-    product = db.Column(db.String(400), nullable=True)
-    description = db.Column(db.String(400), nullable=True)
-    status = db.Column(db.Boolean(), nullable=True)
-    cost = db.Column(db.String(400), nullable=True)
-    psychologist_id_marketplace = Column(Integer, ForeignKey('user.id'))
-    psychologist = db.relationship('User', backref='psychologist_id', foreign_keys=[psychologist_id_marketplace])
-    client_id_marketplace = Column(Integer, ForeignKey('user.id'))
-    client = db.relationship('User', backref='client_id', foreign_keys=[client_id_marketplace])
+    phrase = db.Column(db.String(400), nullable=True)
+    author = db.Column(db.String(100), nullable=True)
+    
 
     def serialize(self):
         return {
             "id": self.id,
-            "product": self.product,
-            "description": self.description,
-            "status": self.status,
-            "cost": self.cost,
+            "phrase": self.phrase,
+            "author": self.author,
+        }
+    
+class Client_List(db.Model):
+    __tablename__ = "client_list"
+    id = Column(Integer, primary_key=True)   
+    psychologist_id = Column(Integer, ForeignKey('user.id'))
+    psychologist = db.relationship('User', backref='psychologist_clientlist_id', foreign_keys=[psychologist_id])
+    client_id = Column(Integer, ForeignKey('user.id'))
+    client = db.relationship('User', backref='client_clientlist_id', foreign_keys=[client_id])
+
+    def serialize(self):
+        return {
+            "id": self.id,
             "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
             "patient_name": self.client.name if self.client else None,  # Handle potential null values
             "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
@@ -515,19 +508,28 @@ class Factura(db.Model):
             "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
             "patient_last_name": self.client.last_name if self.client else None,
         }
-
-
-class Phrase(db.Model):
-    __tablename__ = "phrase"
+class Marketplace(db.Model):
+    __tablename__ = "marketplace"
 
     id = db.Column(db.Integer, primary_key=True)
-    phrase = db.Column(db.String(400), nullable=True)
-    author = db.Column(db.String(100), nullable=True)
-    
+    product = db.Column(db.String(400), nullable=True)
+    description = db.Column(db.String(400), nullable=True)
+    status = db.Column(db.Boolean(), nullable=True)
+    cost = db.Column(db.String(400), nullable=True)
+    psychologist_id_marketplace = Column(Integer, ForeignKey('user.id'))
+    psychologist = db.relationship('User', backref='psychologist_id', foreign_keys=[psychologist_id_marketplace])
+    client_id_marketplace = Column(Integer, ForeignKey('user.id'))
+    client = db.relationship('User', backref='client_id', foreign_keys=[client_id_marketplace])
 
     def serialize(self):
         return {
             "id": self.id,
-            "phrase": self.phrase,
-            "author": self.author,
+            "product": self.product,
+            "description": self.description,
+            "status": self.status,
+            "cost": self.cost,
+            "psychologist_name": self.psychologist.name if self.psychologist else None,  # Handle potential null values
+            "patient_name": self.client.name if self.client else None,  # Handle potential null values
+            "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
+            "patient_last_name": self.client.last_name if self.client else None,
         }
