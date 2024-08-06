@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1e432eec8d56
+Revision ID: f1e6b87c4f07
 Revises: 
-Create Date: 2024-08-06 17:23:02.545487
+Create Date: 2024-08-06 20:19:09.138804
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1e432eec8d56'
+revision = 'f1e6b87c4f07'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -45,9 +45,11 @@ def upgrade():
     )
     op.create_table('socialnetwork',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=120), nullable=True),
-    sa.Column('url', sa.String(length=120), nullable=True),
-    sa.Column('icon', sa.String(length=120), nullable=True),
+    sa.Column('tiktok', sa.String(length=120), nullable=True),
+    sa.Column('facebook', sa.String(length=120), nullable=True),
+    sa.Column('instagram', sa.String(length=120), nullable=True),
+    sa.Column('linkedin', sa.String(length=120), nullable=True),
+    sa.Column('x', sa.String(length=120), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('permission',

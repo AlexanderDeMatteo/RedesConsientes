@@ -781,4 +781,33 @@ def handle_random_phrase():
 
         # Return an error message if no phrase was found
         return jsonify({"message": "No se encontraron frases en la base de datos"}), 404
+    
 
+
+@api.route('/socialnetwork/', methods=['PUT'])
+@jwt_required()
+def update_social_network():
+    current_user = get_jwt_identity()
+    user_data = request.json
+    user = User.query.filter_by(id=current_user).one_or_none()
+    social_network = SocialNetwork.query.filter_by(id=current_user).one_or_none()
+    # Get the existing record
+    
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+
+    # Get the update data from the request
+    update_data = request.get_json()
+
+    # Update the record with the provided data (optional validation)
+    social_network.tiktok = update_data.get('tiktok', social_network.tiktok)
+    social_network.facebook = update_data.get('facebook', social_network.facebook)
+    social_network.instagram = update_data.get('instagram', social_network.instagram)
+    social_network.linkedin = update_data.get('linkedin', social_network.linkedin)
+    social_network.x = update_data.get('x', social_network.x)
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    # Serialize and return the updated record
+    return jsonify(social_network.serialize()), 200

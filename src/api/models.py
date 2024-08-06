@@ -252,16 +252,20 @@ class SocialNetwork(db.Model):
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=False, nullable=True)
-    url = db.Column(db.String(120), unique=False, nullable=True)
-    icon = db.Column(db.String(120), unique=False, nullable=True)
+    tiktok = db.Column(db.String(120), unique=False, nullable=True)
+    facebook = db.Column(db.String(120), unique=False, nullable=True)
+    instagram = db.Column(db.String(120), unique=False, nullable=True)
+    linkedin = db.Column(db.String(120), unique=False, nullable=True)
+    x = db.Column(db.String(120), unique=False, nullable=True)
 
     def serialize(self):
             return {
                 "id": self.id,
-                "name": self.name,
-                "url": self.url,
-                "icon": self.icon
+                "tiktok": self.tiktok,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "linkedin": self.linkedin,
+                "x": self.x
             }
 
 

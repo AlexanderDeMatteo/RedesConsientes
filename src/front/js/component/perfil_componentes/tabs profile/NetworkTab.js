@@ -21,7 +21,7 @@ const API_URL = process.env.BACKEND_URL;
         const userDataCopy = { ...store.userData };
         delete userDataCopy.role_id;
       
-        const response = await fetch(`${API_URL}/api/user-profile`, {
+        const response = await fetch(`${API_URL}/api/socialnetwork/`, {
           method: "PUT",
           body: JSON.stringify(userDataCopy),
           headers: {
@@ -67,7 +67,7 @@ const API_URL = process.env.BACKEND_URL;
           { !show ? <Input
           type="text"
           onChange={handleChange}
-          name="Tiktok"
+          name="tiktok"
           label="Tiktok"
           placeholder="Ingresa tu usuario de Tiktok"
           labelPlacement="outside"
@@ -79,8 +79,9 @@ const API_URL = process.env.BACKEND_URL;
           isDisabled
           type="text"
           onChange={handleChange}
-          name="Tiktok"
+          name="tiktok"
           label="Tiktok"
+          value={store.userData.tiktok}
           placeholder="Ingresa tu usuario de Tiktok"
           labelPlacement="outside"
           startContent={
@@ -94,7 +95,7 @@ const API_URL = process.env.BACKEND_URL;
           {!show ?<Input
           type="text"
           onChange={handleChange}
-          name="Facebook"
+          name="facebook"
           label="Facebook"
           placeholder="Ingresa tu usuario de Facebook"
           labelPlacement="outside"
@@ -106,7 +107,8 @@ const API_URL = process.env.BACKEND_URL;
           isDisabled
           type="text"
           onChange={handleChange}
-          name="Facebook"
+          name="facebook"
+          value={store.userData.facebook}
           label="Facebook"
           placeholder="Ingresa tu usuario de Facebook"
           labelPlacement="outside"
@@ -120,7 +122,7 @@ const API_URL = process.env.BACKEND_URL;
           {!show ? <Input
           type="text"
           onChange={handleChange}
-          name="Instagram"
+          name="instagram"
           label="Instagram"
           placeholder="Ingresa tu usuario de Instagram"
           labelPlacement="outside"
@@ -132,7 +134,8 @@ const API_URL = process.env.BACKEND_URL;
           isDisabled
           type="text"
           onChange={handleChange}
-          name="Instagram"
+          name="instagram"
+          value={store.userData.instagram}
           label="Instagram"
           placeholder="Ingresa tu usuario de Instagram"
           labelPlacement="outside"
@@ -147,7 +150,7 @@ const API_URL = process.env.BACKEND_URL;
           {!show ? <Input
           type="text"
           onChange={handleChange}
-          name="Linkedin"
+          name="linkedin"
           label="Linkedin"
           placeholder="Ingresa el usuario de Linkedin"
           labelPlacement="outside"
@@ -159,7 +162,8 @@ const API_URL = process.env.BACKEND_URL;
           isDisabled
           type="text"
           onChange={handleChange}
-          name="Linkedin"
+          name="linkedin"
+          value={store.userData.linkedin}
           label="Linkedin"
           placeholder="Ingresa el usuario de Linkedin"
           labelPlacement="outside"
@@ -173,7 +177,7 @@ const API_URL = process.env.BACKEND_URL;
           {!show ? <Input
           type="text"
           onChange={handleChange}
-          name="X"
+          name="x"
           label="X"
           placeholder="Ingresa tu usuario de X"
           labelPlacement="outside"
@@ -185,7 +189,8 @@ const API_URL = process.env.BACKEND_URL;
           isDisabled
           type="text"
           onChange={handleChange}
-          name="X"
+          name="x"
+          value={store.userData.x}
           label="X"
           placeholder="Ingresa tu usuario de X"
           labelPlacement="outside"

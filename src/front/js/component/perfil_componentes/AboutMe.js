@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import {Card, CardHeader, CardBody, Avatar, Image, Button} from "@nextui-org/react";
+import { Link } from "react-router-dom";
+
 
 
 
@@ -29,11 +31,11 @@ export const AboutMe = (data) => {
         <p className="text-muted">{data.user_data.state}, {data.user_data.city}</p>
       </>
         : ""}
-        {data.user_data.twitter ?
+        {data.user_data.x ?
           <>
             <hr />
-            <strong><i classNameName="fab fa-twitter fa-lg"></i> Twitter</strong>
-            <p className="text-muted"> <i class="fa-brands fa-twitter"></i>{data.user_data.twitter}</p>
+            <strong><i class="fa-brands fa-square-x-twitter"></i> X </strong>
+            <Link to={`https://www.x.com/${data.user_data.x}`} target="_blank">{data.user_data.x}</Link>
 
           </> : <>
           </>
@@ -41,8 +43,8 @@ export const AboutMe = (data) => {
         {data.user_data.instagram ?
           <>
             <hr />
-            <strong><i classNameName="fab fa-instagram fa-lg"></i> Instagram</strong>
-            <p className="text-muted">{data.user_data.instagram}</p>
+            <strong><i style={{ color: "pink" }}  class="fa-brands fa-instagram"></i> Instagram</strong>
+            <Link to={`https://www.instagram.com/${data.user_data.instagram}`} target="_blank">{data.user_data.instagram}</Link>
 
           </> : <>
           </>
@@ -50,8 +52,26 @@ export const AboutMe = (data) => {
         {data.user_data.facebook ?
           <>
             <hr />
-            <strong><i classNameName="fab fa-facebook fa-lg"></i> Facebook</strong>
-            <p className="text-muted">{data.user_data.facebook}</p>
+            <strong><i style={{ color: "blue" }}  class="fa-brands fa-square-facebook"></i> Facebook</strong>
+            <Link to={`https://www.facebook.com/${data.user_data.facebook.replaceAll(" ",".")}`} target="_blank">{data.user_data.facebook}</Link>
+
+          </> : <>
+          </>
+        }
+        {data.user_data.tiktok ?
+          <>
+            <hr />
+            <strong><i style={{ color: "white", background: "black" }}  class="fa-brands fa-tiktok"></i> Tiktok</strong>
+            <Link to={`https://www.tiktok.com/@${data.user_data.tiktok.replaceAll(" ",".")}`} target="_blank">{data.user_data.tiktok}</Link>
+
+          </> : <>
+          </>
+        }
+        {data.user_data.linkedin ?
+          <>
+            <hr />
+            <strong><i style={{ color: "blue" }} class="fa-brands fa-linkedin"></i> Linkedin</strong>
+            <Link to={`https://www.linkedin.com/in/${data.user_data.linkedin.replaceAll(" ","-")}`} target="_blank">{data.user_data.linkedin}</Link>
 
           </> : <>
           </>
