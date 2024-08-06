@@ -62,12 +62,14 @@ export const LoginSiginUp = () => {
 		if (check_fpv) {
 
 			data.name = name,
+      data.last_name = lastname,
 				data.email = email,
 				data.password = password,
 				data.fpv_number = numero_fpv,
 				data.is_psicologo = check_fpv
 		} else {
 			data.name = name,
+      data.last_name = lastname,
 				data.email = email,
 				data.password = password,
 				data.fpv_number = null,
@@ -102,7 +104,8 @@ export const LoginSiginUp = () => {
                 <Input 
                   isRequired 
                   label="Email" 
-                  placeholder="Enter your email" 
+                  placeholder="Enter your email"
+                  value={email} 
                   type="email" 
                   onChange={(e) => setEmail(e.target.value)}
                   onBlur={(e) => {
@@ -118,6 +121,7 @@ export const LoginSiginUp = () => {
                 <Input
                   isRequired
                   label="Password"
+                  value={password}
                   placeholder="Enter your password"
                   type={isVisible1 ? "text" : "password"}
                   onBlur={(e) => {
@@ -168,7 +172,8 @@ export const LoginSiginUp = () => {
             <Tab key="sign-up" title="Registrate">
               <form className="flex flex-col gap-4">
                 <Input 
-                  isRequired 
+                  isRequired
+                  value={name}
                   label="Nombre" 
                   placeholder="Ingresa tu nombre" 
                   type="text"
@@ -177,6 +182,7 @@ export const LoginSiginUp = () => {
 
                 <Input 
                   isRequired 
+                  value={lastname}
                   label="Apellido" 
                   placeholder="Ingresa tu apellido" 
                   type="text"
@@ -187,6 +193,7 @@ export const LoginSiginUp = () => {
                 <Input 
                   isRequired 
                   label="Email" 
+                  value={email}
                   placeholder="Ingresa tu email" 
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
@@ -209,6 +216,7 @@ export const LoginSiginUp = () => {
                 <Input
                   isRequired
                   label="Contraseña"
+                  value={password}
                   placeholder="Introduce una contraseña"
                   type={isVisible2 ? "text" : "password"}
                   endContent={
@@ -241,6 +249,7 @@ export const LoginSiginUp = () => {
                 <Input
                   isRequired
                   label="Repetir-contraseña"
+                  value={repeat}
                   placeholder="Repite la contraseña"
                   endContent={
                     <button className="focus:outline-none" type="button" onClick={passwordVisibilityReRegister} aria-label="toggle password visibility">
@@ -266,10 +275,10 @@ export const LoginSiginUp = () => {
 														La contraseña no coincide
 														</div>
 													)}
-                <Checkbox defaultSelected isSelected={check_fpv} onClick={() => setCheck_fpv(!check_fpv)}>
+                <Checkbox defaultSelected isSelected={check_fpv} value={check_fpv} onClick={() => setCheck_fpv(!check_fpv)}>
                   Eres Psicologo?
                 </Checkbox>
-                {check_fpv && ( // Use logical AND for conditional rendering
+                {/* {check_fpv && ( // Use logical AND for conditional rendering
                   <Input 
                     isRequired 
                     label="Numero de federado" 
@@ -277,7 +286,18 @@ export const LoginSiginUp = () => {
                     type="number" 
                     onChange={(e) => setNumero_fpv(e.target.value)}
                   />
-                )}
+                )} */}
+                {check_fpv ?
+                  <Input 
+                    isRequired 
+                    label="Numero de federado" 
+                    placeholder="Ingresa tu numero de FPV" 
+                    type="number" 
+                    onChange={(e) => setNumero_fpv(e.target.value)}
+                    value={numero_fpv}
+                  />
+                  : ""
+                }
 
                 <Checkbox defaultSelected isSelected={check} onClick={() => setCheck(!check)}>Acepto los terminos y condiciones del contrato</Checkbox>
 

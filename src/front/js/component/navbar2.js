@@ -139,7 +139,7 @@ export const Navbar2 = () => {
             Buscador de psicologos
           </Link>
         </NavbarItem>
-        {store.userData.is_psicologo ? 
+        {store.userData.role_id == 2 || store.userData.role_id == 3 ? 
 
           <NavbarItem>
           <Link color="foreground" href="/cursos">
@@ -251,11 +251,14 @@ export const Navbar2 = () => {
               color="secondary"
               name="Jason Hughes"
               size="md"
+              onClick={console.log(store.userData.role_id == 2)}
               src={store.userData.profile_picture
                 ? store.userData.profile_picture
                 : psicologo_img}
               />
           </DropdownTrigger>
+          {store.userData.role_id == 2 || store.userData.role_id == 3 ? 
+          <>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as {store.userData.name}</p>
@@ -264,14 +267,10 @@ export const Navbar2 = () => {
             <DropdownItem key="Perfil" href="/perfil">Perfil</DropdownItem>
             <DropdownItem key="Agenda_del_dia" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
             <DropdownItem key="Contactos" href="/contactos">Contactos</DropdownItem>
-            {store.userData.is_psicologo ? 
-            <>
             <DropdownItem key="Expedientes" href="/Expedientes">Expedientes</DropdownItem>
             <DropdownItem key="Manejo_de_agend" onClick={() => handleClick(calendar)}>Manejo de agenda</DropdownItem>
             <DropdownItem key="Facturacion">Facturacion</DropdownItem>
             <DropdownItem key="Modalidad_de_pago">Modalidad de pago</DropdownItem>
-            </>
-            : " " }
             <DropdownItem key="logout" onClick={(e) => {
               removeAuthToken()
               navigate("/")
@@ -279,6 +278,24 @@ export const Navbar2 = () => {
               Log Out
             </DropdownItem>
           </DropdownMenu>
+          </>
+              : 
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Signed in as {store.userData.name}</p>
+              <p className="font-semibold">{store.userData.email}</p>
+            </DropdownItem>
+            <DropdownItem key="Perfil" href="/perfil">Perfil</DropdownItem>
+            <DropdownItem key="Agenda_del_dia" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
+            <DropdownItem key="Contactos" href="/contactos">Contactos</DropdownItem>
+            <DropdownItem key="logout" onClick={(e) => {
+              removeAuthToken()
+              navigate("/")
+            }} color="danger">
+              Log Out
+            </DropdownItem>
+          </DropdownMenu>
+              }
         </Dropdown>
       </NavbarContent>
     </NavbarContent>

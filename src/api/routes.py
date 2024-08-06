@@ -39,12 +39,11 @@ def handle_register():
   del user["fpv_number"]
 
   newUser = User.create(user)
+  print()
 
   if newUser is not None:
     access_token = create_access_token(identity=newUser.id)
-    updated_info["psicology_profile"] = newUser.id
     print(updated_info)
-    fpv = updated_info["fpv_number"]
     create_address = Address(
         id = newUser.id
     )
@@ -56,20 +55,24 @@ def handle_register():
         return jsonify(error.args), 500
    
     # Check for psychologist flag and create profile if needed
-    if user.get("is_psicologo", False):
-      create_profile_info = PsicologyProfileInfo(
-          id = newUser.id,
-          fpv_number=fpv,
-      ),
-      create_socialNetwork = SocialNetwork(
-        id = newUser.id
+    if user.get("is_psicologo", True):
+        updated_info["psicology_profile"] = newUser.id
+        fpv = updated_info["fpv_number"]
+
+        # Creación correcta de la instancia de PsicologyProfileInfo
+        create_profile_info = PsicologyProfileInfo(
+            id=newUser.id,
+            fpv_number=fpv
         )
-      try:
-        db.session.add(create_profile_info, create_socialNetwork )
-        db.session.commit()
-      except Exception as error:
-        db.session.rollback()
-        return jsonify(error.args), 500
+
+        create_socialNetwork = SocialNetwork(id=newUser.id)
+
+        try:
+            db.session.add_all([create_profile_info, create_socialNetwork])
+            db.session.commit()
+        except Exception as error:
+            db.session.rollback()
+            return jsonify(error.args), 500
 
     # Assign role based on psychologist flag
     role = Role.query.get(2) if user.get("is_psicologo", False) else Role.query.get(1)
