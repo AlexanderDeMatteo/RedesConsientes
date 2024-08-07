@@ -587,6 +587,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			Psicology_selected: async (id) => {
+				console.log(id)
 				let response = await fetch(`${API_URL}/api/select-psicologo/${id}`, {
 					method: 'POST',
 					headers: {
@@ -594,9 +595,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: `Bearer ${getAuthToken("token")}`
 					},		
 				});
-				if (response.ok) {
-					alert("psicologo seleccionado con exito")
-				}
 				
 			},
 

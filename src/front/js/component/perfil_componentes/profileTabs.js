@@ -37,7 +37,6 @@ export const ProfileTabs = () => {
           <div className="flex items-center space-x-2">
               <i class="fa-solid fa-brain"></i>
               <span>Informacion</span>
-              {/* <Chip size="sm" variant="faded">0</Chip> */}
             </div>
           }
           >
@@ -65,14 +64,13 @@ export const ProfileTabs = () => {
             </Card>  
           </Tab>
         {store.userData.role_id == 2 ?
-        <>
-        <Tab
+      
+       <Tab
         key="redes"
         title={
           <div className="flex items-center space-x-2">
               <i class="fa-solid fa-globe"></i>
               <span>Redes</span>
-              {/* <Chip size="sm" variant="faded">3</Chip> */}
             </div>
           }
           >
@@ -81,14 +79,15 @@ export const ProfileTabs = () => {
                 <NetworkTab/>
               </CardBody>
             </Card>  
-          </Tab>
-        <Tab
+          </Tab> 
+          : " "}
+        {store.userData.role_id == 2 ?
+         <Tab
           key="perfil_profesional"
           title={
             <div className="flex items-center space-x-2">
               <i class="fa-solid fa-user-tie"></i>
               <span>Perfil Profesional</span>
-              {/* <Chip size="sm" variant="faded">1</Chip> */}
             </div>
           }
           >
@@ -97,9 +96,9 @@ export const ProfileTabs = () => {
                <ProfesionalProfileTab/>
               </CardBody>
             </Card>  
-          </Tab>
-            </>
+          </Tab>   
         : ""}
+        
         <Tab
           key="tareas"
           title={

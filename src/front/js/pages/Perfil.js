@@ -86,9 +86,9 @@ export const Perfil = () => {
                         </div>
                       </CardBody>
                       
-                      {/* <Button color="primary" variant="ghost">
+                      <Button color="primary" variant="ghost">
                         Seleccionar psicologo
-                      </Button>  */}
+                      </Button> 
                     </Card>
                     {store.userData.role_id == 2 ?
                     <AboutMe user_data={store.userData} />

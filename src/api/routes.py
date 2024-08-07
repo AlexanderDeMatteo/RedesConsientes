@@ -459,25 +459,28 @@ def handle_unbook_session(session_id):
 @api.route('/select-psicologo/<int:psychologist_session_id>', methods=['POST'])
 @jwt_required()
 def select_psicologo(psychologist_session_id):
-    # Obtén el usuario/cliente actual (seguramente a través de la autenticación)
-    user_id = get_jwt_identity()  # Reemplaza con la lógica para obtener el usuario actual
-    user = User.query.get(user_id)
+    # Obtén el usuario actual
+    user_id = get_jwt_identity()
+    current_user = User.query.get(user_id)
 
-    # Verifica que el usuario sea un cliente y actualiza selected_psicologo_id
-    if not user.is_psicologo:
-        if user.is_psicologo_selected:
-            if user.selected_psicologo_id == psychologist_session_id:
-                user.selected_psicologo_id = None
-                user.is_psicologo_selected= False
-                db.session.commit()
-                return jsonify({'message': ' Psicologo deseleccionado exitosamente '}), 200
-            return jsonify({'message': 'Deselecciona primero el psiologo en la pestaña mi psicologo'}), 400
-        user.selected_psicologo_id = psychologist_session_id
-        user.is_psicologo_selected= True
-        db.session.commit()
-        return jsonify({'message': 'Psicólogo seleccionado exitosamente'}), 200
-    
-    return jsonify({'message': 'No se puede seleccionar un psicólogo como cliente'}), 400
+    # Valida el psicólogo seleccionado
+    selected_psychologist = User.query.get(psychologist_session_id)
+    if not selected_psychologist or not selected_psychologist.is_psicologo:
+        return jsonify({'message': 'Selected user is not a psychologist'}), 400
+    # Lógica de selección/deselección
+    if current_user.selected_psicologo_id == psychologist_session_id:
+        # Si el psicólogo ya está seleccionado, lo deseleccionamos
+        current_user.selected_psicologo_id = None
+        current_user.is_psicologo_selected = False
+    else:
+        # Si el psicólogo no está seleccionado, lo seleccionamos
+        current_user.selected_psicologo_id = psychologist_session_id
+        current_user.is_psicologo_selected = True
+
+    # Commit changes
+    db.session.commit()
+
+    return jsonify({'message': 'Psicólogo seleccionado/deseleccionado exitosamente'})
 
 # Endpoint para obtener usuarios relacionados con el psicólogo actualmente autenticado
 @api.route('/usuarios_relacionados', methods=['GET'])
