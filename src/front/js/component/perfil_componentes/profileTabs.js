@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext} from "react";
+import { Context } from "../../store/appContext";
 import {Tabs, Tab, Chip} from "@nextui-org/react";
 import {Card, CardBody, CardHeader} from "@nextui-org/react";
 import { InfoTab } from "./tabs profile/InfoTab";
@@ -9,7 +10,11 @@ import { NetworkTab } from "./tabs profile/NetworkTab";
 
 
 export const ProfileTabs = () => {
-    return (
+  
+  const { actions, store } = useContext(Context);
+    
+  
+  return (
     <>
       <div className="flex w-full flex-col">
       <Tabs 
@@ -37,7 +42,7 @@ export const ProfileTabs = () => {
         >
           <Card>
             <CardBody>
-              <InfoTab/>
+              <InfoTab user_data={store.userData}/>
             </CardBody>
           </Card>  
         </Tab>

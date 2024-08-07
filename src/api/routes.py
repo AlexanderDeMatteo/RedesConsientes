@@ -278,20 +278,22 @@ def handle_user_data_seleccinado(id):
     selected_user = id
     print(selected_user, "selected user")
     user = User.query.filter_by(id=selected_user).one_or_none()
-    print(user, "userrrr")
     user_profile_info = PsicologyProfileInfo.query.filter_by(
         id=selected_user).one_or_none()
-    print(user_profile_info, "user_profile_infoooooo")
+    socialnetwork_info = SocialNetwork.query.filter_by(
+        id=selected_user).one_or_none()
+    
     
     if request.method == 'GET':
         if user is None:
             return jsonify({"message": "Usuario no encontrado"}), 404
         if user_profile_info is None:
-            return jsonify(user.serialize()), 200
+            return jsonify({"message": "perfil no encontrado"}), 404
         else:
             user_info = user.serialize()
             profile_info = user_profile_info.serialize()
-            full_info = {**user_info, **profile_info}
+            social_info = socialnetwork_info.serialize()
+            full_info = {**user_info, **profile_info, **social_info}
             
             return jsonify(full_info), 200
     

@@ -11,8 +11,6 @@ import psicologo_img from "../component/perfil_componentes/psicologo.png";
 import { Imagenes } from "../component/perfil_componentes/Imagenes";
 import { AboutMe } from "../component/perfil_componentes/AboutMe";
 import { useNavigate } from 'react-router-dom';
-import { TodoList } from "../component/todoList";
-import { TodoListPaciente } from "../component/todoListpaciente";
 import {Card, CardHeader, CardBody, Avatar, Image, Button} from "@nextui-org/react";
 import { Panel } from "./panel";
 import { Imagenes2 } from "../component/perfil_componentes/imagenes2";
@@ -31,14 +29,6 @@ export const Perfil = () => {
   const [modal, setmodal] = useState();
   const navigate = useNavigate();
   const { actions, store } = useContext(Context);
-  const [selectedTab, setSelectedTab] = React.useState({
-    li_0: { nav: "nav-link active", tab: "active tab-pane" },
-    li_1: { nav: "nav-link", tab: "tab-pane" },
-    li_2: { nav: "nav-link", tab: "tab-pane" },
-    li_3: { nav: "nav-link", tab: "tab-pane" },
-    li_4: { nav: "nav-link", tab: "tab-pane" },
-    li_5: { nav: "nav-link", tab: "tab-pane" },
-  });
 
   useEffect(() => {
     const fetchData = async() =>{
@@ -57,97 +47,6 @@ export const Perfil = () => {
 
   }, []);
 
-  function changeSelect(e) {
-    const { name } = e.target;
-    if (e.target.name && selectedTab[name].nav === "nav-link") {
-      Object.filter = (obj, predicate) =>
-        Object.keys(obj)
-          .filter((key) => predicate(obj[key]))
-          .reduce((res, key) => ((res[key] = obj[key]), res), {});
-      let result = Object.filter(
-        selectedTab,
-        (score) => score.nav === "nav-link active"
-      );
-      let [firstKey] = Object.keys(result);
-
-      setSelectedTab((prevSelected) => ({
-        ...prevSelected,
-        [name]: { nav: "nav-link active", tab: "active tab-pane" },
-        [firstKey]: { nav: "nav-link", tab: "tab-pane" },
-      }));
-    } else if (e.target.name) {
-      setSelectedTab((prevSelected) => ({
-        ...prevSelected,
-        [name]: { nav: "nav-link", tab: "tab-pane" },
-      }));
-    }
-  }
-
-  function handleModal() {
-    show.modal;
-  }
-
-  function Editar() {
-    if (!show) {
-      guardar();
-    }
-    setShow((wasShow) => !wasShow);
-  }
-
-
-  function handleChange(event) {
-   
-    actions.handle_edit(event.target.value, event.target.name);
-    
-  }
-
-  
-
-  const onDeleter = (e, value) => {
-    e.preventDefault();
-    let element = lista.la_lista.filter((name) => name !== value);
-    setLista((prevLista) => {
-      return {
-        la_lista: element,
-      };
-    });
-  };
-
-  
-
-  const guardar = async () => {
-
-    const response = await fetch(`${API_URL}/api/user-profile`, {
-      method: "PUT",
-      body: JSON.stringify(store.userData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (response.ok) {
-
-      alert("datos actualizados");
-      // actions.handle_user_data();
-    }
-  };
-
-
-
-
-  function handleSelect(event, value) {
-  
-    let vistaPsicologo = lista.la_lista;
-    if (value != null) {
-      vistaPsicologo.push({ title: value.title });
-      setLista((prevLista) => {
-        return {
-          la_lista: vistaPsicologo,
-        };
-      });
-    }
-  }
 
   return (
 

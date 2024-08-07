@@ -6,12 +6,18 @@ import Imager3 from "../consulta3.jpeg";
 import Imager4 from "../consulta4.jpg";
 import {Button} from "@nextui-org/react";
 import { Context } from "../../../store/appContext";
+import { useParams } from "react-router-dom";
 
 
-export const InfoTab = () => {
+
+export const InfoTab = ( data ) => {
 const [show, setShow] = useState(true);
 const { actions, store } = useContext(Context);
 const API_URL = process.env.BACKEND_URL;
+const { id } = useParams();
+
+console.log(data)
+console.log(data.user_data.psych_strategies)
 
     function Editar() {
         if (!show) {
@@ -50,7 +56,6 @@ const API_URL = process.env.BACKEND_URL;
         const fetchData = async() =>{
           setIsLoading(true)
           try{
-              // const data = await actions.handle_user_data();
     
           } catch (error) {
               console.error(error); // Handle any errors
@@ -76,14 +81,14 @@ const API_URL = process.env.BACKEND_URL;
             label=""
             placeholder="Estrategia Terapeutica o enfoque terapeutico"
             className={{fullWidth:"true"}}
-            value={store.userData.psych_strategies || ""}
+            value={data.user_data.psych_strategies || ""}
             />
           : <Textarea
           isDisabled
           label=""
           labelPlacement="outside"
           placeholder="Estrategia Terapeutica o enfoque terapeutico"
-          value={!store.userData.psych_strategies ? "Estrategia Terapeutica o enfoque terapeutico" : store.userData.psych_strategies}
+          value={data.user_data.psych_strategies ? data.user_data.psych_strategies : "Estrategia Terapeutica o enfoque terapeutico"}
           className={{fullWidth:"true"}}
         />}
             </>
@@ -121,18 +126,18 @@ const API_URL = process.env.BACKEND_URL;
             label=""
             placeholder="introduce tu experiencia terapeutica"
             className={{fullWidth:"true"}}
-            value={store.userData.PsychExperiences || ""}
+            value={data.user_data.PsychExperiences || ""}
             />
           : <Textarea
           isDisabled
           label=""
           labelPlacement="outside"
           placeholder="Enter your description"
-          value={!store.userData.PsychExperiences ? "introduce tu experiencia terapeutica" : store.userData.PsychExperiences}
+          value={data.user_data.PsychExperiences ? data.user_data.PsychExperiences : "introduce tu experiencia terapeutica"}
           className={{fullWidth:"true"}}
         />}
          </>
-
+    {id != store.userData.id ? " " : 
     <div className="flex flex-wrap gap-4 justify-content-center mt-3">
     <Button color="primary" variant="shadow" type="submit"
                                   onClick={Editar}
@@ -140,6 +145,7 @@ const API_URL = process.env.BACKEND_URL;
         {!show ? "Guardar" : "Editar"}
       </Button> 
     </div>
+                                  }
     </>
   );
 }
