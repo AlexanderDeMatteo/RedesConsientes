@@ -29,23 +29,25 @@ export const ProfileTabs = () => {
           
         }}
       >
+        {store.userData.role_id == 2 ? 
         <Tab
-          className=""
-          key="informacion"
-          title={
-            <div className="flex items-center space-x-2">
+        className=""
+        key="informacion"
+        title={
+          <div className="flex items-center space-x-2">
               <i class="fa-solid fa-brain"></i>
               <span>Informacion</span>
               {/* <Chip size="sm" variant="faded">0</Chip> */}
             </div>
           }
-        >
+          >
           <Card>
             <CardBody>
               <InfoTab user_data={store.userData}/>
             </CardBody>
           </Card>  
         </Tab>
+        : ""}
         <Tab
           key="perfil"
           title={
@@ -62,10 +64,12 @@ export const ProfileTabs = () => {
               </CardBody>
             </Card>  
           </Tab>
+        {store.userData.role_id == 2 ?
+        <>
         <Tab
-          key="redes"
-          title={
-            <div className="flex items-center space-x-2">
+        key="redes"
+        title={
+          <div className="flex items-center space-x-2">
               <i class="fa-solid fa-globe"></i>
               <span>Redes</span>
               {/* <Chip size="sm" variant="faded">3</Chip> */}
@@ -94,6 +98,8 @@ export const ProfileTabs = () => {
               </CardBody>
             </Card>  
           </Tab>
+            </>
+        : ""}
         <Tab
           key="tareas"
           title={

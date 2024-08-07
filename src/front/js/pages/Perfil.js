@@ -15,8 +15,6 @@ import {Card, CardHeader, CardBody, Avatar, Image, Button} from "@nextui-org/rea
 import { Panel } from "./panel";
 import { Imagenes2 } from "../component/perfil_componentes/imagenes2";
 import { ProfileTabs } from "../component/perfil_componentes/profileTabs";
-// import { uploadFile } from "../component/drag_and_drop";
-// import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 export const Perfil = () => {
   const API_URL = process.env.BACKEND_URL;
@@ -87,12 +85,14 @@ export const Perfil = () => {
                           <Imagenes2 />
                         </div>
                       </CardBody>
-                      <Button color="primary" variant="ghost">
+                      
+                      {/* <Button color="primary" variant="ghost">
                         Seleccionar psicologo
-                      </Button> 
+                      </Button>  */}
                     </Card>
-
+                    {store.userData.role_id == 2 ?
                     <AboutMe user_data={store.userData} />
+                  : ""}
                   </div>
                   <div className="col-md-9">
                     <ProfileTabs/>

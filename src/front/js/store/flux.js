@@ -592,9 +592,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${getAuthToken("token")}`
-					},
-					
+					},		
 				});
+				if (response.ok) {
+					alert("psicologo seleccionado con exito")
+				}
 				
 			},
 

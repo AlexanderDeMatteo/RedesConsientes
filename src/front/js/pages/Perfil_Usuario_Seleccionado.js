@@ -32,23 +32,17 @@ export const PerfilUsuarioSeleccionado = () => {
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
         li_1: { nav: "nav-link active", tab: "active tab-pane" },
     });
-
-
-    const enlace = (id) => {
-        actions.Psicology_selected(id)
-        if(isSelected == false){
-            setIsSelected(true)
-            alert("psicologo seleccionado con exito")
-        }else{
-            setIsSelected(false)
-            alert("psicologo desseleccionado con exito")
-        }
-    }
-
-    const handleClick = () =>{
-        navigate(`/calendar/${id}`)
-    }
-
+    
+    const enlace = async (id) => {
+      try {
+          await actions.Psicology_selected(id);
+          setIsSelected(!isSelected); // Invierte el estado directamente
+          alert(`Psicólogo ${isSelected ? 'seleccionado' : 'deseleccionado'} con éxito`);
+      } catch (error) {
+          console.error('Error al seleccionar al psicólogo:', error);
+          // Manejar el error de alguna manera, por ejemplo, mostrar un mensaje de error al usuario
+      }
+  };
     useEffect(() => {
         // actions.privateData()
         actions.handle_user_data_seleccinado(id);
@@ -93,7 +87,7 @@ export const PerfilUsuarioSeleccionado = () => {
                         <h4>N°FPV:{store.userDataSelecionado.fpv_number}</h4>
                         <h4 className="font-bold text-large">Precio de la consulta {store.userDataSelecionado.monto_consulta}$</h4>
                       </CardBody>
-                      <Button color="primary" variant="ghost">
+                      <Button color="primary" variant="ghost" onClick={enlace}>
                         Seleccionar psicologo
                       </Button> 
                     </Card>

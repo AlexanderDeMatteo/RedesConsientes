@@ -95,6 +95,7 @@ export const HomeWork = () => {
 
   return (
     <div>
+      {store.userData.role_id == 2 ? 
       <div className="d-flex align-items-end mb-2 ">
       <Input
           type="text"
@@ -116,6 +117,7 @@ export const HomeWork = () => {
       Añadir tarea <i className="fa-solid fa-pencil"></i>
         </Button>
       </div>
+        :""}
       {isLoading ? (
         <div>Cargando...</div>
       ) : (

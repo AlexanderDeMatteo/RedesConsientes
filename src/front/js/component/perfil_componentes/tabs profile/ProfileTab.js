@@ -67,32 +67,6 @@ const genero = ["Masculino", "Femenino", "otros"]
       <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
         <>{!show ? 
           <Input
-          type="last_name"
-          onChange={handleChange}
-          name="last_name"
-          label="Apellido"
-          placeholder="ingresa tu apellido"
-          labelPlacement="outside"
-          startContent={
-            <i class="fa-regular fa-address-card"></i>
-          }
-          />
-          :<Input
-          isDisabled
-          type="last_name"
-          onChange={handleChange}
-          name="last_name"
-          label="Apellido"
-          placeholder="ingresa tu apellido"
-          labelPlacement="outside"
-          startContent={
-            <i class="fa-regular fa-address-card"></i>
-          }
-          value={store.userData.last_name}
-          />}
-        </>
-        <>{!show ? 
-          <Input
           type="dni"
           onChange={handleChange}
           name="dni"
