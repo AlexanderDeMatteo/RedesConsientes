@@ -467,6 +467,11 @@ def select_psicologo(psychologist_session_id):
     selected_psychologist = User.query.get(psychologist_session_id)
     if not selected_psychologist or not selected_psychologist.is_psicologo:
         return jsonify({'message': 'Selected user is not a psychologist'}), 400
+    
+    # Evita conflicto de intereses
+    if selected_psychologist and user_id == psychologist_session_id:
+        return jsonify({'message': 'No puedes seleccionarte a ti mismo como psicólogo'}), 400
+    
     # Lógica de selección/deselección
     if current_user.selected_psicologo_id == psychologist_session_id:
         # Si el psicólogo ya está seleccionado, lo deseleccionamos

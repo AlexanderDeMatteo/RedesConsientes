@@ -69,6 +69,7 @@ class User(db.Model):
         "is_active": self.is_active,
         "role_id": self.role_id,
         "is_psicologo_selected": self.is_psicologo_selected,
+        "selected_psicologo_id" : self.selected_psicologo_id,
         # "selected_psicologo" : self.selected_psicologo
         }
 

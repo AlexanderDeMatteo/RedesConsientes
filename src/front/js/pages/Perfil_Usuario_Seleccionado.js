@@ -28,32 +28,26 @@ export const PerfilUsuarioSeleccionado = () => {
     const { actions, store } = useContext(Context);
     const [isSelected, setIsSelected] = useState()
     const [isLoading, setIsLoading] = useState(false);
+    const [contenidoBoton,setContenidoBoton] = useState("")
     const [selectedTab, setSelectedTab] = React.useState({
         li_0: { nav: "nav-link active", tab: "active tab-pane" },
         li_1: { nav: "nav-link active", tab: "active tab-pane" },
     });
     
     const enlace = (id) =>  {
-     
-            actions.Psicology_selected(id)
-            if(isSelected == false){
-                  setIsSelected(true)
-                  alert("psicologo seleccionado con exito")
-              }else{
-                  setIsSelected(false)
-                  alert("psicologo desseleccionado con exito")
-              }
-          }
-
-    // useEffect(() => {
-    //     // actions.privateData()
-    //     actions.handle_user_data_seleccinado(id);
-    //     if(store.userdata.is_psicologo_selected == true){
-    //       setIsSelected(true)
-    //     }else{
-    //       setIsSelected(false)
-    //     }
-    // }, []);
+      const selected_psicologo_id = store.userData.selected_psicologo_id
+      actions.Psicology_selected(id)
+      if(isSelected == false){
+      setIsSelected(true && selected_psicologo_id == id)
+      setContenidoBoton("Deseleccionar Psicologo")
+      }else if(isSelected == true && selected_psicologo_id != id ){
+      setIsSelected(true)
+      setContenidoBoton("Deseleccionar Psicologo")
+      }else{
+      setIsSelected(false)
+      setContenidoBoton("Seleccionar Psicologo")
+      }
+    }
 
     useEffect(() => {
       const fetchData = async() =>{
@@ -61,12 +55,20 @@ export const PerfilUsuarioSeleccionado = () => {
         try{
             const data = await actions.handle_user_data_seleccinado(id);
             const data2 = await actions.handle_user_data();
-            console.log(data2)
-            if(store.userData.is_psicologo_selected == true){
+            console.log((store.userData.is_psicologo_selected == true && store.userData.selected_psicologo_id == id ))
+            console.log(store.userData.is_psicologo_selected)
+            if(store.userData.is_psicologo_selected && store.userData.selected_psicologo_id == id ){
               setIsSelected(true)
-            }else{
-              setIsSelected(false)
+              setContenidoBoton("Deseleccionar Psicologo")
             }
+            else if(store.userData.is_psicologo_selected == true){
+              setIsSelected(true)
+              setContenidoBoton("Cambiar de Psicologo")}
+            else{
+              setIsSelected(false)
+              setContenidoBoton("Seleccionar Psicologo")
+            }
+
         } catch (error) {
             console.error(error); // Handle any errors
           } finally {
@@ -117,7 +119,8 @@ export const PerfilUsuarioSeleccionado = () => {
                         <h4 className="font-bold text-large">Precio de la consulta {store.userDataSelecionado.monto_consulta}$</h4>
                       </CardBody>
                       <Button color="primary" variant={isSelected ? "solid" : "ghost"} onClick={() => enlace(id)}>
-                        {isSelected ? "Cambiar de psicologo" : "Seleccionar psicologo"}
+                        {/* {isSelected ? "Cambiar de psicologo" : "Seleccionar psicologo"} */}
+                        {contenidoBoton}
                       </Button> 
                     </Card>
 

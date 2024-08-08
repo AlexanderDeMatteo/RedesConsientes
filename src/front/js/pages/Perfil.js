@@ -80,7 +80,9 @@ export const Perfil = () => {
                       <CardBody className="overflow-visible py-2 text-center">
                         <p className="text-tiny uppercase font-bold">{store.userData.name} {store.userData.last_name}</p>
                         <small className="text-default-500">{store.userData.area_de_especialidad}</small>
-                        <h4 className="font-bold text-large">{store.userData.email}</h4>
+                        {store.userData.role_id == 1 ? " " :
+                        <h4 className="font-bold text-large">N°FPV:{store.userData.fpv_number}</h4>
+                      }
                         <div className="text-center">
                           <Imagenes2 />
                         </div>
