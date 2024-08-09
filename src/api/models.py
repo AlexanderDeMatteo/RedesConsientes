@@ -3,7 +3,10 @@ from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
 from flask_login import UserMixin
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Numeric, Date, Table
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Numeric, Date, DateTime, Table, JSON, func
+from sqlalchemy.orm import relationship
+from sqlalchemy import Enum as SQLAlchemyEnum
+from enum import Enum
 import string
 
 db = SQLAlchemy()
@@ -543,4 +546,36 @@ class Marketplace(db.Model):
             "patient_name": self.client.name if self.client else None,  # Handle potential null values
             "psychologist_last_name": self.psychologist.last_name if self.psychologist else None,
             "patient_last_name": self.client.last_name if self.client else None,
+        }
+    
+class NotificationType(Enum):
+    new_session = 'new_session'
+    reminder = 'reminder'
+    message = 'message'
+    system = 'system'
+    payment = 'payment'
+
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user = relationship("User", foreign_keys=[user_id])
+    sender_id = Column(Integer, ForeignKey('user.id'))
+    sender = relationship("User", foreign_keys=[sender_id])
+    notification_type = Column(SQLAlchemyEnum(NotificationType), nullable=False)
+    message = Column(String, nullable=False)
+    read = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+    data = Column(JSON)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user": self.user,
+            "sender": self.sender,
+            "notification_type": self.notification_type,
+            "message": self.message,
+            "read": self.read,
+            "created_at": self.created_at,
+            "data": self.data,
         }

@@ -5,7 +5,7 @@ from cmath import inf
 from distutils.log import error
 from http.client import OK
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import Session, PsicologyProfileInfo, MiPsicologo, db, User, ClientTask, PaymentAccount, Phrase, Role, Address, SocialNetwork
+from api.models import Session, PsicologyProfileInfo, MiPsicologo, Notification, db, User, ClientTask, PaymentAccount, Phrase, Role, Address, SocialNetwork
 from api.utils import generate_sitemap, APIException
 import json
 from flask_cors import CORS, cross_origin
@@ -825,3 +825,18 @@ def update_social_network():
 
     # Serialize and return the updated record
     return jsonify(social_network.serialize()), 200
+
+@api.route('/notifications', methods=['POST'])
+def create_notification():
+    # Obtener datos de la solicitud
+    data = request.get_json()
+    # Crear una nueva notificación
+    new_notification = Notification(**data)
+    db.session.add(new_notification)
+    db.session.commit()
+    return jsonify(new_notification.serialize()), 201
+
+@app.route('/users/<int:user_id>/notifications', methods=['GET'])
+def get_user_notifications(user_id):
+    notifications = Notification.query.filter_by(user_id=user_id).all()
+    return jsonify([notification.serialize() for notification in notifications])
