@@ -15,9 +15,7 @@ const [show, setShow] = useState(true);
 const { actions, store } = useContext(Context);
 const API_URL = process.env.BACKEND_URL;
 const { id } = useParams();
-
-console.log(data)
-console.log(data.user_data.psych_strategies)
+const [isLoading, setIsLoading] = useState(false);
 
     function Editar() {
         if (!show) {

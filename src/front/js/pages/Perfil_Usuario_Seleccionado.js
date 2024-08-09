@@ -37,14 +37,25 @@ export const PerfilUsuarioSeleccionado = () => {
     const enlace = (id) =>  {
       const selected_psicologo_id = store.userData.selected_psicologo_id
       actions.Psicology_selected(id)
-      if(isSelected == false){
-      setIsSelected(true && selected_psicologo_id == id)
-      setContenidoBoton("Deseleccionar Psicologo")
+      if(isSelected == true && selected_psicologo_id == id){
+      setIsSelected(false)
+      console.log("soy yo 1")
+      setContenidoBoton("Seleccionar Psicologo")
+      }else if(isSelected == true && contenidoBoton == "Deseleccionar Psicologo"){
+        setIsSelected(false)
+        console.log("soy yo 2")
+        setContenidoBoton("Seleccionar Psicologo")
       }else if(isSelected == true && selected_psicologo_id != id ){
       setIsSelected(true)
+      console.log("soy yo 2")
       setContenidoBoton("Deseleccionar Psicologo")
+      }else if (isSelected == false){
+        setIsSelected(true)
+        console.log("soy yo 3")
+        setContenidoBoton("Deseleccionar Psicologo")
       }else{
       setIsSelected(false)
+      console.log("soy yo 4")
       setContenidoBoton("Seleccionar Psicologo")
       }
     }

@@ -25,7 +25,9 @@ class User(db.Model):
     name = db.Column(db.String(120), unique=False, nullable=False)
     last_name = db.Column(db.String(120), unique=False, nullable=True)
     dni = db.Column(db.String(30), unique=True, nullable=True)
-    dob = db.Column(db.String(30), unique=True, nullable=True)
+    day = db.Column(db.Numeric(2), unique=True, nullable=True)
+    month = db.Column(db.Numeric(2), unique=True, nullable=True)
+    year = db.Column(db.Numeric(4), unique=True, nullable=True)
     gender= db.Column(db.String(20), nullable=True)
     phone_number = db.Column(db.String(25), unique=False, nullable=True)
     motivo_consulta = db.Column(db.String(10), nullable=True)
@@ -60,7 +62,9 @@ class User(db.Model):
         "name": self.name,
         "last_name": self.last_name,
         "dni" : self.dni,
-        "dob" : self.dob,
+        "day" : self.day,
+        "month" : self.month,
+        "year" : self.year,
         "gender" : self.gender,
         "phone_number" : self.phone_number,
         "motivo_consulta" : self.motivo_consulta,

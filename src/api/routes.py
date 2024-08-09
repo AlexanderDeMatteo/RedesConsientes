@@ -175,7 +175,7 @@ def update_user():
     user_data = request.json
     user = User.query.filter_by(id=current_user).one_or_none()
     profile = PsicologyProfileInfo.query.filter_by(id=current_user).one_or_none()
-    print(profile)
+    address = Address.query.filter_by(id=current_user).one_or_none()
 
     if user is None:
         return jsonify({"error": "User not found"}), 404
@@ -198,6 +198,10 @@ def update_user():
     for key, value in user_data.items():
         if key not in ["id", "user_id"]:  # Prevent updates to these read-only fields
             setattr(profile, key, value)
+
+    for key, value in user_data.items():
+        if key not in ["id", "user_id"]:  # Prevent updates to these read-only fields
+            setattr(address, key, value)
 
     try:
         db.session.commit()

@@ -1,15 +1,32 @@
 import React, { useState, useContext, useEffect } from "react";
-import {Button, Input, DateInput, Select, SelectItem, Avatar} from "@nextui-org/react";
+import {Button, Input, DateInput, Select, SelectItem, Avatar, user} from "@nextui-org/react";
 import {CalendarDate, parseDate} from "@internationalized/date";
 import { Context } from "../../../store/appContext";
 
 
-export const ProfileTab = () => {
+export const ProfileTab = (data) => {
 const [show, setShow] = useState(true);
 const { actions, store } = useContext(Context);
 const API_URL = process.env.BACKEND_URL;
+const [isLoading, setIsLoading] = useState(false);
+const [fecha, setFecha] = useState("")
 
 const genero = ["Masculino", "Femenino", "otros"]
+// const date = new CalendarDate(1993,10,8)
+
+console.log(data.user_data == undefined)
+
+const birthDate1 = store.userData.day && store.userData.month && store.userData.year 
+    ? new CalendarDate(store.userData.year,store.userData.year, store.userData.month, store.userData.day) 
+    : null;
+const birthDate2 = data.user_data == undefined
+    ? null 
+    : data.user_data.year && data.user_data.month && data.user_data.year 
+    ? new CalendarDate(data.user_data.year,data.user_data.year, data.user_data.month, data.user_data.day)
+    :null
+
+
+
 
     function Editar() {
         if (!show) {
@@ -22,6 +39,11 @@ const genero = ["Masculino", "Femenino", "otros"]
         // Create a copy of user data without role_id
         const userDataCopy = { ...store.userData };
         delete userDataCopy.role_id;
+
+        console.log(fecha)
+        userDataCopy["day"] = fecha.day
+        userDataCopy["month"] = fecha.month
+        userDataCopy["year"] = fecha.year
       
         const response = await fetch(`${API_URL}/api/user-profile`, {
           method: "PUT",
@@ -85,7 +107,7 @@ const genero = ["Masculino", "Femenino", "otros"]
           label="Cedula"
           placeholder="ingresa tu cedula"
           labelPlacement="outside"
-          value={store.userData.dni}
+          value={data.user_data ? data.user_data.dni : store.userData.dni}
           startContent={
             <i class="fa-solid fa-address-card"></i>
           }
@@ -94,12 +116,11 @@ const genero = ["Masculino", "Femenino", "otros"]
         <>{!show ?
           <DateInput
           name="dob"
-          onChange={handleChange}
+          onChange={setFecha}
           label= <strong>Fecha de nacimiento</strong>
-          className="m-0"
-          defaultValue={parseDate("2024-04-04")} 
-          placeholderValue={new CalendarDate(1995, 11, 6)} 
-          labelPlacement="outside"
+          // className="m-0"
+          // defaultValue={} 
+          // placeholderValue={new CalendarDate(1995, 11, 6)} 
           startContent={
             <i class="fa-solid fa-calendar-days"></i>
           }
@@ -107,32 +128,19 @@ const genero = ["Masculino", "Femenino", "otros"]
           : <DateInput
           isDisabled
           name="dob"
-          onChange={handleChange}
+          // onChange={handleChange}
           label= <strong>Fecha de nacimiento</strong>
-          className="m-0"
-          defaultValue={parseDate("2024-04-04")} 
-          placeholderValue={new CalendarDate(1995, 11, 6)} 
+          // className="m-0"
+          // value={store.userData.dob}
+          value={ data.user_data ? birthDate2 : birthDate1} 
+          // value={birthDate1} 
+          // placeholderValue={prueba} 
           labelPlacement="outside"
           startContent={
             <i class="fa-solid fa-calendar-days"></i>
           }
           /> }
         </>
-      {/* <Select
-      className="max-w-xs"
-      defaultSelectedKeys={["Select"]}
-      label="Favorite Animal"
-      placeholder="Selecciona uno"
-      startContent={
-        <>
-        <i class="fa-solid fa-venus-mars"></i> 
-        <i class="fa-solid fa-transgender"></i>
-        </>}
-    >
-      {genero.map((item) => (
-        <SelectItem key={item.key}>{item}</SelectItem>
-      ))}
-    </Select> */}
     <> {!show ?
     <Select
       name="gender"
@@ -176,6 +184,7 @@ const genero = ["Masculino", "Femenino", "otros"]
         {!show ?
           <Input
             name="phone_number"
+            onChange={handleChange}
             type="number"
             label="Numero Telefonico"
             placeholder="ingresa tu numero telefonico"
@@ -192,6 +201,7 @@ const genero = ["Masculino", "Femenino", "otros"]
             label="Numero Telefonico"
             placeholder="ingresa tu numero telefonico"
             labelPlacement="outside"
+            value={store.userData.phone_number ? store.userData.phone_number : "" }
             startContent={
               <i class="fa-solid fa-mobile-screen-button"></i>
             }
@@ -218,7 +228,7 @@ const genero = ["Masculino", "Femenino", "otros"]
           label="Estado"
           placeholder="ingresa el estado donde reside"
           labelPlacement="outside"
-          value={store.userData.state}
+          value={ data.user_data ? data.user_data.state : store.userData.state}
           startContent={
             <i class="fa-solid fa-earth-americas"></i>
           }
@@ -246,7 +256,7 @@ const genero = ["Masculino", "Femenino", "otros"]
               label="Ciudad"
               placeholder="ingresa la ciudad donde reside"
               labelPlacement="outside"
-              value={store.userData.city}
+              value={data.user_data ? data.user_data.city : store.userData.city}
               startContent={
                 <i class="fa-solid fa-map-location-dot"></i>
               }
@@ -257,13 +267,15 @@ const genero = ["Masculino", "Femenino", "otros"]
             </div>
     </div>   
 
-        <div className="flex flex-wrap gap-4 justify-content-center mt-3">
-        <Button color="primary" variant="shadow" type="submit"
-                                    onClick={Editar}
-                                    className="btn btn-danger">
-            {!show ? "Guardar" : "Editar"}
-        </Button> 
-        </div>
+    {data.user_data ? " " : 
+    <div className="flex flex-wrap gap-4 justify-content-center mt-3">
+    <Button color="primary" variant="shadow" type="submit"
+                                  onClick={Editar}
+                                  className="btn btn-danger">
+        {!show ? "Guardar" : "Editar"}
+      </Button> 
+    </div>
+                                  }
         </>
   );
 }
