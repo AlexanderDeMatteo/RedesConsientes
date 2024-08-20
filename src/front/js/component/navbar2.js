@@ -15,27 +15,14 @@ import {
   removeAuthToken,
   hasValidToken
 } from '../../utils/AuthTokenUtil';
+import { Notification } from "./buscador_componentes/navbarComponent.js/notification.js";
 
 export const Navbar2 = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isInvisible, setIsInvisible] = React.useState(false);
-  const [contentPerfil, setContentPerfil] = useState(false)
-  const [contentAdmPaciente, setContentAdmPaciente] = useState(false)
-  const [contentadmCuenta, setContentadmCuenta] = useState(false)
-  const [contentNavega, setContentNavega] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
   const { actions, store } = useContext(Context)
   const navigate = useNavigate();
-  const toggle = () => setIsOpen(!isOpen)
 
-  const [isLogOut, setIsLogOut] = useState(false);
-  
-  console.log(store.userData.role_id)
-  
-  const handleLogOut = () =>{
-    setIsLogOut(true)
-  }
-  
+   
   const id = {
       id: store.userData.id
   };
@@ -177,9 +164,6 @@ export const Navbar2 = () => {
     {!hasValidToken() ?
       <NavbarContent justify="end" className="">
         
-        {/* <NavbarItem>
-          <Link href="/loginsiginup">Ingresa</Link>
-        </NavbarItem> */}
         <NavbarItem>
           <Button as={Link} color="primary" href="/loginsiginup" variant="flat">
             Ingresa
@@ -192,29 +176,7 @@ export const Navbar2 = () => {
     <>
     {!hasValidToken() ? "" :
     <NavbarContent  justify="end" >
-    <Badge content="99+" shape="circle" color="warning">
-       <Dropdown >
-      <DropdownTrigger>
-        <Button
-        radius="full"
-        isIconOnly
-        aria-label="more than 99 notifications"
-        variant="light"
-        isInvisible="true"
-        >
-        <i class="fa-regular fa-bell" style={{"font-size":20, color:"grey"}}></i>
-      </Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Example with disabled actions" disabledKeys={["edit", "delete"]}>
-        <DropdownItem key="new">New file</DropdownItem>
-        <DropdownItem key="copy">Copy link</DropdownItem>
-        <DropdownItem key="edit">Edit file</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">
-          Delete file
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown> 
-    </Badge>
+    <Notification/>
 
     <Badge content="99+" shape="circle" color="warning">
        <Dropdown >

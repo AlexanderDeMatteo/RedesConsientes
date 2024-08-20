@@ -836,7 +836,7 @@ def create_notification():
     db.session.commit()
     return jsonify(new_notification.serialize()), 201
 
-@app.route('/users/<int:user_id>/notifications', methods=['GET'])
+@api.route('/users/<int:user_id>/notifications', methods=['GET'])
 def get_user_notifications(user_id):
     notifications = Notification.query.filter_by(user_id=user_id).all()
     return jsonify([notification.serialize() for notification in notifications])

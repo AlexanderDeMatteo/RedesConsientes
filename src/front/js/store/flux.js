@@ -671,7 +671,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				}
 			},
-		
+			
+			get_psicologo_asigned: async (id) => {
+				let response = await fetch(`${API_URL}/api/psicologo_relacionado`, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${getAuthToken("token")}`
+					},
+				
+				});
+				if (response.ok) {
+					try{
+						let body = await response.json()
+						setStore({ userRelationShip: [body] })
+					}catch(error){
+					}
+				}
+			},
 
 			
 		}

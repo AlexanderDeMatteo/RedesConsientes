@@ -548,12 +548,13 @@ class Marketplace(db.Model):
             "patient_last_name": self.client.last_name if self.client else None,
         }
     
-class NotificationType(Enum):
-    new_session = 'new_session'
-    reminder = 'reminder'
-    message = 'message'
-    system = 'system'
-    payment = 'payment'
+class NotificationType(str, Enum):
+    new_session = 'nueva session'
+    reminder = 'Recordatorio'
+    message = 'Mensaje'
+    system = 'Administracion'
+    payment = 'Pagos'
+    market = 'Mercado'
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
@@ -571,11 +572,11 @@ class Notification(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user": self.user,
-            "sender": self.sender,
-            "notification_type": self.notification_type,
+            "user": {"id": self.user.id, "email": self.user.email},  # Include some user data
+            "sender": self.sender if self.sender else None,  # Handle potential null sender
+            "notification_type": self.notification_type.value,
             "message": self.message,
             "read": self.read,
-            "created_at": self.created_at,
+            "created_at": self.created_at.isoformat(),
             "data": self.data,
         }
