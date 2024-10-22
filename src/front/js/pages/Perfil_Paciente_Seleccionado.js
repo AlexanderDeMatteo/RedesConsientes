@@ -24,8 +24,21 @@ export const PerfilPacienteSeleccionado = () => {
     
 
     useEffect(() => {
-        // actions.privateData()
-        actions.handle_patient_data_seleccinado(id);
+        
+      const fetchData = async() =>{
+        setIsLoading(true)
+        
+        try{
+            const data = await actions.handle_patient_data_seleccinado(id);
+            console.log(data, "data")
+        } catch (error) {
+            console.error(error); // Handle any errors
+          } finally {
+            setIsLoading(false); // Finalizar la carga
+        }
+  
+    }
+    fetchData()
     }, []);
 
 
@@ -61,10 +74,7 @@ export const PerfilPacienteSeleccionado = () => {
                                 : psicologo_img} />
                         </CardHeader>
                       <CardBody className="overflow-visible py-2 text-center">
-                        <p className="text-tiny uppercase font-bold">{store.userDataSelecionado.id} {store.userDataSelecionado.last_name}</p>
-                        <small className="text-default-500">{store.userDataSelecionado.area_de_especialidad}</small>
-                        <h4>N°FPV:{store.userDataSelecionado.fpv_number}</h4>
-                        <h4 className="font-bold text-large">Precio de la consulta {store.userDataSelecionado.monto_consulta}$</h4>
+                        <p className="text-tiny uppercase font-bold">{store.userDataSelecionado.name} {store.userDataSelecionado.last_name}</p>
                       </CardBody>
                     </Card>
 
@@ -105,6 +115,22 @@ export const PerfilPacienteSeleccionado = () => {
                                     <div className="flex items-center space-x-2">
                                     <i class="fa-solid fa-book"></i>
                                     <span>Tareas</span>
+                                    {/* <Chip size="sm" variant="faded">1</Chip> */}
+                                    </div>
+                                }
+                                >
+                                <Card>
+                                    <CardBody>
+                                        <HomeWork/>
+                                    </CardBody>
+                                </Card>     
+                                </Tab>
+                                <Tab
+                                key="Notas sobre paciente"
+                                title={
+                                    <div className="flex items-center space-x-2">
+                                    <i class="fa-solid fa-book"></i>
+                                    <span>Notas sobre paciente</span>
                                     {/* <Chip size="sm" variant="faded">1</Chip> */}
                                     </div>
                                 }

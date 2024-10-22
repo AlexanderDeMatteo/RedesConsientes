@@ -7,6 +7,7 @@ import Imager4 from "../consulta4.jpg";
 import {Button} from "@nextui-org/react";
 import { Context } from "../../../store/appContext";
 import { useParams } from "react-router-dom";
+import "../../../../styles/jumbotron.css"
 
 
 
@@ -16,6 +17,9 @@ const { actions, store } = useContext(Context);
 const API_URL = process.env.BACKEND_URL;
 const { id } = useParams();
 const [isLoading, setIsLoading] = useState(false);
+
+console.log(data)
+console.log(data.user_data.id)
 
     function Editar() {
         if (!show) {
@@ -68,9 +72,9 @@ const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
-        <div>
+        
             <div className="pb-3">
-                <p>Estrategia Terapeutica</p>
+                <p className="subtitulo2">Estrategia Terapeutica</p>
             </div>
             <> {!show ? 
             <Textarea
@@ -78,7 +82,8 @@ const [isLoading, setIsLoading] = useState(false);
             onChange={handleChange}
             label=""
             placeholder="Estrategia Terapeutica o enfoque terapeutico"
-            className={{fullWidth:"true"}}
+            className="cuerpoTexto"
+            fullWidth="true"
             value={data.user_data.psych_strategies || ""}
             />
           : <Textarea
@@ -88,6 +93,7 @@ const [isLoading, setIsLoading] = useState(false);
           placeholder="Estrategia Terapeutica o enfoque terapeutico"
           value={data.user_data.psych_strategies ? data.user_data.psych_strategies : "Estrategia Terapeutica o enfoque terapeutico"}
           className={{fullWidth:"true"}}
+          
         />}
             </>
             <div className="row mb-3 mt-3">
@@ -113,7 +119,7 @@ const [isLoading, setIsLoading] = useState(false);
 
                               </div>
 
-        </div>
+        
         <div className="pb-3">
             <p>Experiencia Terapeutica</p>
         </div>
@@ -135,14 +141,15 @@ const [isLoading, setIsLoading] = useState(false);
           className={{fullWidth:"true"}}
         />}
          </>
-    {id != store.userData.id ? " " : 
+    {data.user_data.id == store.userData.id ?
     <div className="flex flex-wrap gap-4 justify-content-center mt-3">
-    <Button color="primary" variant="shadow" type="submit"
+    <Button id="button" variant="shadow" type="submit"
                                   onClick={Editar}
                                   className="btn btn-danger">
         {!show ? "Guardar" : "Editar"}
       </Button> 
     </div>
+    : " " 
                                   }
     </>
   );

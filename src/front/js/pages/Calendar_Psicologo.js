@@ -33,6 +33,7 @@ export const Calendar_Psicologo = () => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await actions.getPsicologiScheduleDay(id, fecha);
+            console.log(data)
             // Usa la data aquí
           
         };

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import "../../../styles/imagenes.css";
+import "../../../styles/jumbotron.css"
 import { Context } from "../../store/appContext";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 
@@ -61,7 +62,7 @@ export const Imagenes2 = () => {
             <Button  
             key={b}
             variant="flat" 
-            color="primary" 
+            id="button"
             onPress={() => handleOpen(b)}
             className="capitalize"
 
@@ -75,12 +76,12 @@ export const Imagenes2 = () => {
         <ModalContent>
           {(onClose) => (
               <>
-              <ModalHeader className="flex flex-col gap-1">Selecciona tu imagen de perfil</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 titulo">Selecciona tu imagen de perfil</ModalHeader>
               <ModalBody>
-                <p> 
+                <p className="subtitulo2"> 
                   Se recomienda que selecciones una imagen pulcra y profecional
                 </p>
-                <label htmlFor="img" className="agregarFoto">
+                <label htmlFor="img" className="agregarFoto subtitulo2">
                 Seleccionar Imagen
                 </label>
               <input
@@ -94,10 +95,10 @@ export const Imagenes2 = () => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button id="button" className="subtitulo2" variant="ghost" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={handlePicture}>
+                <Button id="button" className="subtitulo2" variant="shadow" onPress={handlePicture}>
                   Guardar
                 </Button>
               </ModalFooter>

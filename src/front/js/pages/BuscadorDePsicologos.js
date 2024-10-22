@@ -2,28 +2,42 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import "../../styles/buscador_de_psicologos.css"
 import { Context } from "../store/appContext.js";
 import { PsicologoCards } from "../component/buscador_componentes/PsicologoCard.js";
+import { Filtro2 } from "./BuscadorDePsicologos2.js";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+import {Input} from "@nextui-org/react";
+import {Accordion, AccordionItem, Select, SelectItem} from "@nextui-org/react";
 
 export const BuscadorDePsicologos = () => {
     const { actions, store } = useContext(Context);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const itemClasses = {
+        base: "py-0 w-full",
+        title: "font-normal text-medium",
+        trigger: "px-2 py-0 data-[hover=true]:bg-default-100 rounded-lg h-14 flex items-center",
+        indicator: "text-medium",
+        content: "text-small px-2",
+      };
 
     const [filtros, setFiltros] = useState({       // estado donde se guardan los parametros del filtro
         precio: "",
         nombre: "",
+        apellido:"",
         numeroFpv: "",
         especialidades: "",
         estado: "",
-        ciudad: "",
-        cedula: "",
-        sexo: "",
-        edadMin: "",
-        edadMax: ""
+        ciudad: ""
     })
-    
+   
+    let psicologos = store.userPsicologos
+
+    console.log(psicologos)
+
     const handleChange = (e) => {
         setFiltros({ ...filtros, [e.target.name]: e.target.value.toLowerCase() })
     }
 
-    let especialidades = ["Psicología Cognitiva", "Psicología Clínica",   // array de las especialidades
+    let especialidades = ["todos","Psicología Cognitiva", "Psicología Clínica",   // array de las especialidades
         "Neuro Psicología", "Psicólogia Biológica",
         "Psicología Comparativa o Etiología", "Psicología Educativa",
         "Psicología Evolutiva", "Psicología del Deporte",
@@ -36,160 +50,187 @@ export const BuscadorDePsicologos = () => {
         "Psicología del Marketing", "Sexología", "Psicología Clinica",
         "Psicología comunitaria"]
 
-    const [showFiltros, setShowFiltros] = useState(false)
+    // useEffect(() => {
+    //     // actions.privateData()
+    //     actions.handle_user_psicologo();
+    // }, [])
 
     useEffect(() => {
-        // actions.privateData()
-        actions.handle_user_psicologo();
-    }, [])
+      const fetchData = async() =>{
+          setIsLoading(true)
+          try{
+              const data = await actions.handle_user_psicologo();
+          } catch (error) {
+              console.error(error); // Handle any errors
+            } finally {
+              setIsLoading(false); // Finalizar la carga
+          }
+
+      }
+      fetchData()
+
+  }, [])
+
+    console.log(store.userPsicologos)
+
 
     return (
         <>
             <div className="content-wrapper">
                 <div className="boxPrincipal">
+                  <div className="d-flex justify-content-between">
                     <div className="d-flex py-1 justify-content-start" >
                         <h1>Encuentra tu psicologo ideal</h1>
-                        <button
-                            type="button"
-                            className="ms-1 btn btn-primary"
-                            onClick={(e) => {
-                                if (showFiltros == true) return setShowFiltros(false)
-                                setShowFiltros(true)
-                            }}>
-                            <i className="fa-solid fa-sliders"></i> Filtros
-                        </button>
                     </div>
 
+                    <div class="dropdown">
+  {/* <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Dropdown button
+  </button> */}
+    <Button 
+          variant="bordered" 
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Open Menu
+    </Button>
+
+  <ul class="dropdown-menu p-0 rounded-full  min-w-[300px]">
+  <Accordion
+
+      showDivider={false}
+      variant="shadow"
+      itemClasses={itemClasses}
+    >
+      <AccordionItem
+        key="1"
+        aria-label="Connected devices"
+        startContent={<i class="fa-solid fa-users-viewfinder"></i>}
+        title="Buscar por Nombre"
+      >
+       <Input
+      autoFocus
+      label="Buscar"
+      // isClearable
+      radius="lg"
+      name="nombre"
+      onChange={(e) => handleChange(e)}
+      // placeholder=""
+      startContent={
+        <i class="fa-solid fa-magnifying-glass"></i>
+      }
+    />
+      </AccordionItem>
+      <AccordionItem
+        key="2"
+        aria-label="Connected devices"
+        startContent={<i class="fa-solid fa-users-viewfinder"></i>}
+        title="Buscar por Apellido"
+      >
+       <Input
+      autoFocus
+      label="Buscar"
+      isClearable
+      radius="lg"
+      name="apellido"
+      onChange={(e) => handleChange(e)}
+      placeholder="Buscar..."
+      startContent={
+        <i class="fa-solid fa-magnifying-glass"></i>
+      }
+    />
+      </AccordionItem>
+      <AccordionItem
+        key="3"
+        aria-label="Apps Permissions"
+        startContent={<i class="fa-regular fa-address-card"></i>}
+        // subtitle="3 apps have read permissions"
+        title="Buscar por Numero FPV"
+      >
+        <Input
+      autoFocus
+      name="numeroFpv"
+      label="Buscar"
+      isClearable
+      radius="lg"
+      onChange={(e) => handleChange(e)}
+      placeholder="Buscar..."
+      startContent={
+        <i class="fa-solid fa-magnifying-glass"></i>
+      }
+    />
+      </AccordionItem>
+      <AccordionItem
+        key="4"
+        aria-label="Pending tasks"
+        startContent={<i class="fa-solid fa-brain"></i>}
+        title="Buscar por Especialidad"
+        // title="Pending tasks"
+      >
+        <Select
+            label="Buscar"
+            name="especialidades"
+            placeholder="Selecciona una especialidad"
+            className="max-w-xs"
+            onChange={(e) => handleChange(e)}
+        >
+            {especialidades.map((especialidad) => (
+                <SelectItem key={especialidad} value={especialidad}>
+                    {especialidad}
+                </SelectItem>
+            ))}
+        </Select>   
+      </AccordionItem>
+      <AccordionItem
+        key="5"
+        aria-label="Card expired"
+        classNames={{ subtitle: "text-danger" }}
+        startContent={<i class="fa-solid fa-location-dot"></i>}
+        title="Buscar por Ciudad"
+      >
+       <Input
+      autoFocus
+      name="ciudad"
+      label="Buscar"
+      isClearable
+      radius="lg"
+      onChange={(e) => handleChange(e)}
+      placeholder="Buscar..."
+      startContent={
+        <i class="fa-solid fa-magnifying-glass"></i>
+      }
+    />
+      </AccordionItem>
+      <AccordionItem
+        key="6"
+        aria-label="Card expired"
+        classNames={{ subtitle: "text-danger" }}
+        startContent={<i class="fa-solid fa-location-dot"></i>}
+        title="Buscar por Estado"
+      >
+       <Input
+      autoFocus
+      name="estado"
+      label="Buscar"
+      isClearable
+      radius="lg"
+      onChange={(e) => handleChange(e)}
+      placeholder="Buscar..."
+      startContent={
+        <i class="fa-solid fa-magnifying-glass"></i>
+      }
+    />
+      </AccordionItem>
+    </Accordion>
+  </ul>
+</div>
+                  </div>
+
                     <div className="boxBuscador">
-                        <PsicologoCards filtros={filtros} />
-                        {showFiltros &&
-                            <div className="filtros">
-                                <form className="d-flex flex-column">
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEspecialidad" aria-expanded="false" aria-controls="collapseExample">
-                                        Busqueda por Especialidad
-                                    </button>
-                                    <div className="collapse" id="collapseEspecialidad">
-                                        <div className="card card-body">
-                                            <select className="form-select"
-                                                onChange={(e) => handleChange(e)}
-                                                name="especialidades"
-                                            >
-                                                <option defaultValue>Especialidad</option>
-                                                {especialidades.map((especialidad, index) => {
-                                                    return (
-                                                        <option key={index} value={especialidad}>{especialidad}</option>
-                                                    )
-                                                })}
-                                            </select>
-                                           
-                                        </div>
-                                    </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCredenciales" aria-expanded="false" aria-controls="collapseExample">
-                                        Busqueda por Credenciales
-                                    </button>
-                                    <div className="collapse" id="collapseCredenciales">
-                                        <div className="card card-body">
-                                            Nombre y Apellido
-                                            <input
-                                                className="form-control"
-                                                placeholder="Nombre del Psicologo"
-                                                name="nombre"
-                                                value={filtros.nombre}
-                                                onChange={(e) => { handleChange(e) }} />
-                                            Cedula de Identidad
-                                            <input
-                                                className="form-control"
-                                                placeholder="Cedula de Identidad"
-                                                name="cedula"
-                                                value={filtros.cedula}
-                                                onChange={(e) => { handleChange(e) }} />
-                                            Numero FPV
-                                            <input
-                                                className="form-control"
-                                                placeholder="Numero FPV del Psicologo"
-                                                name="numeroFpv"
-                                                value={filtros.numeroFpv}
-                                                onChange={(e) => { handleChange(e) }} />
-                                        </div>
-                                    </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDatos" aria-expanded="false" aria-controls="collapseExample">
-                                        Busqueda por Datos Personales
-                                    </button>
-                                    <div className="collapse" id="collapseDatos">
-                                        <div className="card card-body">
-                                            Nombre y Apellido
-                                            <input
-                                                className="form-control mb-1"
-                                                placeholder="Nombre del Psicologo"
-                                                name="nombre"
-                                                value={filtros.nombre}
-                                                onChange={(e) => { handleChange(e) }} />
-                                            Genero
-                                            <select className="form-select mb-1"
-                                                onChange={(e) => handleChange(e)}
-                                                name="sexo"
-                                            >
-                                                <option defaultValue>Sexo</option>
-                                                <option value="masculino">Masculino</option>
-                                                <option value="femenino">Femenino</option>
-                                                <option value="otro">Otro</option>
-                                            </select>
-                                            Rango de Edad
-                                            <div className="row ms-1">
-                                                <input
-                                                    className="col-5 form-control me-1"
-                                                    placeholder="Desde"
-                                                    name="edadMin"
-                                                    value={filtros.edadMin}
-                                                    onChange={(e) => handleChange(e)} />
-                                                <input
-                                                    className="col-5 form-control"
-                                                    placeholder="Hasta"
-                                                    name="edadMax"
-                                                    value={filtros.edadMax}
-                                                    onChange={(e) => handleChange(e)} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrecio" aria-expanded="false" aria-controls="collapseExample">
-                                        Busqueda por Precio de Consulta
-                                    </button>
-                                    <div className="collapse" id="collapsePrecio">
-                                        <div className="card card-body">
-                                            Precio
-                                            <input
-                                                className="form-control"
-                                                placeholder="Precio Maximo por Consulta"
-                                                name="precio"
-                                                value={filtros.precio}
-                                                onChange={(e) => { handleChange(e) }} />
-                                        </div>
-                                    </div>
-                                    <button className="dropdowns btn btn-secondary mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLocal" aria-expanded="false" aria-controls="collapseExample">
-                                        Busqueda por Localizacion
-                                    </button>
-                                    <div className="collapse" id="collapseLocal">
-                                        <div className="card card-body">
-                                            Estado
-                                            <input
-                                                className="form-control"
-                                                placeholder="Estado de Residencia"
-                                                name="estado"
-                                                value={filtros.estado}
-                                                onChange={(e) => { handleChange(e) }} />
-                                            Ciudad
-                                            <input
-                                                className="form-control"
-                                                placeholder="Ciudad de Residencia"
-                                                name="ciudad"
-                                                value={filtros.ciudad}
-                                                onChange={(e) => { handleChange(e) }} />
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        }
+                        <PsicologoCards filtros={filtros} psicologos={psicologos} />
                     </div>
+
+
                 </div>
             </div>
         </>

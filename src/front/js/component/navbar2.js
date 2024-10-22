@@ -87,6 +87,7 @@ export const Navbar2 = () => {
     <Navbar
       maxWidth="xl"
       isBordered
+      position="sticky"
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       >
@@ -100,15 +101,13 @@ export const Navbar2 = () => {
 
       <NavbarContent className="sm:hidden " justify="center">
         <NavbarBrand>
-        <i className="fa-solid fa-brain"></i>
-        <p className="font-bold text-inherit">RedesConscientes</p>
+        <p className="font-bold text-inherit titulo">RedesConscientes</p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4">
         <NavbarBrand>
-        <i className="fa-solid fa-brain"></i>
-        <p className="font-bold text-inherit">RedesConscientes</p>
+        <p className="font-bold text-inherit titulo">RedesConscientes</p>
         </NavbarBrand>
       </NavbarContent>
 
@@ -117,25 +116,25 @@ export const Navbar2 = () => {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         
         <NavbarItem isActive>
-          <Link href="noticias" aria-current="page">
+          <Link href="/noticias" aria-current="page">
             Noticias
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/buscador">
+          <Link color="foreground" href="/buscador" className=" subtitulo">
             Buscador de psicologos
           </Link>
         </NavbarItem>
         {store.userData.role_id == 2 || store.userData.role_id == 3 ? 
 
           <NavbarItem>
-          <Link color="foreground" href="/cursos">
+          <Link color="foreground" className="subtitulo" href="/cursos">
           Cursos
           </Link>
           </NavbarItem>
         : " "}
         <NavbarItem>
-          <Link color="foreground" href="/eventos">
+          <Link color="foreground" className=" subtitulo" href="/eventos">
             Eventos
           </Link>
         </NavbarItem>
@@ -147,13 +146,18 @@ export const Navbar2 = () => {
     {!hasValidToken() ?
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
       <NavbarItem>
-        <Link color="foreground" href="/sobre-nosotros">
+        <Link color="foreground" className=" subtitulo" href="/">
         Home
         </Link>
       </NavbarItem>
       <NavbarItem isActive>
-        <Link href="noticias" aria-current="/">
+        <Link href="/sobre-nosotros" className=" subtitulo" aria-current="/">
         Sobre nosotros
+        </Link>
+      </NavbarItem>
+      <NavbarItem>
+        <Link color="foreground" className=" subtitulo" href="/contact">
+        Contacto
         </Link>
       </NavbarItem>
     </NavbarContent>
@@ -165,7 +169,7 @@ export const Navbar2 = () => {
       <NavbarContent justify="end" className="">
         
         <NavbarItem>
-          <Button as={Link} color="primary" href="/loginsiginup" variant="flat">
+          <Button as={Link} className="main-button subtitulo" href="/loginsiginup" variant="flat">
             Ingresa
           </Button> 
         </NavbarItem>
@@ -223,20 +227,20 @@ export const Navbar2 = () => {
           <>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as {store.userData.name}</p>
-              <p className="font-semibold">{store.userData.email}</p>
+              <p className="font-semibold cuerpoTexto">Signed in as {store.userData.name}</p>
+              <p className="font-semibold cuerpoTexto">{store.userData.email}</p>
             </DropdownItem>
-            <DropdownItem key="Perfil" href="/perfil">Perfil</DropdownItem>
+            <DropdownItem key="Perfil" className="subtitulo" href="/perfil">Perfil</DropdownItem>
             <DropdownItem key="Agenda_del_dia" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
-            <DropdownItem key="Contactos" href="/contactos">Contactos</DropdownItem>
-            <DropdownItem key="Expedientes" href="/Expedientes">Expedientes</DropdownItem>
-            <DropdownItem key="Manejo_de_agend" onClick={() => handleClick(calendar)}>Manejo de agenda</DropdownItem>
-            <DropdownItem key="Facturacion">Facturacion</DropdownItem>
-            <DropdownItem key="Modalidad_de_pago">Modalidad de pago</DropdownItem>
+            <DropdownItem key="Contactos" className="subtitulo" href="/contactos">Contactos</DropdownItem>
+            <DropdownItem key="Expedientes" className="subtitulo" href="/Expedientes">Expedientes</DropdownItem>
+            <DropdownItem key="Manejo_de_agend" className="subtitulo" onClick={() => handleClick(calendar)}>Manejo de agenda</DropdownItem>
+            <DropdownItem key="Facturacion" className="subtitulo">Facturacion</DropdownItem>
+            <DropdownItem key="Modalidad_de_pago" className="subtitulo">Modalidad de pago</DropdownItem>
             <DropdownItem key="logout" onClick={(e) => {
               removeAuthToken()
               navigate("/")
-            }} color="danger">
+            }} color="danger" className="subtitulo">
               Log Out
             </DropdownItem>
           </DropdownMenu>
@@ -244,16 +248,16 @@ export const Navbar2 = () => {
               : 
               <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as {store.userData.name}</p>
-              <p className="font-semibold">{store.userData.email}</p>
+              <p className="font-semibold cuerpoTexto">Signed in as {store.userData.name}</p>
+              <p className="font-semibold cuerpoTexto">{store.userData.email}</p>
             </DropdownItem>
-            <DropdownItem key="Perfil" href="/perfil">Perfil</DropdownItem>
-            <DropdownItem key="Agenda_del_dia" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
-            <DropdownItem key="Contactos" href="/contactos">Contactos</DropdownItem>
+            <DropdownItem key="Perfil" className="subtitulo" href="/perfil">Perfil</DropdownItem>
+            <DropdownItem key="Agenda_del_dia" className="subtitulo" onClick={() => handleClick(calendar_today)} >Agenda del dia</DropdownItem>
+            <DropdownItem key="Contactos" className="subtitulo" href="/contactos">Contactos</DropdownItem>
             <DropdownItem key="logout" onClick={(e) => {
               removeAuthToken()
               navigate("/")
-            }} color="danger">
+            }} color="danger" className="subtitulo">
               Log Out
             </DropdownItem>
           </DropdownMenu>
@@ -273,7 +277,7 @@ export const Navbar2 = () => {
         {menuItemsPsicologo.map((item, index) => (   
           <NavbarMenuItem key={`${item}-${index}`} >
           <Link
-          className="w-100%"
+          className="w-100% subtitulo"
           color={
             index === 2 ? "warning" : index === menuItemsPsicologo.length - 1 ? "danger" : "foreground"
           }

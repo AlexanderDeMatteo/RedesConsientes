@@ -34,7 +34,7 @@ export const Noticias = () => {
     <div className="content-wrapper">
 
     <div>
-      <h1 className=" p-4 h1 ">Noticias</h1>
+      <h1 className=" subtitulo p-4 h1 ">Noticias</h1>
     </div>
     <div className="mb-4">
 

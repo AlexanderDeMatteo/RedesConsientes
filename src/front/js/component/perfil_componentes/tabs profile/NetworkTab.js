@@ -206,7 +206,7 @@ const API_URL = process.env.BACKEND_URL;
     </div>   
 
         <div className="flex flex-wrap gap-4 justify-content-center mt-3">
-        <Button color="primary" variant="shadow" type="submit"
+        <Button id="button" variant="shadow" type="submit"
                                     onClick={Editar}
                                     className="btn btn-danger">
             {!show ? "Guardar" : "Editar"}

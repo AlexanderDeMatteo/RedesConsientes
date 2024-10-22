@@ -2,16 +2,14 @@ import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../../../store/appContext";
 import {DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Button,} from "@nextui-org/react";
 import {Badge} from "@nextui-org/react";
-import { useSocket } from "../../../socket.io/customHook";
+
 
 export const Notification = () => {
   
   const { actions, store } = useContext(Context);
-  // const { notifications } = useSocket();
+  
   const [notifications, setNotifications] = useState([])
 
-
-  use
   
   return (
 

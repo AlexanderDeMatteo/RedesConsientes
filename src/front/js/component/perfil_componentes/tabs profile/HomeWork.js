@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import {Button, Input, Card, CardBody, Checkbox} from "@nextui-org/react";
 import { Context } from "../../../store/appContext";
 import { useParams } from "react-router-dom";
+// import "../../../../styles/jumbotron.css"
 
 export const HomeWork = () => {
   const { id } = useParams();
@@ -111,7 +112,7 @@ export const HomeWork = () => {
             <i className="fa-solid fa-list-check"></i>
           }
           />
-        <Button color="primary"
+        <Button id="button"
         type="button" onClick={() => buttonSaveTask()}
         >
       Añadir tarea <i className="fa-solid fa-pencil"></i>

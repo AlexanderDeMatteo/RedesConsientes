@@ -2,15 +2,13 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
-import { Home } from "./pages/home";
+import { LandingPage } from "./pages/landingPage";
 import { SignUp } from "./pages/SiginUp";
 import { SignIn } from "./pages/SiginIn";
 import { Perfil } from "./pages/Perfil";
 
 import injectContext from "./store/appContext";
 import { BuscadorDePsicologos } from "./pages/BuscadorDePsicologos";
-import { Calendar_custom } from "./pages/Calendar";
-import { CalendarCogif_custom } from "./pages/Calendar_Config";
 import { CalendarToday_custom } from "./pages/Calendar_today";
 
 import { Footer } from "./component/footer";
@@ -21,18 +19,22 @@ import { PerfilUsuarioSeleccionado } from "./pages/Perfil_Usuario_Seleccionado";
 import { MetodosDePago } from "./pages/Metodos_De_Pago";
 import PrivateRoutes from "../utils/PrivateRoutes";
 import ReservedSession from "./pages/ReservedSession";
-import Calendar from "react-calendar";
-import { Calendar_Psicologo } from "./pages/Calendar_Psicologo";
 import { Expedientes } from "./pages/Expedientes";
 import { PerfilPacienteSeleccionado } from "./pages/Perfil_Paciente_Seleccionado";
 import { Panel } from "./pages/panel";
 import { Contactos } from "./pages/contactos";
-import { Buscador2 } from "./pages/BuscadorDePsicologos2";
+import { Filtro2 } from "./pages/BuscadorDePsicologos2";
 import { Noticias } from "./pages/Noticias";
 import { Cursos } from "./pages/Cursos";
 import { Navbar2 } from "./component/navbar2";
 import { Eventos } from "./pages/Eventos";
 import { LoginSiginUp } from "./pages/LoginSiginUp";
+import { AboutUs } from "./pages/aboutUs";
+import { Contact } from "./component/home_component/contact";
+import { ResetPassword } from "./pages/resetPassword";
+import { UpdateContraseña } from "./pages/updateContraseña";
+import { Calendar2 } from "./component/calendar_components/calendar2";
+import { HomePage } from "./pages/HomePage";
 
 
 //create your first component
@@ -48,10 +50,19 @@ const Layout = () => {
           {/* <Navbar /> */}
           <Navbar2 />
           <Routes>
-            <Route element={<Home />} path="/"/>
+            <Route element={<LandingPage />} path="/"/>
             <Route element={<SignUp />} path="/signup"/>
             <Route element={<SignIn />} path="/signin"/>
+            <Route element={<AboutUs />} path="/sobre-nosotros"/>
+            <Route element={<Contact />} path="/contact"/>
             <Route element={<LoginSiginUp />} path="/LoginSiginUp"/>
+            <Route element={<ResetPassword />} path="/Reset-Password"/>
+            <Route element={<UpdateContraseña />} path="/password-update"/>
+            {/* <Route element={< />} path="/password-update"/> */}
+            <Route element={<Calendar2 />} path="/calendario/:id"/>
+
+            <Route element={<HomePage />} path="/prueba"/>
+
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
@@ -156,7 +167,7 @@ const Layout = () => {
               path="Eventos"
             />
             </Route>
-            <Route element={<PrivateRoutes/>}>
+            {/* <Route element={<PrivateRoutes/>}>
             <Route element={
               <div className="contenedor">
                 <div id="paginaCentral">
@@ -165,7 +176,7 @@ const Layout = () => {
               </div>}
               path="/calendar"
             />
-            </Route>
+            </Route> */}
             <Route element={<PrivateRoutes/>}>
             <Route element={
             <div className="contenedor">
@@ -173,24 +184,11 @@ const Layout = () => {
                   <Sidebarx />
                 </div> */}
                 <div id="paginaCentral">
-                  <Calendar_custom/>
+                  <Calendar2/>
                 </div>
               </div>}
               path="/calendar/:id"
               />
-            </Route>
-            <Route element={<PrivateRoutes/>}>
-            <Route element={
-              <div className="contenedor">
-                {/* <div id="navbar2">
-                  <Sidebarx />
-                </div> */}
-                <div id="paginaCentral">
-                  <CalendarCogif_custom />
-                </div>
-              </div>}
-              path="/calendar_config"
-            />
             </Route>
             <Route element={<PrivateRoutes/>}>
             <Route element={
@@ -225,7 +223,7 @@ const Layout = () => {
                   <Sidebarx />
                 </div> */}
                 <div id="paginaCentral">
-                  <Buscador2 />
+                  <Filtro2 />
                 </div>
               </div>}
               path="/buscador2"

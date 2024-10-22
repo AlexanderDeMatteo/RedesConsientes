@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 export const Card = ({
     id,
     name,
+    lastname,
     profile_picture,
     specialty_area,
     precio_consulta,
@@ -17,7 +18,7 @@ export const Card = ({
     colSpacing = "col-3",
 
 }) => {
-
+console.log(specialty_area)
     return (
         <>
             <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
@@ -40,7 +41,7 @@ export const Card = ({
                                 </ul>
                             </div>
                             <div className="card--title">
-                                <h3>{name}</h3>
+                                <h3>{name} {lastname}</h3>
                                 <p>{specialty_area ? specialty_area : "Psicologo"}<br />
                                     {`${city ? city : ""}, ${state ? state: ""}`}
                                 </p>
@@ -53,7 +54,7 @@ export const Card = ({
                                         {`${precio_consulta ? precio_consulta: ""}`}
                                     </div>
                                     <div className="col-6" id="precioynumerocard">
-                                        {`Contacto: ${phoneNumber ? phoneNumber: "" }`}
+                                        {`Numero FPV: ${numberFpv ? numberFpv: "" }`}
                                     </div>
                                     
                                 </div>

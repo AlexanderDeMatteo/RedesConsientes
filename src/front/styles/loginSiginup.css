@@ -10,3 +10,35 @@
       flex-direction: column;
     }
   }
+
+  .block:not(:last-child){
+    margin-bottom: 0 !important;
+  }
+
+  
+button.main-button {
+  cursor: pointer;
+  background-color: #8261ee;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 0.25px;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+button.main-button:hover {
+  background-color: #ff589e;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(244 244 245) inset;
+}
+/* 
+input:-webkit-autofill,
+input:-webkit-autofill:hover{
+  -webkit-box-shadow: 0 0 0px 1000px hsl(var(--nextui-default-100) / var(--nextui-default-100-opacity, var(--tw-bg-opacity))) inset
+
+} */

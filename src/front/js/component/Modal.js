@@ -26,8 +26,7 @@ export const Modal = ({calendar_date2, calendar_date, fecha}) => {
     const [horainicioFinal,setHoraInicioFinal] = useState("");
     const [value, onChange] = useState('10:00');
 
-
-    // let diaFiltado = store.psicologySession.filter((data) => data.calendar_date == calendar_date)
+    
 
     const transition = useTransition(store.scheduleSession, {
         from: { x: 0, y: 50, opacity: 0 },

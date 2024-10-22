@@ -20,7 +20,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			patientTask: [],
 			userScheduleData:{},
 			userSession:{},
-			scheduleSession:{},
+			scheduleSession:[],
 			clientScheduleData:{},
 			userPaymentData:{},
 			userPatients:[],
@@ -132,8 +132,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					let date = `${fecha} 00:00:00 GMT`
-					let schedule = body.filter(persona => persona.calendar_date == date)
+					let i = 0
+					for (i ; i < body.length; i++) {
+						console.log(new Date(body[i]['calendar_date']).toGMTString().slice(0,17))
+						console.log(new Date(fecha).toGMTString().slice(0,17))
+						console.log("/////////////////////")
+						}
+					console.log(body)
+					let schedule = body.filter(persona => new Date(persona.calendar_date).toGMTString().slice(0,17) == new Date(fecha).toGMTString().slice(0,17))
+					
+					console.log(schedule)
 					setStore({
 						...store,
 						scheduleSession: schedule
@@ -144,7 +152,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getPsicologiScheduleReservedDay: async (id, fecha) => {
 				const store = getStore()
-				let response = await fetch(`${API_URL}/api/sessions/${id}`, {
+				let response = await fetch(`${API_URL}/api/sessions/today/${id}`, {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
@@ -153,11 +161,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					let date = `${fecha} 00:00:00 GMT`
-					let schedule = body.filter(persona => persona.calendar_date == date && persona.reserved == true)
+					console.log(body)
+					// let date = `${fecha} 00:00:00 GMT`
+					// let schedule = body.filter(persona => persona.calendar_date == date && persona.reserved == true)
 					setStore({
 						...store,
-						scheduleSession: schedule
+						scheduleSession: body
 					})
 					// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}
@@ -174,13 +183,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
-					let date = `${fecha} 00:00:00 GMT`
-					let schedule = body.filter(persona => persona.calendar_date == date && persona.reserved == true)
+					
 					setStore({
 						...store,
-						scheduleSession: schedule
+						scheduleSession: body
 					})
-					// sessionStorage.setItem("psicos", JSON.stringify(store.userPsicologos))
 				}
 			},
 
@@ -395,7 +402,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					console.log(body)
 					let dataFiltada = body.filter((data) => data.is_active == true)
+					console.log(dataFiltada)
+					
 					setStore({
 						...store,
 						userPsicologos: dataFiltada
@@ -415,6 +425,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				if (response.ok) {
 					let body = await response.json()
+					console.log(body)
 					// let dataFiltada = body.filter((data) => data.is_active == false)
 					setStore({
 						...store,
@@ -687,6 +698,64 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ userRelationShip: [body] })
 					}catch(error){
 					}
+				}
+			},
+
+			sendContactMail: async (Mdata) => {
+				try {
+				  const response = await fetch(`${API_URL}/contact/mail`, {
+					method: 'POST',
+					headers: {
+					  'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+					  name: Mdata.name, 
+					  email: Mdata.email,
+					  message: Mdata.message
+					})
+				  });
+			  
+				  if (!response.ok) {
+					console.error('Error response:', await response.json());
+				  }
+				} catch (error) {
+				  console.error('Error sending email:', error);
+				}
+			},
+
+			resetPassword: async (email) => {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/reset-password`,
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json"
+							},
+							body: JSON.stringify(email)
+
+						}
+					)
+
+					console.log(response)
+
+				} catch (error) {
+					console.log(error)
+				}
+			},
+
+			updatePassword: async (tokenUpdate, newPass) => {
+				try {
+					let response = await fetch(`${process.env.BACKEND_URL}/api/update-password`, {
+						method: "PUT",
+						headers: {
+							"Authorization": `Bearer ${tokenUpdate}`,
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify(newPass)
+					})
+					console.log(response)
+				} catch (error) {
+					console.log(error)
 				}
 			},
 

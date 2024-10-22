@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext"; 
+import img from "../../img/rm373batch7-socialmedia-09.jpg"
 import {
   Tabs,
   Tab,
@@ -86,10 +87,10 @@ export const LoginSiginUp = () => {
 
 
   return (
-    <div className=" max-w-full max-h-full h-auto justify-content-center flex ">
-      <Card id="card" className="w-auto h-auto m-2 ">
-        <CardBody className=" ">
-          <Image src="https://img.freepik.com/vector-gratis/dibujado-mano-ilustracion-dia-mundial-salud-mental_23-2149664792.jpg?t=st=1718861213~exp=1718864813~hmac=472f6c611b046bfb370ae4aa1c8d6a1022ee8e82b6ced3654dbb00ad6ca14581&w=740" />
+    <div className="  justify-content-center flex ">
+      <Card id="card" className=" w-[75%]  h-[100%] m-5">
+        <CardBody >
+          <Image src={img} />
         </CardBody>
         <CardBody className=" ">
           <Tabs
@@ -100,7 +101,7 @@ export const LoginSiginUp = () => {
             onSelectionChange={setSelected}
           >
             <Tab key="Inicia Sesion" title="Inicia Sesion">
-              <form className="flex flex-col gap-4">
+              <form className="flex flex-col gap-4 ">
                 <Input 
                   isRequired 
                   label="Email" 
@@ -126,7 +127,7 @@ export const LoginSiginUp = () => {
                   type={isVisible1 ? "text" : "password"}
                   onBlur={(e) => {
                     let regex =
-                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&\.])[A-Za-z\d@$!%*#?&\.]{8,}$/;
                     if (regex.test(password)) {
                         setErrors({ ...errors, password: false });
                     } else {
@@ -154,9 +155,16 @@ export const LoginSiginUp = () => {
                     Registrate
                   </Link>
                 </p>
+                <p className="text-center text-small">
+                  Olvidaste tu contraseña?{" "}
+                  <Link size="sm" href="/Reset-Password">
+                    recordar contraseña
+                  </Link>
+                </p>
                 <div className="flex gap-2 justify-end">
                   <Button 
-                    fullWidth color="primary" 
+                    fullWidth 
+                    className="main-button"
                     onClick={handlelogin} 
                     isDisabled={
                               errors.email ||
@@ -170,7 +178,7 @@ export const LoginSiginUp = () => {
               </form>
             </Tab>
             <Tab key="sign-up" title="Registrate">
-              <form className="flex flex-col gap-4">
+              <form className="flex flex-col gap-4 ">
                 <Input 
                   isRequired
                   value={name}
@@ -209,7 +217,7 @@ export const LoginSiginUp = () => {
                 />
                 {errors.email && (
 														<div className="text-warning">
-															Correo invalido perro de awa
+															Correo invalido
 														</div>
 													)}
 
@@ -230,20 +238,20 @@ export const LoginSiginUp = () => {
                   }
                   onBlur={(e) => {
                     let regex =
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&\.])[A-Za-z\d@$!%*#?&\.]{8,}$/;
                     if (regex.test(password)) {
-                      setErrors({ ...errors, password: false });
+                        setErrors({ ...errors, password: false });
                     } else {
-                      setErrors({ ...errors, password: true });
+                        setErrors({ ...errors, password: true });
                     }
-                  }}
+                }}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 {errors.password && (
 														<div className="text-warning">
 															recuerda que debe tener al menos 8 caracteres 1
 															letra minuscula 1 letra mayuscula 1 numero y un
-															caracter especial perro
+															caracter especial
 														</div>
 													)}
                 <Input
@@ -311,7 +319,7 @@ export const LoginSiginUp = () => {
                 <div className="flex gap-2 justify-end pb-3">
                   <Button 
                     fullWidth 
-                    color="primary"
+                    className="main-button"
                     onClick={() => handleSubmit()}
                     isDisabled={
                       errors.email ||

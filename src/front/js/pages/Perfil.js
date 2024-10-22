@@ -15,6 +15,7 @@ import {Card, CardHeader, CardBody, Avatar, Image, Button} from "@nextui-org/rea
 import { Panel } from "./panel";
 import { Imagenes2 } from "../component/perfil_componentes/imagenes2";
 import { ProfileTabs } from "../component/perfil_componentes/profileTabs";
+import "../../styles/jumbotron.css"
 
 export const Perfil = () => {
   const API_URL = process.env.BACKEND_URL;
@@ -61,7 +62,7 @@ export const Perfil = () => {
               <div className="container-fluid">
                 <div className="row mb-2">
                   <div className="col-sm-6">
-                    <h1>Perfil</h1>
+                    <h1 className="subtitulo p-2 h1">Perfil</h1>
                   </div>
                 </div>
               </div>
@@ -73,24 +74,24 @@ export const Perfil = () => {
                   <div className="col-md-3">
                    <Card className="pt-4 mb-4">
                      <CardHeader className="pb-0 pt-2 px-4 flex-col col-md-auto">
-                        <Avatar isBordered className="w-40 h-40"  color="primary" src={store.userData.profile_picture
+                        <Avatar isBordered className="w-40 h-40" color="secondary" src={store.userData.profile_picture
                                 ? store.userData.profile_picture
                                 : psicologo_img} />
                         </CardHeader>
                       <CardBody className="overflow-visible py-2 text-center">
-                        <p className="text-tiny uppercase font-bold">{store.userData.name} {store.userData.last_name}</p>
-                        <small className="text-default-500">{store.userData.area_de_especialidad}</small>
+                        <p className="text-tiny uppercase font-bold subtitulo">{store.userData.name} {store.userData.last_name}</p>
+                        <small className="text-default-500 subtitulo">{store.userData.area_de_especialidad}</small>
                         {store.userData.role_id == 1 ? " " :
-                        <h4 className="font-bold text-large">N°FPV:{store.userData.fpv_number}</h4>
+                        <h4 className="font-bold text-large subtitulo">N°FPV:{store.userData.fpv_number}</h4>
                       }
                         <div className="text-center">
                           <Imagenes2 />
                         </div>
                       </CardBody>
                       
-                      <Button color="primary" variant="ghost">
+                      {/* <Button color="primary" variant="ghost">
                         Seleccionar psicologo
-                      </Button> 
+                      </Button>  */}
                     </Card>
                     {store.userData.role_id == 2 ?
                     <AboutMe user_data={store.userData} />

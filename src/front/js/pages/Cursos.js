@@ -10,11 +10,11 @@ export const Cursos = () => {
    <div className="content-wrapper">
 
   <div>
-      <h1 className=" p-4 h1 ">Cursos</h1>
+      <h1 className=" subtitulo p-4 h1 ">Cursos</h1>
   </div>
   <div className="mb-4">
   <div className="max-w-[100%] gap-2 grid grid-cols-12 grid-rows-2 px-8">
-  <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-3">
+  <Card isFooterBlurred className="w-full h-[300px] col-span-3 sm:col-span-3">
       <CardHeader className="absolute z-10 top-1 flex-col items-start">
         <p className="text-tiny text-white/60 uppercase font-bold">Fecha:</p>
         <h4 className="text-white/90 font-medium text-xl">Titulo:</h4>

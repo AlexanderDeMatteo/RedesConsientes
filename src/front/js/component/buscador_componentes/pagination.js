@@ -1,50 +1,38 @@
-import React from 'react'
+import React, { useState, useContext, useEffect } from "react";
+import {Pagination, Button} from "@nextui-org/react";
 
 
-export const Pagination = ({ currentPage, setCurrentPage, psicologytotal, psicologyPerPage }) => {
-
+export const Pagination2 = ({ currentPage, setCurrentPage, totalPerPage, psicologyPerPage}) => {
+    
+    console.log(totalPerPage)
+ 
     const pageNumbers = []
 
-
-    for (let i = 1; i <= Math.ceil(psicologytotal / psicologyPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(totalPerPage/ psicologyPerPage); i++) {
         pageNumbers.push(i)
     }
+    const totalPageFinal = pageNumbers.length
+    console.log(totalPageFinal)
 
-    const onPreviosPage = () => {
-        if (currentPage > 1) {
-
-            setCurrentPage(currentPage - 1)
-        }
-    }
-
-    const onNextPage = () => {
-        if (currentPage < pageNumbers.length) {
-            setCurrentPage(currentPage + 1)
-        }
-    }
-    const onSpecificPage = (e) => {
-        setCurrentPage(e)
-    }
+    
 
     return (
         <>
-            <nav className="pagination is-centered" role="navigation" aria-label="pagination">
-                <button className={`pagination-previous ${currentPage === 1 ? "is-disabled" : ""}`} onClick={onPreviosPage}>Anterior</button>
-                <button className={`pagination-next ${currentPage >= pageNumbers.length ? "is-disabled" : ""}`} onClick={onNextPage}>Siguiente</button>
-                {/* <button className={`button is-info ${currentPage === 1 ? "is-disabled" : ""}`} onClick={onPreviosPage}>Anterior</button> */}
-                <ul className="pagination-list">
-
-
-                    {pageNumbers.map(noPage => (
-                        <li key={noPage}>
-                            <a onClick={() => onSpecificPage(noPage)}
-                                className={`pagination-link ${noPage === currentPage ? "is-current" : ""}`}>{noPage}</a>
-                        </li>
-                    ))}
-
-
-                </ul>
-            </nav>
+            <div className="d-flex justify-content-center">
+     
+    
+                <Pagination
+                    initialPage={currentPage}
+                    total={totalPageFinal}
+                    color="secondary"
+                    isCompact 
+                    showControls
+                    // page={currentPage}
+                    onChange={setCurrentPage}
+                />
+      
+            </div>
+            
         </>
 
     )

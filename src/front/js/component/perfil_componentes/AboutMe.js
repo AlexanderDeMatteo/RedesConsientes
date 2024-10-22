@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Card, CardHeader, CardBody, Avatar, Image, Button} from "@nextui-org/react";
 import { Link } from "react-router-dom";
-
+import "../../../styles/AboutMe.css"
 
 
 
@@ -14,8 +14,8 @@ export const AboutMe = (data) => {
   return (
     
       <Card className="bg-white">
-      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start bg-primary">
-        <p className="text-tiny uppercase font-bold">Sobre mi</p>
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start" id="titulo">
+        <p  className="text-tiny uppercase font-bold">Sobre mi</p>
       </CardHeader>
       <CardBody className="overflow-visible py-2">
       {data.user_data.education ? <>

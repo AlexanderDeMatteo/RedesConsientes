@@ -6,6 +6,9 @@ import { useTransition, animated } from "react-spring";
 import { useParams } from "react-router-dom";
 import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image} from "@nextui-org/react";
 import Calendar from 'react-calendar';
+import "../../styles/jumbotron.css"
+import { PsicologoCard } from "../component/calendar_components/PsicologoCard.js";
+import { ClientCard, clientCard } from "../component/calendar_components/clientCard.js";
 // import { useParams } from "react-router-dom";
 
 
@@ -23,6 +26,8 @@ export const CalendarToday_custom = () => {
 
     });
 //    
+
+console.log(store.scheduleSession)
 
 function to12HourFormat(time24h) {
     if (typeof time24h === 'undefined') {
@@ -50,6 +55,7 @@ function to12HourFormat(time24h) {
 
     const phrase = store.phrase
 
+
     useEffect(() => {
         const fetchData = async() =>{
             setIsLoading(true)
@@ -57,10 +63,13 @@ function to12HourFormat(time24h) {
                 const data = await actions.handle_user_data()
                 if(store.userData.is_psicologo == false){
                     const clientdate = await actions.getClientScheduleReservedDay(id, fecha)
+                    // const psicologo = await actions.getPsicologiScheduleReservedDay(id, fecha)
                     const frase = await actions.get_phrase()
                     return true
                 }
-                const psicologodate = await actions.getPsicologiScheduleReservedDay(id, fecha)
+                const clientdate = await actions.getPsicologiScheduleReservedDay(id, fecha)
+                // const clientdate2 = await actions.getClientScheduleReservedDay(id, fecha)
+                // const psicologodate = await actions.getPsicologiScheduleReservedDay(id, fecha)
                 const frase = await actions.get_phrase()
             } catch (error) {
                 console.error(error); // Handle any errors
@@ -73,6 +82,7 @@ function to12HourFormat(time24h) {
 
     }, [])
     
+    console.log(store.scheduleSession)
    
     return (
         <>
@@ -90,101 +100,53 @@ function to12HourFormat(time24h) {
                 {isLoading == true ? (<div className="d-flex justify-content-center"><div className="spinner-border text-primary m-5" role="status">
                                     <span className="visually-hidden">Loading...</span>
                                 </div></div>) : (
-                <div className="row">
+               
 
-                    <div className="container-fluid">
-                        <div className="row justify-content-between">
-                           {store.scheduleSession == false ? ( 
-                           <div className="col-md-5 ">
+                    <div className="">
+                        <section className="max-w-[100%] gap-2 grid grid-cols-12 grid-rows-2 px-8">
+                           {store.scheduleSession.length == 0  ? ( 
+                           <div className="w-full h-[300px] col-span-12 sm:col-span-6">
                                 
-                                        <div className="col-md-3 col-sm-6 col-12">
-
-                                            <div className="info-box bg-primary box_info">
-                                                <span className="info-box-icon"><i className="far fa-bookmark"></i></span>
-                                                <div className="info-box-content">
-                                                   <p>No hay citas para el dia de hoy</p>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                            <Card className="max-w-[400px]">
+                            <CardHeader className="flex gap-3 " id="card">
+                                <Image
+                                alt="nextui logo"
+                                height={40}
+                                radius="sm"
+                                src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
+                                width={40}
+                                />
+                                <div className="flex flex-col">
+                                <p className="text-md">Citas para hoy</p>
+                                </div>
+                            </CardHeader>
+                            <Divider/>
+                            <CardBody>
+                                <p>No hay sesiones para el dia de hoy</p>
+                            </CardBody>
+                            <Divider/>
+                            </Card>
+                                        
                                     
 
-                            </div>):(<div className="col-md-5 p-4 ">
+                            </div>):(<div className="w-full h-[300px] col-span-12 sm:col-span-6">
                                 {transition((style, item) =>
-                                    item ? <animated.div style={style} className="p-2" >
+                                    item ? <animated.div style={style} className="" >
                                         <>
-                                        {store.userData.is_psicologo ? 
-                                         <Card className="max-w-[400px]">
-                                            <CardHeader className="flex gap-3 bg-blue">
-                                                <Image
-                                                alt="nextui logo"
-                                                height={40}
-                                                radius="sm"
-                                                src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-                                                width={40}
-                                                />
-                                                <div className="flex flex-col">
-                                                <p className="text-md">Paciente</p>
-                                                <p className="text-md ">{item.patient_name} {item.patient_last_name}</p>
-                                                </div>
-                                            </CardHeader>
-                                            <Divider/>
-                                            <CardBody>
-                                                <p>Hora: {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</p>
-                                            </CardBody>
-                                            <Divider/>
-                                            <CardFooter>
-                                                <Link
-                                                isExternal
-                                                showAnchorIcon
-                                                href={`/session/${id}/${item.room_number}`}
-                                                >
-                                                ir a session
-                                                </Link>
-                                            </CardFooter>
-                                            </Card>
-                                            :
-                                            <Card className="max-w-[400px]">
-                                            <CardHeader className="flex gap-3 bg-blue">
-                                                <Image
-                                                alt="nextui logo"
-                                                height={40}
-                                                radius="sm"
-                                                src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-                                                width={40}
-                                                />
-                                                <div className="flex flex-col">
-                                                <p className="text-md">Psicologo</p>
-                                                <p className="text-small text-default-500">{item.psychologist_name} {item.psychologist_last_name}</p>
-                                                </div>
-                                            </CardHeader>
-                                            <Divider/>
-                                            <CardBody>
-                                            <p>Hora: {to12HourFormat(item.start_time)} - {to12HourFormat(item.end_time)}</p>
-                                                
-                                            </CardBody>
-                                            <Divider/>
-                                            <CardFooter>
-                                                <Link
-                                                isExternal
-                                                showAnchorIcon
-                                                href={`/session/${id}/${item.room_number}`}
-                                                >
-                                                ir a session
-                                                </Link>
-                                            </CardFooter>
-                                            </Card>
-                                }
-                                </>
-                                </animated.div> : '')}
+                                        {item.psychologist_session_id == id ? 
+                                        <PsicologoCard item={item} id={id}/> : <ClientCard id={id} item={item}/>}
+                                        
+                                            
+                                        </>
+                                        </animated.div> : '')}
 
                             </div>)}
                             
-                            <div className="col-md-5 p-4">
+                            <div className="w-full h-[300px] col-span-12 sm:col-span-6 ">
                                 
                                     {phrase.length == 0 ? (
                                                 <Card className="max-w-[400px]">
-                                            <CardHeader className="flex gap-3 bg-blue">
+                                            <CardHeader className="flex gap-3" id="card">
                                                 <div className="flex flex-col">
                                                 <p className="text-md">Frase del Dia</p>
                                                 </div>
@@ -198,8 +160,8 @@ function to12HourFormat(time24h) {
                                             ) : (
                                             phrase.map((item, index) => 
                                             <>
-                                                <Card className="max-w-[400px]">
-                                            <CardHeader className="flex gap-3">
+                                                <Card className="max-w-[400px] mt-1">
+                                            <CardHeader className="flex gap-3" id="card">
                                                 <div className="flex flex-col">
                                                 <p className="text-md">Frase del dia</p>
                                                 </div>
@@ -219,9 +181,9 @@ function to12HourFormat(time24h) {
                                    
 
                             </div>
-                        </div>
+                        </section>
                     </div>
-                </div>)}
+                )}
 
 
             </div>

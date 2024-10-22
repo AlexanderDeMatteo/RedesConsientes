@@ -1,0 +1,35 @@
+
+
+#tab button .absolute {
+    background-color: #2f1e6c
+}
+
+.group[data-selected=true] .group-data-\[selected\=true\]\:text-\[\#06b6d4\]{
+    color: #2b1a6e !important;
+}
+
+/* #tab button {
+    outline: none !important;
+} */
+
+button{
+    outline: none !important;
+}
+
+#button{
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: #8261ee;
+    /* text-transform: uppercase; */
+    color: #fff;
+    /* letter-spacing: 0.25px; */
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+  
+#button:hover {
+    background-color: #ff589e;
+}

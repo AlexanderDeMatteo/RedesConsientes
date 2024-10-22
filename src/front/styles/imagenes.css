@@ -92,51 +92,6 @@
     }
   }
   
-  .caja-drop-area {
-    margin-left: 70px;
-  }
-  
-  .drop-area {
-    border: 5px dashed #ddd;
-    height: 300px;
-    width: 400px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 20px;
-    padding-left: 30px;
-  }
-  
-  .drop-area.active {
-    background-color: #b8d4fe;
-    color: black;
-    border: 2px dashed #618ac9;
-  }
-  
-  .drop-area h2 {
-    font: size 30px;
-    font-weight: 500;
-    color: black;
-  }
-  
-  .drop-area span {
-    font-size: 25px;
-    color: black;
-  }
-  
-  .drop-area button {
-    padding: 10px 25px;
-    font-size: 20px;
-    border: 0;
-    outline: none;
-    background-color: #5256ad;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 20px;
-  }
   
   .file-container {
     display: flex;
@@ -161,42 +116,19 @@
   
   .agregarFoto {
     background: #f9f9f9;
-    border: 5px solid rgba(8, 166, 240, 0.959);
+    border: 5px solid #2f1e6c;
     padding: 15px;
     border-radius: 5px;
     margin: 10px;
     cursor: pointer;
-    color: rgba(8, 166, 240, 0.959);
+    color: #2b1a6e;
     font-weight: bold;
   }
   
-  /* .page {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .fondo_transparente {
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.226);
-    position: absolute;
-    height: 100vh;
-    width: 100%;
-    display: none;
-  }
-  .modal {
-    background-image: linear-gradiente(0deg, white 70%, crimson 30%);
-    width: 600px;
-    height: 300px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    border-radius: 30px;
-  } */
-  
+button{
+  color: "secondary" !important;
+}
+
+.bg-secondary{
+  background-color: hsl(var(--nextui-secondary) / var(--nextui-secondary-opacity, var(--tw-bg-opacity))) !important;
+}

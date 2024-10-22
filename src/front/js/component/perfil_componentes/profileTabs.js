@@ -7,6 +7,8 @@ import { ProfileTab } from "./tabs profile/ProfileTab";
 import { ProfesionalProfileTab } from "./tabs profile/ProfesionalProfileTab";
 import { HomeWork } from "./tabs profile/HomeWork";
 import { NetworkTab } from "./tabs profile/NetworkTab";
+import "../../../styles/profileTabs.css"
+import "../../../styles/jumbotron.css"
 
 
 export const ProfileTabs = () => {
@@ -17,15 +19,15 @@ export const ProfileTabs = () => {
   return (
     <>
       <div className="flex w-full flex-col">
-      <Tabs 
-        aria-label="Options" 
-        color="primary" 
+      <Tabs id="tab"
+        aria-label="Options"  
         variant="underlined"
         classNames={{
           tabList: "gap-6 w-full relative rounded-small p-3 border-b border-divider bg-white",
           cursor: "w-full bg-[#22d3ee]",
           tab: "max-w-fit px-0 h-12",
           tabContent: "group-data-[selected=true]:text-[#06b6d4]",
+          color:"success"
           
         }}
       >
@@ -36,7 +38,7 @@ export const ProfileTabs = () => {
         title={
           <div className="flex items-center space-x-2">
               <i class="fa-solid fa-brain"></i>
-              <span>Informacion</span>
+              <span className="subtitulo2">Informacion</span>
             </div>
           }
           >
@@ -52,7 +54,7 @@ export const ProfileTabs = () => {
           title={
             <div className="flex items-center space-x-2">
               <i class="fa-regular fa-user"></i>
-              <span>Perfil</span>
+              <span className="subtitulo2">Perfil</span>
               {/* <Chip size="sm" variant="faded">0</Chip> */}
             </div>
           }
@@ -70,7 +72,7 @@ export const ProfileTabs = () => {
         title={
           <div className="flex items-center space-x-2">
               <i class="fa-solid fa-globe"></i>
-              <span>Redes</span>
+              <span className="subtitulo2">Redes</span>
             </div>
           }
           >
@@ -87,7 +89,7 @@ export const ProfileTabs = () => {
           title={
             <div className="flex items-center space-x-2">
               <i class="fa-solid fa-user-tie"></i>
-              <span>Perfil Profesional</span>
+              <span className="subtitulo2">Perfil Profesional</span>
             </div>
           }
           >
@@ -98,13 +100,13 @@ export const ProfileTabs = () => {
             </Card>  
           </Tab>   
         : ""}
-        
-        <Tab
+        {store.userData.is_psicologo_selected ?
+          <Tab
           key="tareas"
           title={
             <div className="flex items-center space-x-2">
               <i class="fa-solid fa-book"></i>
-              <span>Tareas</span>
+              <span className="subtitulo2">Tareas</span>
               {/* <Chip size="sm" variant="faded">1</Chip> */}
             </div>
           }
@@ -114,7 +116,8 @@ export const ProfileTabs = () => {
                <HomeWork/>
               </CardBody>
             </Card>  
-          </Tab>
+          </Tab>  
+        : ""}
       </Tabs>
     </div>  
      

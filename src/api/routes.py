@@ -1,26 +1,33 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from cmath import inf
-from distutils.log import error
-from http.client import OK
-from flask import Flask, request, jsonify, url_for, Blueprint
+# from cmath import inf
+# from http.client import OK
+
 from api.models import Session, PsicologyProfileInfo, MiPsicologo, Notification, db, User, ClientTask, PaymentAccount, Phrase, Role, Address, SocialNetwork
 from api.utils import generate_sitemap, APIException
+from flask import Flask, request, jsonify, url_for, Blueprint
 import json
 from flask_cors import CORS, cross_origin
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, create_refresh_token, get_jwt, set_access_cookies
-from datetime import timedelta
+from datetime import timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import SQLAlchemyError 
+from base64 import b64encode
 import os
-from functools import wraps
-from datetime import date
+# from functools import wraps
 from sqlalchemy import func
+from api.utils import set_password, send_email
 
 
+app = Flask(__name__)
+CORS(app)
 api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
+
+expires_in_minutes = 10
+expires_delta = timedelta(minutes=expires_in_minutes)
 
 @api.route('/sign-up', methods=['POST'])
 def handle_register():
@@ -30,16 +37,18 @@ def handle_register():
   # Update info dictionary with user data
   updated_info = {**user}
   existing_user = User.query.filter_by(email=user['email']).first()
+  existing_fpv_user = PsicologyProfileInfo.query.filter_by(fpv_number=user['fpv_number']).first()
   if existing_user:
       return jsonify({'error': 'Email already exists'}), 400  # Bad request
+  if existing_fpv_user:
+      return jsonify({'error': 'FPV already exists'}), 400  # Bad request
   # Add salt to the password
   password = user['password']
   user['password'] = generate_password_hash(password,salt_length=8)
-
   del user["fpv_number"]
-
-  newUser = User.create(user)
-  print()
+  
+  if existing_fpv_user is None:
+    newUser = User.create(user)
 
   if newUser is not None:
     access_token = create_access_token(identity=newUser.id)
@@ -242,20 +251,23 @@ def protected():
 @jwt_required()
 def handle_user_psicologo():
     if request.method == 'GET':
-        users = User.query.filter_by(is_psicologo=True).all()
-        users_info = PsicologyProfileInfo.query.filter(PsicologyProfileInfo.fpv_number != "null")
-        if users is None:
+        query = db.session.query(User, PsicologyProfileInfo, Address) \
+            .join(PsicologyProfileInfo, User.psicology_profile == PsicologyProfileInfo.id) \
+            .join(Address, User.user_address == Address.id) \
+            .filter(User.role_id == 2, PsicologyProfileInfo.fpv_number != "null")
+
+        results = query.all()
+
+        if not results:
             return jsonify({"message": "Usuario no encontrado"}), 404
-        else:
-            users = list(map(lambda user: user.serialize(),users))
-            users_info = list(map(lambda user: user.serialize(), users_info))
-            full_info = []
-            for user in users:
-                for info in users_info:
-                    if info["id"] == user["psicology_profile"]:
-                        info.update(user)
-                        full_info.append(info)
-            return jsonify(full_info), 200
+
+        full_info = [{
+            **user.serialize(),
+            **info.serialize(),
+            **address.serialize()
+        } for user, info, address in results]
+
+        return jsonify(full_info), 200
         
 @api.route("/psicologo-data-to-aprove", methods=['GET'])
 @jwt_required()
@@ -301,30 +313,32 @@ def handle_user_data_seleccinado(id):
             
             return jsonify(full_info), 200
     
-@api.route("/sessions/today/client/<int:client_id>", methods=['GET'])
+@api.route("/sessions/today/client/<int:user_id>", methods=['GET'])
 @jwt_required()
-def handle_sessions_client_today(client_id):
+def handle_sessions_client_today(user_id):
     today = date.today()
-    # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
-    sessions = Session.query.filter_by(
-        client_session_id=client_id).where(current_date == Session.calendar_date).all()
-    print(Session.client_session_id)
-    print(sessions, "aquiiii")
-    response = []
-    print(sessions, "aquiiii")
-    for session in sessions:
-        # Serialize session data and include psychologist and patient names
-        session_data = session.serialize()
-        session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
-        session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
-        print(session_data)
-        response.append(session_data)
 
-    if sessions is None:
-        return jsonify({"message": "Not sessions available for this Client"}), 401
-    else:
-        return jsonify(response), 201
+    try:
+        # Realizamos la consulta y obtenemos el primer resultado
+        session = Session.query.filter_by(
+            client_session_id=user_id).filter(
+            Session.calendar_date == current_date).first()
+        
+        print(session)
+
+        if session:
+            # Serializamos y añadimos datos del psicólogo
+            session_data = session.serialize()
+            session_data["psychologist_name"] = session.psychologist.name
+            session_data["psychologist_last_name"] = session.psychologist.last_name
+            return jsonify(session_data), 200
+        else:
+            return jsonify({"message": "No se encontraron sesiones para este cliente"}), 404
+
+    except Exception as e:
+        print(f"Error al recuperar sesiones: {e}")
+        return jsonify({"message": "Error interno del servidor"}), 500
 
 @api.route("/sessions/today/<int:psychologist_session_id>", methods=['GET'])
 @jwt_required()
@@ -333,25 +347,22 @@ def handle_sessions_today(psychologist_session_id):
     # Get the current date and stringify to compare with the value on the database
     current_date = today.strftime("%Y/%m/%d")
 
+    try:
+        # Filtramos las sesiones por psicólogo, cliente y si están reservadas
+        sessions = Session.query.filter(
+            (Session.psychologist_session_id == psychologist_session_id) |
+            (Session.client_session_id == psychologist_session_id)
+        ).filter(Session.calendar_date == current_date).filter(Session.reserved == True).all()
+
+        # Serializamos y retornamos las sesiones
+        serialized_sessions = [session.serialize() for session in sessions]
+        return jsonify(serialized_sessions), 200
+
+
     # Query sessions for the psychologist on today's date
-    sessions = Session.query.filter_by(psychologist_session_id=psychologist_session_id).filter(Session.calendar_date == current_date).all()
-
-    response = []
-    for session in sessions:
-        # Serialize session data and include psychologist and patient names
-        session_data = session.serialize()
-        print(session_data, "a")
-        session_data["psychologist_name"] = session.psychologist.name  # Assuming a psychologist relationship
-        session_data["patient_name"] = session.client.name  # Assuming a patient relationship
-        session_data["psychologist_last_name"] = session.psychologist.last_name  # Assuming a psychologist relationship
-        session_data["patient_last_name"] = session.client.last_name  # Assuming a patient relationship
-        response.append(session_data)
-
-    if sessions is None:
-        return jsonify({"message": "Not sessions available for this Psychologist"}), 401
-    else:
-        return jsonify(response), 201
-    
+    except Exception as e:
+        print(f"Error al recuperar sesiones: {e}")
+        return jsonify({"message": "Error interno del servidor"}), 500
 
 # Obtain sessions by the ID of the psicologo. Return all sessions for that piscologo
 # traer todas las sesiones del psicologo, para anular los botones
@@ -418,7 +429,6 @@ def handle_one_session(session_id):
             return jsonify({"message": "error"}), 500
 
 
-# Handle the reservation of the service by a client
 @api.route("/session-reserved/<int:client_session_id>", methods=['PUT'])
 @jwt_required()
 def handle_reserved_session(client_session_id):
@@ -443,7 +453,6 @@ def handle_reserved_session(client_session_id):
             return jsonify({"message": "error"}), 500
     else:
         return ({"message": "session not found"})
-
 
 @api.route("/session-unbook/<int:session_id>", methods=['PUT'])
 @jwt_required()
@@ -738,34 +747,40 @@ def psicology_payment_account(id):
 @api.route("/user-patient-data/<int:id>", methods=['GET'])
 @jwt_required()
 def handle_patient_data_seleccinado(id):
+
     selected_user_id = id
 
-    # Obtiene el usuario actual desde el token JWT
-    current_user_id = get_jwt_identity()  # Reemplaza con la función que obtiene el ID del usuario
+    # Get current user from JWT
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(current_user_id)
 
-    # Filtra los usuarios por el ID del psicólogo actual y que no sean psicólogos
+    # Check for valid user and psychologist role
+    if not current_user or not current_user.is_psicologo:
+        return jsonify({"message": "Acceso no autorizado"}), 403
+
+    # Retrieve user address information (handle potential None)
+    user_address_info = Address.query.filter_by(id=selected_user_id).one_or_none()
+
+    # Filter user data (consider authorization and error handling)
     usuario_filtrado = User.query.filter(
-        User.id == selected_user_id,
-        User.selected_psicologo_id == current_user_id,
-        User.is_psicologo == False
+        User.id == selected_user_id
     ).first()
-    print(usuario_filtrado, "usuario filtrado")
 
     if not usuario_filtrado:
-        return jsonify({"message": "Usuario no encontrado o no es paciente del psicólogo actual"}), 404
+        return jsonify({"message": "Usuario no encontrado"}), 404
 
-    # Si el usuario existe, buscamos su perfil
-    profile_info = usuario_filtrado
+    # Check authorization (optional, uncomment if needed)
+    # if current_user_id != selected_user_id:
+    #     return jsonify({"message": "No puedes ver datos de otros psicólogos"}), 403
 
-    if request.method == 'GET':
-        if usuario_filtrado is None:
-            return jsonify({"message": "Usuario no encontrado"}), 404
+    # Serialize data (handle potential None for address)
+    user_info = usuario_filtrado.serialize() if usuario_filtrado else {}
+    user_addres = user_address_info.serialize() if user_address_info else {}
 
-        if profile_info is None:
-            return jsonify(usuario_filtrado.serialize()), 200
-        else:
-            user_info = usuario_filtrado.serialize()
-            return jsonify(user_info), 200
+    # Combine data (consider using a custom dictionary class if complex)
+    full_info = {**user_info, **user_addres}
+
+    return jsonify(full_info), 200
 
 @api.route('/patients/own/tasks', methods=['GET'])
 @jwt_required()
@@ -840,3 +855,60 @@ def create_notification():
 def get_user_notifications(user_id):
     notifications = Notification.query.filter_by(user_id=user_id).all()
     return jsonify([notification.serialize() for notification in notifications])
+
+
+
+# ruta que resetea el password
+@api.route("/reset-password", methods=["POST"])
+def reset_password():
+    body = request.json
+
+    # crear un link para poder recuperar la contraseña
+    access_token = create_access_token(identity=body, expires_delta=expires_delta)
+
+    # crear el mensaje a enviar por email
+
+    message = f"""
+        <h1> Si solicito recuperar la contraseña, ingrese al siguiente link</h1>
+        <a href="{os.getenv("FRONTEND_URL")}password-update?token={access_token}">
+            ir a recuperar contraseña
+        </a>
+    """
+
+    data = {
+        "subject": "Recuperación de contraseña",
+        "to": body,
+        "message": message
+    }
+
+    sended_email = send_email(data.get("subject"), data.get("to"), data.get("message"))
+
+    print(sended_email)
+
+    return jsonify("trabajando por un mejor servicio :)"), 200
+
+
+# actualizamos el password
+@api.route("/update-password", methods=["PUT"])
+@jwt_required()
+def update_pass():
+    email = get_jwt_identity()
+    body = request.json
+
+    user = User.query.filter_by(email=email).one_or_none()
+
+    if user is not None:
+        # salt = b64encode(os.urandom(32)).decode("utf-8")
+        password = body
+        
+        new_password = generate_password_hash(password,salt_length=8)
+
+        # user.salt = salt
+        user.password= new_password
+
+        try:
+            db.session.commit()
+            return jsonify("Clave actualizada bien"), 201
+        except Exception as error:
+            print(error.args)
+            return jsonify("No se puede actualizar el password")

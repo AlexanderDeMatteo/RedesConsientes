@@ -79,6 +79,8 @@ class User(db.Model):
         "selected_psicologo_id" : self.selected_psicologo_id,
         # "selected_psicologo" : self.selected_psicologo
         }
+    
+    
 
     def update_profile_picture(self, data):
         print("hola")
@@ -319,6 +321,10 @@ class Session(db.Model):
             "session_type_cost": self.session_type_info.cost if self.session_type_info else None,
 
         }
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
     
     @classmethod
     def create_schedule(cls, schedules):

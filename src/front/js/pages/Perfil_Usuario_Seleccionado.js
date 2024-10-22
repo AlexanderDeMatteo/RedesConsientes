@@ -19,6 +19,7 @@ import Calendar from "react-calendar";
 import { Calendar_custom } from "./Calendar";
 import { Calendar_Psicologo } from "./Calendar_Psicologo";
 import { Cursos } from "./Cursos";
+import { Calendar2 } from "../component/calendar_components/calendar2";
 
 
 export const PerfilUsuarioSeleccionado = () => {
@@ -124,10 +125,11 @@ export const PerfilUsuarioSeleccionado = () => {
                                 : psicologo_img} />
                         </CardHeader>
                       <CardBody className="overflow-visible py-2 text-center">
-                        <p className="text-tiny uppercase font-bold">{store.userDataSelecionado.id} {store.userDataSelecionado.last_name}</p>
-                        <small className="text-default-500">{store.userDataSelecionado.area_de_especialidad}</small>
-                        <h4>N°FPV:{store.userDataSelecionado.fpv_number}</h4>
-                        <h4 className="font-bold text-large">Precio de la consulta {store.userDataSelecionado.monto_consulta}$</h4>
+                        <p className=" text-tiny uppercase font-bold subtitulo">{store.userDataSelecionado.name} {store.userDataSelecionado.last_name}</p>
+                        <p className="font-bold subtitulo2">{store.userDataSelecionado.specialty_area}</p>
+                        <p className="font-bold subtitulo2">N°FPV:{store.userDataSelecionado.fpv_number}</p>
+                        <p className="font-bold subtitulo2">CI:{store.userDataSelecionado.dni}</p>
+                        <h4 className="font-bold text-large subtitulo">Precio de la consulta {store.userDataSelecionado.monto_consulta}$</h4>
                       </CardBody>
                       <Button color="primary" variant={isSelected ? "solid" : "ghost"} onClick={() => enlace(id)}>
                         {/* {isSelected ? "Cambiar de psicologo" : "Seleccionar psicologo"} */}
@@ -180,7 +182,7 @@ export const PerfilUsuarioSeleccionado = () => {
                                 >
                                 <Card>
                                     <CardBody>
-                                        <Calendar_Psicologo/>
+                                        <Calendar2/>
                                     </CardBody>
                                 </Card>     
                                 </Tab>

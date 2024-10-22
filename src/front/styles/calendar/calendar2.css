@@ -1,0 +1,39 @@
+#calendario table {
+    outline: none;
+    border: none;
+}
+
+#calendario table thead tr th {
+    outline: none;
+    border: none;
+}
+
+#calendario table tbody tr td {
+    outline: none;
+    border: none;
+}
+
+table tr:nth-child(even) {
+    background-color: transparent;
+}
+
+a.bg-secondary:focus, button.bg-secondary:focus {
+    background-color: hsl(270deg 66.67% 47.06%) !important ;
+}
+a.bg-secondary:hover, button.bg-secondary:hover {
+    background-color: #ff589e !important;
+}
+
+/* a.bg-secondary:focus, a.bg-secondary:hover, button.bg-secondary:focus, button.bg-secondary:hover {
+    background-color: #ff589e !important;
+} */
+
+
+
+.container-fluid .row .col-md-4{
+    margin-bottom: 10px;
+}
+
+.col-md-8{
+    margin-bottom: 10px;
+}
